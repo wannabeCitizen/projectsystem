@@ -37,6 +37,7 @@ User Node: [May want to consider using a Gravitar or similar ID system]
 	"organizations": [2903840, 9084205] (list of organizations belonged to)
 	"owner": [908430198, 0928340] (list of projects and proposal on which this user has owner permissions)
 	"member": [2390480, 93028408] (list of projects that user has voting permissions)
+    "following": [90832048, 09832048] (list of projects you are following)
 	"join_date": Unix Timestamp
 }
 
