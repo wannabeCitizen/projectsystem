@@ -14,7 +14,7 @@ Project Node:
 	"id": 123098493287 (unique ID #)
 	"title": "Name your project"
 	"text" : "The bulk description written in .md format"
-	"short_desciption": "The description you'll write up for summary views of the project"
+	"short_desciption": "The description you'll write up for summary views of the project in 144 characters"
 	"date": Unix Timestamp
 	"budget": 1384.98 (some float)
 	"owner": 1093824098 (User ID #)
@@ -25,6 +25,7 @@ Project Node:
 	"phases": [2309840, 02983490, 203984098] List of other Project ID #s; if it is a proposal, this will be "None"]
 	"next_phase": 902384098 (next chronological phase; if it is a proposal, this will be "None"; if it is the last phase of a project, we could have a placeholder like -1 or something)
 	"vote_status": 0 [Has this been voted on?  This boolean will be reset if a new vote is awaiting]
+    "to_do": [("fix JS", 098203498, 0), ("write overview", 08230984,1)]   (list of tuples for to-do items on this particular project or phase and who is the lead for each item, and whether it is done)
 }
 
 
@@ -60,6 +61,7 @@ Vote:
 {
 	"initiator": 908230498 (user ID # of who requested vote)
 	"base_node": 098320984 (project ID for what is being voted on)
+    "content": "Description of what is being voted on."
 	"majority": .5 (percent needed to pass)
 	"voters": [239408, 0982304] (list of user IDs who have permission to vote)
 	"votes": [0, 1, 0 ,1] (list of votes in boolean form)
