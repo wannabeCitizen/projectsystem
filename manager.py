@@ -1,11 +1,9 @@
 from flask import Flask, session, redirect, url_for, escape, request
 from flask_googlelogin import GoogleLogin
 from flask.ext import restful
-from flask.ext.pymongo import PyMongo
 
 app = Flask(__name__)
 api = restful.Api(app)
-mongo = PyMongo(app)
 google_login = GoogleLogin(app)
 
 @app.route('/')
@@ -29,11 +27,6 @@ def create_or_update_user(token, userinfo, **params):
     db.session.flush()
     login_user(user)
     return redirect(url_for('index'))
-
-@app.route('/profile')
-@login_required
-def profile():
-    return render_template('profile.html')
 
 
 if __name__ == __main__:
