@@ -1,2 +1,5 @@
 Flask
-flask_googlelogin
+Flask_Googlelogin
+mongoengine
+Flask-Restful
+Flask-Login
