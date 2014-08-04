@@ -1,15 +1,20 @@
 from flask import Flask, session, redirect, url_for, escape, request
 from flask_googlelogin import GoogleLogin
 from flask.ext import restful
+from flask.ext.restful import reqparse
+
+from resource.organization import Organization
 
 from mongoengine import connect
 
 app = Flask(__name__)
 api = restful.Api(app)
-google_login = GoogleLogin(app)
+#google_login = GoogleLogin(app)
 
-db = connect('projectsystem')
+connect('projectsystem')
 
+parser = reqparse.RequestParser()
+parser.add_argument
 
 
 @app.route('/')

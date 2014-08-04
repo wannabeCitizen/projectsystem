@@ -7,11 +7,12 @@ import datetime
 class User(Document):
 	name = StringField(max_length=50, required=True)
 	email = EmailField(required=True)
-	unique = UUIDField(required=True)
+	token = StringField(required=True)
 	organizations = ListField(EmbeddedDocument(MiniOrganization))
 	projects = ListField(EmbeddedDocument(Project))
 	ideas = ListField(EmbeddedDocument(Idea))
 	joined_on = DateTimeField
+	notifications = ListField(EmbeddedDocument(Notification))
 
 
 #A mini version of the user document to embed in other things
@@ -20,11 +21,14 @@ class MiniUser(EmbeddedDocument):
 	email = EmailField(required=True)
 	unique = UUIDField(required=True)
 
+class Notification(EmbeddedDocument):
+
 
 #Organizations are parents of everything except users
 class Organization(Document):
 	name = StringField(required=True)
 	unique = UUIDField(required=True)
+	description = StringField
 	short_description = StringField(max_length=400)
 	owners = ListField(EmbeddedDocument(MiniUser))
 	members = ListField(EmbeddedDocument(MiniUser))
@@ -81,6 +85,7 @@ class Project(Proposal):
 	complete = BooleanField
 	phases = ListField(EmbeddedDocument)
 	tasks = ListField(EmbeddedDocument(Tasks))
+	revisions = ListField(EmbeddedDocument(Revision))
 
 class Phase(EmbeddedDocument):
 	text = StringField
@@ -90,9 +95,13 @@ class Phase(EmbeddedDocument):
 
 class Tasks(EmbeddedDocument):
 	task = StringField(required=True)
-	person = EmbeddedDocument(MiniUser)
+	person = ListField(EmbeddedDocument(MiniUser))
 	due = DateTimeField
 	complete = BooleanField
+
+class Revision(EmbeddedDocument):
+	text = StringField
+	time = DateTimeField
 
 
 
