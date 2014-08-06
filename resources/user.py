@@ -25,6 +25,7 @@ class User(restful.Resource):
 		user = create_user()
 		return user
 
+    #user_id will be an oauth token from google
 	def get(self, user_id):
 		user = get_user(user_id)
 		return user

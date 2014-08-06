@@ -27,7 +27,7 @@ class Notification(EmbeddedDocument):
 #Organizations are parents of everything except users
 class Organization(Document):
 	name = StringField(required=True)
-	unique = UUIDField(required=True)
+	unique = UUIDField(required=True, binary=False)
 	description = StringField
 	short_description = StringField(max_length=400)
 	owners = ListField(EmbeddedDocument(MiniUser))
@@ -46,6 +46,7 @@ class MiniOrganization(EmbeddedDocument)
 class Idea(EmbeddedDocument):
 	title = StringField(required=True)
 	text = StringField(required=True)
+	unique = UUIDField(required=True, binary=False)
 	short_description(max_length=250)
 	created_on = DateTimeField(required=True, default=datetime.datetime.now)
 	last_edit = DateTimeField(default=datatime.datetime.now)

@@ -1,32 +1,61 @@
 """
 For Handling all the db calls
 """
-
 import json
 
-from resources.model import *
+from lib.model import *
 
-def get_user():
 
-def get_org():
+#<----- User Utilities
+
+#Returns a single user based on google oauth token
+def get_user(g_token):
+	my_user = User.objects(token=g_token)
+	user_str = my_user.to_json()
+	data = json.loads(user_str)
+	return data 
+
+def create_user():
 
 def delete_user():
+
+def update_user():
+
+#------>
+
+#<----- Organization Utilities
+
+def get_org(org_id):
+	my_org = Organization.objects(unique=org_id)
+	org_str = my_org.to_json()
+	data = json.loads(org_str)
+	return data 
 
 def delete_org():
 
 def create_org():
 
-def create_user():
+def update_org():
 
-def create_idea():
 
-def get_idea():
+#--------->
+
+#<------- Idea Utilities
+
+def create_idea(org_id, idea_id):
+	my_idea = Organization.objects(unique=org_id)
+	org_str = my_org.to_json()
+	data = json.loads(org_str)
+	return data 
+
+def get_idea(org_id, idea_id):
+
 
 def delete_idea():
 
 def update_idea():
 
-def update_org():
+#--------->
 
-def update_user():
+
 	

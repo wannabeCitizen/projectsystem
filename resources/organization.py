@@ -3,6 +3,8 @@ from flask.ext.restful import fields, marshal_with, reqparse
 
 import bson
 
+import json
+
 post_parser = reqparse.RequestParser()
 post_parser.add_argument(
     'name',type=str, 

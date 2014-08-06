@@ -13,9 +13,6 @@ api = restful.Api(app)
 
 connect('projectsystem')
 
-parser = reqparse.RequestParser()
-parser.add_argument
-
 
 @app.route('/')
 def index():
