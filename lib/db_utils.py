@@ -40,11 +40,24 @@ def get_org(org_id):
     data = json.loads(org_str)
     return data
 
+<<<<<<< HEAD
 def delete_org():
     pass
 
 def create_org():
     pass
+=======
+def delete_org(org_id):
+    old_org = Organization.objects(unique=org_id)
+    old_org.delete()
+    return old_org
+
+
+def create_org(name, unique_id, owner):
+    my_owner = User(token=owner)
+    new_mini = MiniUser(my_owner.name, my_owner.email, my_owner.token)
+    new_org = Organization(name=name, unique=unique_id, owners=new_mini)
+>>>>>>> 9fb68cd89520881c97435d53a33eeac343ddafed
 
 
 def update_org(**kwargs):
