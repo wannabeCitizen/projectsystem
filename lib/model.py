@@ -11,7 +11,7 @@ class User(Document):
 	organizations = ListField(EmbeddedDocument(MiniOrganization))
 	projects = ListField(EmbeddedDocument(Project))
 	ideas = ListField(EmbeddedDocument(Idea))
-	joined_on = DateTimeField
+	joined_on = DateTimeField(default=datetime.datetime.now)
 	notifications = ListField(EmbeddedDocument(Notification))
 
 
@@ -101,8 +101,9 @@ class Tasks(EmbeddedDocument):
 	complete = BooleanField
 
 class Revision(EmbeddedDocument):
-	text = StringField
-	time = DateTimeField
+	text = StringField(required=True)
+	time = DateTimeField(required=True)
+	revision_of = UUIDField(required=True)	
 
 
 

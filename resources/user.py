@@ -1,6 +1,8 @@
 from flask.ext import restful
 from flask.ext.restful import fields, marshal_with, reqparse
 
+from lib.db_utils import *
+
 post_parser = reqparse.RequestParser()
 post_parser.add_argument(
     'name',type=str, 
@@ -19,10 +21,10 @@ post_parser.add_argument(
 )
 
 
-class User(restful.Resource):
+class UserEP(restful.Resource):
 	def post(self):
 		my_args = post_parser.parse_args()
-		user = create_user()
+		user = create_user(my_args['name'], my_args['email'], myargs['token'])
 		return user
 
     #user_id will be an oauth token from google

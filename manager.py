@@ -3,8 +3,8 @@ from flask_googlelogin import GoogleLogin
 from flask.ext import restful
 from flask.ext.restful import reqparse
 
-from resource.organization import Organization
-
+from resources.organization import Organization
+from resources.user import UserEP
 from mongoengine import connect
 
 app = Flask(__name__)
@@ -21,7 +21,7 @@ def index():
 #Here is an example of how you add an API resource to the app
 #Simply pass the restful resource class and then the URL(s) 
 #Expected variables are placed in carrot brackets with a type declaration
-api.add_resource(User, '/home/<string:user>', '/user/<string:user>')
+api.add_resource(User, '/home/<string:user>', '/user/')
 
 """
 

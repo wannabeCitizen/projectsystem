@@ -3,3 +3,5 @@ Flask_Googlelogin
 mongoengine
 Flask-Restful
 Flask-Login
+bson
+mongodb

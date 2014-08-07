@@ -2,6 +2,7 @@
 For Handling all the db calls
 """
 import json
+import datetime
 
 from lib.model import *
 
@@ -15,7 +16,9 @@ def get_user(g_token):
 	data = json.loads(user_str)
 	return data 
 
-def create_user():
+def create_user(name, address, token):
+	current_time = datetime.datetime.now()
+	new_user = User(name=name, email=address, token=token, join_on=current_time)
 
 def delete_user():
 
