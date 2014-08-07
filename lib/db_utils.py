@@ -9,7 +9,7 @@ from lib.model import *
 
 #<----- User Utilities
 
-#Returns a single user based on google oauth token
+#Returns a json-formatted single user based on google oauth token
 def get_user(g_token):
 	my_user = User.objects(token=g_token)
 	user_str = my_user.to_json()
@@ -19,8 +19,13 @@ def get_user(g_token):
 def create_user(name, address, token):
 	current_time = datetime.datetime.now()
 	new_user = User(name=name, email=address, token=token, join_on=current_time)
+	new_user.save()
+	return new_user
 
-def delete_user():
+def delete_user(token):
+	old_user = User.objects(token=token)
+	old_user.delete()
+	return old_user
 
 def update_user():
 
@@ -38,7 +43,8 @@ def delete_org():
 
 def create_org():
 
-def update_org():
+
+def update_org(**kwargs):
 
 
 #--------->
