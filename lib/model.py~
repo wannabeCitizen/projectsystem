@@ -15,13 +15,11 @@ class User(Document):
     name = StringField(max_length=50, required=True)
     email = EmailField(required=True)
     token = StringField(required=True)
-    organizations =
-    ListField(EmbeddedDocumentField(MiniOrganization))
-    projects = ListField(EmbeddedDocumentField(Project))
-    ideas = ListField(EmbeddedDocumentField(Idea))
+    organizations = ListField(EmbeddedDocument(MiniOrganization))
+    projects = ListField(EmbeddedDocument(Project))
+    ideas = ListField(EmbeddedDocument(Idea))
     joined_on = DateTimeField(default=datetime.datetime.now)
-    notifications =
-    ListField(EmbeddedDocumentField(Notification))
+    notifications = ListField(EmbeddedDocument(Notification))
 
 
 #A mini version of the user document to embed in other things
@@ -40,11 +38,11 @@ class Organization(Document):
     unique = UUIDField(required=True, binary=False)
     description = StringField
     short_description = StringField(max_length=400)
-    owners = ListField(EmbeddedDocumentField(MiniUser))
-    members = ListField(EmbeddedDocumentField(MiniUser))
-    projects = ListField(EmbeddedDocumentField(Project))
-    ideas = ListField(EmbeddedDocumentField(Idea))
-    proposals = ListField(EmbeddedDocumentField(Proposal))
+    owners = ListField(EmbeddedDocument(MiniUser))
+    members = ListField(EmbeddedDocument(MiniUser))
+    projects = ListFiend(EmbeddedDocument(Project))
+    ideas = ListField(EmbeddedDocument(Idea))
+    proposals = ListField(EmbeddedDocument(Proposal))
 
 
 #Idea is the parent classe of project and proposals
@@ -58,7 +56,7 @@ class Idea(EmbeddedDocument):
     #May want to consider a reverse_delete_rule for owner
     owner = EmbeddedDocument(MiniUser)
     organization = EmbeddedDocument(MiniOrganization)
-    followers = ListField(EmbeddedDocumentField(MiniUser))
+    followers = ListField(EmbeddedDocument(MiniUser))
     #we may want to consider how far down we store references to base_nodes
     base_node = EmbeddedDocument(Idea)
     karma = IntField
@@ -68,7 +66,7 @@ class Idea(EmbeddedDocument):
 
 class Vote(EmbeddedDocument):
     initiator = EmbeddedDocument(MiniUser, required=True)
-    members = ListField(EmbeddedDocumentField(MiniUser), required=True)
+    members = ListField(EmbeddedDocument(MiniUser), required=True)
     description = StringField
     verdict = BooleanField
     comments = StringField
@@ -80,8 +78,8 @@ class Proposal(Idea):
     budget = FloatField
     voted_on = BooleanField
     #always delete pending votes as they get counted
-    pending_votes = ListField(EmbeddedDocumentField(Vote))
-    completed_votes = ListField(EmbeddedDocumentField(Vote))
+    pending_votes = ListField(EmbeddedDocument(Vote))
+    completed_votes = ListField(EmbeddedDocument(Vote))
     votes = IntField
     quorum = DecimalField(min_value=.5, max_value=1.0)
 
@@ -89,14 +87,14 @@ class Proposal(Idea):
 
 class Project(Proposal):
     complete = BooleanField
-    phases = ListField(EmbeddedDocumentField)
-    tasks = ListField(EmbeddedDocumentField(Tasks))
-    revisions = ListField(EmbeddedDocumentField(Revision))
+    phases = ListField(EmbeddedDocument)
+    tasks = ListField(EmbeddedDocument(Tasks))
+    revisions = ListField(EmbeddedDocument(Revision))
 
 class Phase(EmbeddedDocument):
     text = StringField
     complete = BooleanField
-    tasks = ListField(EmbeddedDocumentField(Tasks))
+    tasks = ListField(EmbeddedDocument(Tasks))
     goal_date = DateTimeField
 
 class Tasks(EmbeddedDocument):

@@ -4,7 +4,7 @@ For Handling all the db calls
 import json
 import datetime
 
-from lib.model import *
+from lib.model import User
 
 
 #<----- User Utilities
@@ -28,6 +28,7 @@ def delete_user(token):
     return old_user
 
 def update_user():
+    pass
 
 #------>
 
@@ -40,11 +41,14 @@ def get_org(org_id):
     return data
 
 def delete_org():
+    pass
 
 def create_org():
+    pass
 
 
 def update_org(**kwargs):
+    pass
 
 
 #--------->
@@ -58,11 +62,14 @@ def create_idea(org_id, idea_id):
     return data
 
 def get_idea(org_id, idea_id):
+    pass
 
 
 def delete_idea():
+    pass
 
 def update_idea():
+    pass
 
 #--------->
 
