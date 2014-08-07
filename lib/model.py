@@ -8,9 +8,9 @@ class User(Document):
     name = StringField(max_length=50, required=True)
     email = EmailField(required=True)
     token = StringField(required=True)
-    organizations = ListField(EmbeddedDocument(MiniOrganization))
-    projects = ListField(EmbeddedDocument(Project))
-    ideas = ListField(EmbeddedDocument(Idea))
+    organizations = ListField(EmbeddedDocumentField(MiniOrganization))
+    projects = ListField(EmbeddedDocumentField(Project))
+    ideas = ListField(EmbeddedDocumentField(Idea))
     joined_on = DateTimeField(default=datetime.datetime.now)
     notifications = ListField(EmbeddedDocument(Notification))
 
@@ -19,7 +19,7 @@ class User(Document):
 class MiniUser(EmbeddedDocument):
     name = StringField(required=True)
     email = EmailField(required=True)
-    unique = UUIDField(required=True)
+    token = StringField(required=True)
 
 class Notification(EmbeddedDocument):
 
@@ -30,11 +30,11 @@ class Organization(Document):
     unique = UUIDField(required=True, binary=False)
     description = StringField
     short_description = StringField(max_length=400)
-    owners = ListField(EmbeddedDocument(MiniUser))
-    members = ListField(EmbeddedDocument(MiniUser))
-    projects = ListFiend(EmbeddedDocument(Project))
-    ideas = ListField(EmbeddedDocument(Idea))
-    proposals = ListField(EmbeddedDocument(Proposal))
+    owners = ListField(EmbeddedDocumentField(MiniUser))
+    members = ListField(EmbeddedDocumentField(MiniUser))
+    projects = ListFiend(EmbeddedDocumentField(Project))
+    ideas = ListField(EmbeddedDocumentField(Idea))
+    proposals = ListField(EmbeddedDocumentField(Proposal))
 
 class MiniOrganization(EmbeddedDocument)
     name = StringField(required=True)
@@ -51,9 +51,9 @@ class Idea(EmbeddedDocument):
     created_on = DateTimeField(required=True, default=datetime.datetime.now)
     last_edit = DateTimeField(default=datatime.datetime.now)
     #May want to consider a reverse_delete_rule for owner
-    owner = EmbeddedDocument(MiniUser) 
-    organization = EmbeddedDocument(MiniOrganization)
-    followers = ListField(EmbeddedDocument(MiniUser))
+    owner = EmbeddedDocumentField(MiniUser) 
+    organization = EmbeddedDocumentField(MiniOrganization)
+    followers = ListField(EmbeddedDocumentField(MiniUser))
     #we may want to consider how far down we store references to base_nodes
     base_node = EmbeddedDocument(Idea)
     karma = IntField
@@ -62,8 +62,8 @@ class Idea(EmbeddedDocument):
 
 
 class Vote(EmbeddedDocument):
-    initiator = EmbeddedDocument(MiniUser, required=True)
-    members = ListField(EmbeddedDocument(MiniUser), required=True)
+    initiator = EmbeddedDocumentField(MiniUser, required=True)
+    members = ListField(EmbeddedDocumentField(MiniUser), required=True)
     description = StringField
     verdict = BooleanField
     comments = StringField
@@ -71,12 +71,12 @@ class Vote(EmbeddedDocument):
 
 
 class Proposal(Idea):
-    owner = EmbeddedDocument(MiniUser)
+    owner = EmbeddedDocumentField(MiniUser)
     budget = FloatField
     voted_on = BooleanField
     #always delete pending votes as they get counted
-    pending_votes = ListField(EmbeddedDocument(Vote))
-    completed_votes = ListField(EmbeddedDocument(Vote))
+    pending_votes = ListField(EmbeddedDocumentField(Vote))
+    completed_votes = ListField(EmbeddedDocumentField(Vote))
     votes = IntField
     quorum = DecimalField(min_value=.5, max_value=1.0)
 
@@ -84,19 +84,19 @@ class Proposal(Idea):
 
 class Project(Proposal):
     complete = BooleanField
-    phases = ListField(EmbeddedDocument)
-    tasks = ListField(EmbeddedDocument(Tasks))
-    revisions = ListField(EmbeddedDocument(Revision))
+    phases = ListField(EmbeddedDocumentField(Phase))
+    tasks = ListField(EmbeddedDocumentField(Tasks))
+    revisions = ListField(EmbeddedDocumentField(Revision))
 
 class Phase(EmbeddedDocument):
     text = StringField
     complete = BooleanField
-    tasks = ListField(EmbeddedDocument(Tasks))
+    tasks = ListField(EmbeddedDocumentField(Tasks))
     goal_date = DateTimeField
 
 class Tasks(EmbeddedDocument):
     task = StringField(required=True)
-    person = ListField(EmbeddedDocument(MiniUser))
+    person = ListField(EmbeddedDocumentField(MiniUser))
     due = DateTimeField
     complete = BooleanField
 
