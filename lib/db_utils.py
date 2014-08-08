@@ -32,6 +32,7 @@ def update_user(token, **kwargs):
     my_user = User.objects(token=token).first()
     my_user.update(**{"set__%s" % k : kwargs[k] for k in kwargs.keys()})
     my_user.save()
+>>>>>>> b489d1ca4289ed1b0c6942254f137933815ccf30
 
 #------>
 
@@ -66,20 +67,30 @@ def update_org(org_id, **kwargs):
 #<------- Idea Utilities
 
 def create_idea(org_id, idea_id):
+   
+
+def get_idea(org_id, idea_id):
     my_idea = Organization.objects(unique=org_id)
     org_str = my_org.to_json()
     data = json.loads(org_str)
     return data
 
+<<<<<<< HEAD
+=======
 def get_idea(org_id, idea_id):
     pass
 
 
+>>>>>>> b489d1ca4289ed1b0c6942254f137933815ccf30
 def delete_idea():
     pass
 
+<<<<<<< HEAD
+def update_idea(**kwargs):
+=======
 def update_idea():
     pass
+>>>>>>> b489d1ca4289ed1b0c6942254f137933815ccf30
 
 #--------->
 
