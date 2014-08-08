@@ -50,6 +50,6 @@ def create_or_update_user(token, userinfo, **params):
 """
 
 
-if __name__ == __main__:
+if __name__ == "__main__":
     app.debug = True
     app.run()

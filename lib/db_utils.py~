@@ -4,7 +4,7 @@ For Handling all the db calls
 import json
 import datetime
 
-from lib.model import User
+from lib.model import User, Organization, MiniUser
 
 
 #<----- User Utilities
