@@ -29,7 +29,7 @@ def delete_user(token):
 
 def update_user(token, **kwargs):
 
-    my_user = User.objects(token=token)
+    my_user = User.objects(token=token).first()
     my_user.update(**{"set__%s" % k : kwargs[k] for k in kwargs.keys()})
     my_user.save()
 
@@ -56,7 +56,7 @@ def create_org(name, unique_id, owner):
 
 
 def update_org(org_id, **kwargs):
-    my_org = Organization.objects(unique=org_id)
+    my_org = Organization.objects(unique=org_id).first()
     my_org.update(**{"set__%s" % k : kwargs[k] for k in kwargs.keys()})
     my_org.save()
 
