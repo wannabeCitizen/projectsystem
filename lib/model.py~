@@ -62,18 +62,18 @@ class Proposal(Idea):
     meta = {'allow_inheritance': True}
 
 
-class Tasks(EmbeddedDocument):
-    task = StringField(required=True)
-    person = ListField(EmbeddedDocumentField(MiniUser))
-    due = DateTimeField
-    complete = BooleanField
-
-
 class Phase(EmbeddedDocument):
     text = StringField
     complete = BooleanField
     tasks = ListField(EmbeddedDocumentField(Tasks))
     goal_date = DateTimeField
+
+
+class Tasks(EmbeddedDocument):
+    task = StringField(required=True)
+    person = ListField(EmbeddedDocumentField(MiniUser))
+    due = DateTimeField
+    complete = BooleanField
 
 
 class Revision(EmbeddedDocument):

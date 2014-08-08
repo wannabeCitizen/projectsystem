@@ -4,7 +4,7 @@ For Handling all the db calls
 import json
 import datetime
 
-from lib.model import *
+from lib.model import User, Organization, MiniUser
 
 
 #<----- User Utilities
@@ -27,7 +27,12 @@ def delete_user(token):
     old_user.delete()
     return old_user
 
-def update_user(**kwargs):
+def update_user(token, **kwargs):
+
+    my_user = User.objects(token=token)
+    my_user.update(**{"set__%s" % k : kwargs[k] for k in kwargs.keys()})
+    my_user.save()
+>>>>>>> b489d1ca4289ed1b0c6942254f137933815ccf30
 
 #------>
 
@@ -51,7 +56,10 @@ def create_org(name, unique_id, owner):
     new_org = Organization(name=name, unique=unique_id, owners=new_mini)
 
 
-def update_org(**kwargs):
+def update_org(org_id, **kwargs):
+    my_org = Organization.objects(unique=org_id)
+    my_org.update(**{"set__%s" % k : kwargs[k] for k in kwargs.keys()})
+    my_org.save()
 
 
 #--------->
@@ -67,9 +75,22 @@ def get_idea(org_id, idea_id):
     data = json.loads(org_str)
     return data
 
-def delete_idea():
+<<<<<<< HEAD
+=======
+def get_idea(org_id, idea_id):
+    pass
 
+
+>>>>>>> b489d1ca4289ed1b0c6942254f137933815ccf30
+def delete_idea():
+    pass
+
+<<<<<<< HEAD
 def update_idea(**kwargs):
+=======
+def update_idea():
+    pass
+>>>>>>> b489d1ca4289ed1b0c6942254f137933815ccf30
 
 #--------->
 

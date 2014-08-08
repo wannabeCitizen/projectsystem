@@ -1,7 +1,7 @@
 from flask.ext import restful
 from flask.ext.restful import fields, marshal_with, reqparse
 
-from lib.db_utils import *
+from lib.db_utils import create_user, get_user, delete_user, update_user
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument(

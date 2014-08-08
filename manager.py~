@@ -17,12 +17,12 @@ connect('projectsystem')
 
 @app.route('/')
 def index():
-	render_template('index.html')
+    render_template('index.html')
 
 #Here is an example of how you add an API resource to the app
 #Simply pass the restful resource class and then the URL(s)
 #Expected variables are placed in carrot brackets with a type declaration
-api.add_resource(User, '/home/<string:user>', '/user/')
+api.add_resource(UserEP, '/home/<string:user>', '/user/')
 
 """
 
@@ -51,5 +51,5 @@ def create_or_update_user(token, userinfo, **params):
 
 
 if __name__ == __main__:
-	app.debug = True
-	app.run()
+    app.debug = True
+    app.run()
