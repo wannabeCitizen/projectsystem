@@ -27,8 +27,11 @@ def delete_user(token):
     old_user.delete()
     return old_user
 
-def update_user():
-    pass
+def update_user(token, **kwargs):
+
+    my_user = User.objects(token=token)
+    my_user.update(**{"set__%s" % k : kwargs[k] for k in kwargs.keys()})
+    my_user.save()
 
 #------>
 
@@ -52,8 +55,10 @@ def create_org(name, unique_id, owner):
     new_org = Organization(name=name, unique=unique_id, owners=new_mini)
 
 
-def update_org(**kwargs):
-    pass
+def update_org(org_id, **kwargs):
+    my_org = Organization.objects(unique=org_id)
+    my_org.update(**{"set__%s" % k : kwargs[k] for k in kwargs.keys()})
+    my_org.save()
 
 
 #--------->
