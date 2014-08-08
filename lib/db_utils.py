@@ -27,7 +27,7 @@ def delete_user(token):
     old_user.delete()
     return old_user
 
-def update_user():
+def update_user(**kwargs):
 
 #------>
 
@@ -59,17 +59,17 @@ def update_org(**kwargs):
 #<------- Idea Utilities
 
 def create_idea(org_id, idea_id):
+   
+
+def get_idea(org_id, idea_id):
     my_idea = Organization.objects(unique=org_id)
     org_str = my_org.to_json()
     data = json.loads(org_str)
     return data
 
-def get_idea(org_id, idea_id):
-
-
 def delete_idea():
 
-def update_idea():
+def update_idea(**kwargs):
 
 #--------->
 
