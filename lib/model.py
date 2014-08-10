@@ -108,7 +108,7 @@ class User(Document):
 class Organization(Document):
     name = StringField(required=True)
     unique = UUIDField(required=True, binary=False)
-    description = StringField
+    description = StringField()
     short_description = StringField(max_length=400)
     owners = ListField(EmbeddedDocumentField(MiniUser))
     members = ListField(EmbeddedDocumentField(MiniUser))

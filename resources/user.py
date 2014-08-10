@@ -20,6 +20,12 @@ post_parser.add_argument(
     help='The user oauth token',
 )
 
+update_parser = reqparse.RequestParser()
+update_parser.add_argument(
+    'task', type=str,
+    location='args', help='Figure out if its an add or removal')
+
+
 
 class UserEP(restful.Resource):
     def post(self):
@@ -36,6 +42,6 @@ class UserEP(restful.Resource):
         delete_user(user_id)
         return 'user {id} is all gone'.format(id=user_id)
 
-    def put(self):
-        update_user()
+    def put(self, user_id, new_data):
+        update_user(user_id, **new_data)
         return user
