@@ -31,23 +31,23 @@ def delete_user(token):
 def update_user_rem(token, **kwargs):
     my_user = User.objects(token=token).first()
     for k in kwargs.keys():
-        my_user.update(**{"pull__%s" % k : kwargs[k])
-     my_user.save()
+        my_user.update(**{"pull__%s" % k : kwargs[k]})
+    my_user.save()
     return my_user
 
 def update_user_add(token, **kwargs):
     my_user = User.objects(token=token).first()
     for k in kwargs.keys():
-        my_user.update(**{"push__%s" % k : kwargs[k])
+        my_user.update(**{"push__%s" % k : kwargs[k]})
     my_user.save()
     return my_user
 
 def update_user(token, **kwargs):
     my_user = User.objects(token=token).first()
     for k in kwargs.keys():
-        my_user.update(**{"set__%s" % k : kwargs[k])
+        my_user.update(**{"set__%s" % k : kwargs[k]})
     my_user.save()
-    return my_user 
+    return my_user
 
 #------>
 
@@ -79,13 +79,13 @@ def update_org(org_id, **kwargs):
 def update_org_rem(org_id, **kwargs):
     my_org = Organization.objects(unique=org_id).first()
     for k in kwargs.keys():
-        my_org.update(**{"pull__%s" % k : kwargs[k])
+        my_org.update(**{"pull__%s" % k : kwargs[k]})
     return my_org
 
 def update_org_add(org_id, **kwargs):
     my_org = Organization.objects(unique=org_id).first()
     for k in kwargs.keys():
-        my_org.update(**{"push__%s" % k : kwargs[k])
+        my_org.update(**{"push__%s" % k : kwargs[k]})
     return my_org
 
 
@@ -103,7 +103,7 @@ def get_idea(idea_id):
 
 def delete_idea(idea_id):
     old_idea = Organization.objects(ideas__unique=idea_id)
-    old_idea.first().update(pull__ideas{'unique' : idea_id})
+    old_idea.first().update(pull__ideas={'unique' : idea_id})
     return json.loads(old_idea.first().to_json())
 
 def update_idea():
