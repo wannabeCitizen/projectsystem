@@ -1,4 +1,4 @@
-from flask import Flask, session, redirect, url_for, escape, request
+from flask import Flask, session, redirect, url_for, escape, request, render_template
 from flask_googlelogin import GoogleLogin
 from flask.ext import restful
 from flask.ext.restful import reqparse
@@ -17,7 +17,7 @@ connect('projectsystem')
 
 @app.route('/')
 def index():
-    render_template('index.html')
+    return render_template('index.html')
 
 #Here is an example of how you add an API resource to the app
 #Simply pass the restful resource class and then the URL(s)

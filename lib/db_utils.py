@@ -32,21 +32,18 @@ def update_user_rem(token, **kwargs):
     my_user = User.objects(token=token).first()
     for k in kwargs.keys():
         my_user.update(**{"pull__%s" % k : kwargs[k]})
-    my_user.save()
     return my_user
 
 def update_user_add(token, **kwargs):
     my_user = User.objects(token=token).first()
     for k in kwargs.keys():
         my_user.update(**{"push__%s" % k : kwargs[k]})
-    my_user.save()
     return my_user
 
 def update_user(token, **kwargs):
     my_user = User.objects(token=token).first()
     for k in kwargs.keys():
         my_user.update(**{"set__%s" % k : kwargs[k]})
-    my_user.save()
     return my_user
 
 #------>
