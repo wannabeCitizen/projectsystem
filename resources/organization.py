@@ -24,35 +24,35 @@ post_parser.add_argument(
     help='A short description for organization',
 )
 post_parser.add_argument(
-	'owner', type=str,
-	required=True, location='form',
-	help='The user that owns the organization')
+    'owner', type=str,
+    required=True, location='form',
+    help='The user that owns the organization')
 
 
 class Organization(restful.Resource):
-	def post(self):
-		my_args = post_parser.parse_args()
-		user = get_user(my_args.owner)
-		new_id = str(bson.objectid.ObjectId())
-		organization = create_org()
-		return organization
+    def post(self):
+        my_args = post_parser.parse_args()
+        user = get_user(my_args.owner)
+        new_id = str(bson.objectid.ObjectId())
+        organization = create_org()
+        return organization
 
-	def get(self, org_id):
-		organization = get_org(org_id)
-		return organization
+    def get(self, org_id):
+        organization = get_org(org_id)
+        return organization
 
-	def delete(self, org_id):
-		delete_org(org_id)
-		return 'organization {id} is all gone'.format(id=org_id)
+    def delete(self, org_id):
+        delete_org(org_id)
+        return 'organization {id} is all gone'.format(id=org_id)
 
-	def put(self, org_id, update_type):
-		new_data = request.form
-		if update_type == 'remove':
+    def put(self, org_id, update_type):
+        new_data = request.form
+        if update_type == 'remove':
             organization = update_org_rem(org_id, **new_data)
         elif update_type == 'add':
             organization = update_org_add(org_id, **new_data)
         else:
             organization = update_org(org_id, **new_data)
-		return organization
+        return organization
 
 
