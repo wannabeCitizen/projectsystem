@@ -9,8 +9,6 @@ from lib.model import User, Organization, MiniUser
 
 #<----- User Utilities
 
-user_list_attributes = ['organizations', 'projects', 'ideas', 'notifications']
-
 
 #Returns a json-formatted single user based on google oauth token
 def get_user(g_token):
@@ -30,15 +28,26 @@ def delete_user(token):
     old_user.first().delete()
     return old_user
 
+def update_user_rem(token, **kwargs):
+    my_user = User.objects(token=token).first()
+    for k in kwargs.keys():
+        my_user.update(**{"pull__%s" % k : kwargs[k])
+     my_user.save()
+    return my_user
+
+def update_user_add(token, **kwargs):
+    my_user = User.objects(token=token).first()
+    for k in kwargs.keys():
+        my_user.update(**{"push__%s" % k : kwargs[k])
+    my_user.save()
+    return my_user
+
 def update_user(token, **kwargs):
     my_user = User.objects(token=token).first()
     for k in kwargs.keys():
-        if k in user_list_attributes:
-            my_user.update(**{"push__%s" % k : kwargs[k])
-        else:
-            my_user.update(**{"set__%s" % k : kwargs[k]) 
+        my_user.update(**{"set__%s" % k : kwargs[k])
     my_user.save()
-    return my_user
+    return my_user 
 
 #------>
 
@@ -55,18 +64,30 @@ def delete_org(org_id):
     old_org.first().delete()
     return old_org
 
-
 def create_org(name, unique_id, owner):
-    my_owner = User(token=owner)
+    my_owner = User.objects(token=owner).first()
     new_mini = MiniUser(my_owner.name, my_owner.email, my_owner.token)
     new_org = Organization(name=name, unique=unique_id, owners=new_mini)
+    new_org.save()
     return new_org
 
 def update_org(org_id, **kwargs):
     my_org = Organization.objects(unique=org_id).first()
     my_org.update(**{"set__%s" % k : kwargs[k] for k in kwargs.keys()})
-    my_org.save()
     return my_org
+
+def update_org_rem(org_id, **kwargs):
+    my_org = Organization.objects(unique=org_id).first()
+    for k in kwargs.keys():
+        my_org.update(**{"pull__%s" % k : kwargs[k])
+    return my_org
+
+def update_org_add(org_id, **kwargs):
+    my_org = Organization.objects(unique=org_id).first()
+    for k in kwargs.keys():
+        my_org.update(**{"push__%s" % k : kwargs[k])
+    return my_org
+
 
 
 #--------->

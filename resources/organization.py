@@ -1,3 +1,5 @@
+from flask import request
+
 from flask.ext import restful
 from flask.ext.restful import fields, marshal_with, reqparse
 
@@ -43,8 +45,14 @@ class Organization(restful.Resource):
 		delete_org(org_id)
 		return 'organization {id} is all gone'.format(id=org_id)
 
-	def put(self):
-		update_org()
+	def put(self, org_id, update_type):
+		new_data = request.form
+		if update_type == 'remove':
+            organization = update_org_rem(org_id, **new_data)
+        elif update_type == 'add':
+            organization = update_org_add(org_id, **new_data)
+        else:
+            organization = update_org(org_id, **new_data)
 		return organization
 
 

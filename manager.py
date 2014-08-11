@@ -22,7 +22,7 @@ def index():
 #Here is an example of how you add an API resource to the app
 #Simply pass the restful resource class and then the URL(s)
 #Expected variables are placed in carrot brackets with a type declaration
-api.add_resource(UserEP, '/home/<string:user>', '/user/')
+api.add_resource(UserEP, '/user/<string:user_id>', '/user/<string:user_id>/<string:update_type>')
 
 """
 

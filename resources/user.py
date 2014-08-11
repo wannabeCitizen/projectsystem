@@ -1,3 +1,5 @@
+from flask import request
+
 from flask.ext import restful
 from flask.ext.restful import fields, marshal_with, reqparse
 
@@ -23,7 +25,9 @@ post_parser.add_argument(
 update_parser = reqparse.RequestParser()
 update_parser.add_argument(
     'task', type=str,
-    location='args', help='Figure out if its an add or removal')
+    location='args', 
+    help='Figure out if its an add or removal',
+)
 
 
 
@@ -42,6 +46,12 @@ class UserEP(restful.Resource):
         delete_user(user_id)
         return 'user {id} is all gone'.format(id=user_id)
 
-    def put(self, user_id, new_data):
-        update_user(user_id, **new_data)
+    def put(self, user_id, update_type):
+        new_data = request.form
+        if update_type == 'remove':
+            user = update_user_rem(user_id, **new_data)
+        elif update_type == 'add':
+            user = update_user_add(user_id, **new_data)
+        else:
+            user = update_user(user_id, **new_data)
         return user
