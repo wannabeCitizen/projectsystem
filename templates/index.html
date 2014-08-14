@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-theme.css') }}" />
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap/bootstrap.css') }}" />
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap/bootstrap-theme.css') }}" />
+
+		<link rel="stylesheet" type"text/css" href="{{ url_for('static', filename='css/base.css') }}" />
 
 	</head>
 	
 	<body>
-		<div class="row">
-			<nav class="navbar navbar-inverse navbar-fixed-top">
-				<div class="container-fluid">
-					<div class="navbar-header">
-						<a class="navbar-brand" href="#">Our Projects</a>
+		<div class="container">
+			<div class="row">
+				<nav class="navbar navbar navbar-fixed-top" id="static-head">
+					<div class="navbar-header col-md-4 namesake">
+						<a href="#">Collaborate Democracy</a>
 					</div>
 
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	      				<ul class="nav navbar-nav">
+	      				<ul class="nav navbar-nav navlinks">
 	        				<li><a href="#">Find Projects</a></li>
 	        				<li><a href="#">Home</a></li>
 	          			</ul>
 	          		</div>
-				</div>
-			</nav>
+					
+				</nav>
+			</div>
 		</div>
 
 		<div class="jumbotron">
