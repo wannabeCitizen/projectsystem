@@ -2,4 +2,6 @@
 *.sublime-workspace
 *~
 *.sw*
-*.DS_Store
+*.pyc
+.DS_Store
+/.vagrant

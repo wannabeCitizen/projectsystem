@@ -52,4 +52,4 @@ def create_or_update_user(token, userinfo, **params):
 
 if __name__ == "__main__":
     app.debug = True
-    app.run()
+    app.run('0.0.0.0')
