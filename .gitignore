@@ -2,3 +2,5 @@
 *.sublime-workspace
 *~
 *.sw*
+*.pyc
+.DS_Store
