@@ -19,6 +19,10 @@ connect('projectsystem')
 def index():
     return render_template('index.html')
 
+@app.route('/dev')
+def devIndex():
+    return render_template('devIndex.html')
+
 #Here is an example of how you add an API resource to the app
 #Simply pass the restful resource class and then the URL(s)
 #Expected variables are placed in carrot brackets with a type declaration

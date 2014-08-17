@@ -1,7 +1,15 @@
 *.sublime-project
 *.sublime-workspace
+.idea/
 *~
 *.sw*
 *.pyc
 .DS_Store
 /.vagrant
+bower_components/
+node_modules/
+reports/
+/test/app.templates.js
+static/lib/
+templates/index.html
+static/js/dist/

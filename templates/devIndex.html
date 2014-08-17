@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>projectsystem</title>
+    <link rel="shortcut icon" href="favicon.ico" />
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Prevent this page from being cached -->
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+
+    <style>
+        /* angularjs cloaking */
+        .ng-cloak {
+            display: none;
+        }
+    </style>
+</head>
+
+    <body ng-controller="BaseCtrl">
+        <ps-navbar></ps-navbar>
+
+        <div class="content" ui-view></div>
+
+        <!-- build:js static/js/dist/app.min.js-->
+        <script src="static/lib/requirejs/require.js" data-main="static/js/bootstrap"></script>
+        <!-- /build -->
+    </body>
+</html>
