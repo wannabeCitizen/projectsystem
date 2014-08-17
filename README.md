@@ -13,16 +13,18 @@ You only have to follow these steps once, to get all of the build tools on your 
 
 1. Download and install [nodejs](http://nodejs.org/)
 2. Use NPM (from nodejs) to install [Bower](http://bower.io/), [Grunt](http://gruntjs.com/), and [Karma](http://karma-runner.github.io/)
-```
-npm install -g bower
-npm install -g grunt-cli
-npm install -g karma
-```
+
+  ```
+  npm install -g bower
+  npm install -g grunt-cli
+  npm install -g karma
+  ```
 3. Pull down the build dependencies using NPM
-```
-cd /path/to/project/root
-npm install
-```
+
+  ```
+  cd /path/to/project/root
+  npm install
+  ```
 
 ##### Build
 Whenever the source code changes, it must be rebuilt before it will run in production.
@@ -37,9 +39,10 @@ You can use Vagrant to set up a completely isolated development and test environ
 1. Install [VirtualBox](http://virtualbox.org)
 2. Install [Vagrant](http://vagrantup.com)
 3. From the project folder, start vagrant
-```
-vagrant up
-```
+  
+  ```
+  vagrant up
+  ```
 4. In your browser, navigate to http://127.0.0.1:55555/dev
 5. Any changes to the source will be immediately reflected after a browser refresh
 6. To run the compiled, production code instead, navigate to http://127.0.0.1:55555/
