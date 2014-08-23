@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, jsonify
 
 from flask.ext import restful
 from flask.ext.restful import fields, marshal_with, reqparse
@@ -31,10 +31,11 @@ post_parser.add_argument(
 
 class Organization(restful.Resource):
     def post(self):
-        my_args = post_parser.parse_args()
-        user = get_user(my_args.owner)
-        new_id = str(bson.objectid.ObjectId())
-        organization = create_org()
+        new_org_data = json.loads(request.get_json())
+        #Eventuall will need to add an owner below
+        # user = get_user(my_args.owner)
+        new_org_data['unique'] = str(bson.objectid.ObjectId())
+        organization = create_org(**new_org_data)
         return organization
 
     def get(self, org_id):
@@ -46,13 +47,28 @@ class Organization(restful.Resource):
         return 'organization {id} is all gone'.format(id=org_id)
 
     def put(self, org_id, update_type):
-        new_data = request.form
-        if update_type == 'remove':
-            organization = update_org_rem(org_id, **new_data)
-        elif update_type == 'add':
-            organization = update_org_add(org_id, **new_data)
-        else:
-            organization = update_org(org_id, **new_data)
+        new_data = request.form   
+        organization = update_org(org_id, **new_data)
         return organization
+
+class AllOrgs(restful.Resource):
+    def get(self):
+        all_orgs = get_all_orgs()
+        return all_orgs
+
+
+class OrgMember(restful.Resource):
+    def put(self, org_id):
+        return "worked"
+
+    def delete(self, org_id):
+        return "worked"
+
+class OrgOwner(restful.Resource):
+    def put(self, org_id):
+        return "worked"
+
+    def delete(self, org_id):
+        return "worked"
 
 

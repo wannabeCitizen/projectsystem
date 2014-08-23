@@ -35,7 +35,7 @@ class Idea(EmbeddedDocument):
     # we may want to consider how far down we store references
     # to base_nodes
     base_node = ReferenceField('self')
-    karma = IntField
+    karma = IntField()
 
     meta = {'allow_inheritance': True}
 
@@ -102,16 +102,23 @@ class User(Document):
     ideas = ListField(EmbeddedDocumentField(Idea))
     joined_on = DateTimeField(default=datetime.datetime.now)
     notifications = ListField(EmbeddedDocumentField(Notification))
+    minified = EmbeddedDocumentField(MiniUser)
 
 
 # Organizations are parents of everything except users
 class Organization(Document):
-    name = StringField(required=True)
+    name = StringField()
     unique = UUIDField(required=True, binary=False)
-    description = StringField()
+    open_org = BooleanField(required=True)
+    description = StringField(required=True)
     short_description = StringField(max_length=400)
+    image = ImageField()
     owners = ListField(EmbeddedDocumentField(MiniUser))
     members = ListField(EmbeddedDocumentField(MiniUser))
     projects = ListField(EmbeddedDocumentField(Project))
     ideas = ListField(EmbeddedDocumentField(Idea))
     proposals = ListField(EmbeddedDocumentField(Proposal))
+    pending_members = ListField(EmbeddedDocumentField(MiniUser))
+    pending_owners = ListField(EmbeddedDocumentField(MiniUser))
+    minified = EmbeddedDocumentField(MiniOrganization)
+

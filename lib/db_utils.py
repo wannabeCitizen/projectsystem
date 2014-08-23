@@ -56,15 +56,21 @@ def get_org(org_id):
     data = json.loads(org_str)
     return data
 
+def get_all_orgs():
+    all_orgs = []
+    for orgs in Organization.objects:
+        all_orgs.append(json.loads(orgs.minified.to_json()))
+    return all_orgs
+
 def delete_org(org_id):
     old_org = Organization.objects(unique=org_id)
     old_org.first().delete()
     return old_org
 
-def create_org(name, unique_id, owner):
-    my_owner = User.objects(token=owner).first()
-    new_mini = MiniUser(my_owner.name, my_owner.email, my_owner.token)
-    new_org = Organization(name=name, unique=unique_id, owners=new_mini)
+def create_org(**kwargs):
+    # my_owner = User.objects(token=owner).first()
+    # new_mini = MiniUser(my_owner.name, my_owner.email, my_owner.token)
+    new_org = Organization(**kwargs)
     new_org.save()
     return new_org
 

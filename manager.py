@@ -26,7 +26,11 @@ def devIndex():
 #Here is an example of how you add an API resource to the app
 #Simply pass the restful resource class and then the URL(s)
 #Expected variables are placed in carrot brackets with a type declaration
-api.add_resource(UserEP, '/user/<string:user_id>', '/user/<string:user_id>/<string:update_type>')
+api.add_resource(AllOrgs, '/api/org')
+api.add_resource(Organization, '/api/org/<string:org_id>')
+api.add_resource(OrgMember, 'api/org/<string:org_id/member')
+api.add_resource(OrgOwner, 'api/org/<string:org_id/owner')
+
 
 """
 
