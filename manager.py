@@ -3,8 +3,7 @@ from flask_googlelogin import GoogleLogin
 from flask.ext import restful
 from flask.ext.restful import reqparse
 
-from resources.organization import Organization
-from resources.user import UserEP
+from resources.organization import Organization, OrgMember, OrgOwner, AllOrgs
 
 from mongoengine import connect
 
@@ -28,8 +27,8 @@ def devIndex():
 #Expected variables are placed in carrot brackets with a type declaration
 api.add_resource(AllOrgs, '/api/org')
 api.add_resource(Organization, '/api/org/<string:org_id>')
-api.add_resource(OrgMember, 'api/org/<string:org_id/member')
-api.add_resource(OrgOwner, 'api/org/<string:org_id/owner')
+api.add_resource(OrgMember, '/api/org/<string:org_id>/member')
+api.add_resource(OrgOwner, '/api/org/<string:org_id>/owner')
 
 
 """
