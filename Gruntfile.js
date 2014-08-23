@@ -73,7 +73,7 @@ module.exports = function (grunt) {
             test: {
                 src: 'static/template/**.html',
                 cwd: './',
-                dest: 'test/app.templates.js',
+                dest: 'test/app.templates.js'
             }
         },
 
@@ -155,7 +155,7 @@ module.exports = function (grunt) {
                     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
                     browsers: [
                         'Chrome',
-                        //'Firefox',
+                        'Firefox',
                         'PhantomJS'
                     ],
 

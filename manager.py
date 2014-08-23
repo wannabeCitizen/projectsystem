@@ -4,7 +4,8 @@ from flask_login import (UserMixin, login_required, login_user, logout_user,
                          current_user)
 from flask_googlelogin import GoogleLogin
 
-from resources.organization import Organization, AllOrgs, Organization, OrgMember, OrgOwner
+
+from resources.organization import Organization, OrgMember, OrgOwner, AllOrgs
 
 from mongoengine import connect
 
