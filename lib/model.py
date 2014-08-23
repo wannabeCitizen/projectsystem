@@ -104,6 +104,18 @@ class User(Document):
     notifications = ListField(EmbeddedDocumentField(Notification))
     minified = EmbeddedDocumentField(MiniUser)
 
+    def is_active(self):
+        return True
+
+    def is_authenticated(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        pass
+
 
 # Organizations are parents of everything except users
 class Organization(Document):
@@ -112,7 +124,7 @@ class Organization(Document):
     open_org = BooleanField(required=True)
     description = StringField(required=True)
     short_description = StringField(max_length=400)
-    image = ImageField()
+    image = FileField()
     owners = ListField(EmbeddedDocumentField(MiniUser))
     members = ListField(EmbeddedDocumentField(MiniUser))
     projects = ListField(EmbeddedDocumentField(Project))
