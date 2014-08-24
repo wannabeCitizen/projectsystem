@@ -32,7 +32,6 @@ post_parser.add_argument(
 
 
 class Organization(restful.Resource):
-
     def get(self, org_id):
         organization = get_org(org_id)
         return organization
@@ -50,7 +49,7 @@ class AllOrgs(restful.Resource):
     def get(self):
         all_orgs = get_all_orgs()
         return all_orgs
-
+    
     def post(self):
         new_org_data = request.get_json()
         #Eventuall will need to add an owner below
