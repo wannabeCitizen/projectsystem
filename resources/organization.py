@@ -11,18 +11,18 @@ import json
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument(
-    'name',type=str, 
-    location='form', required=True, 
+    'name',type=str,
+    location='form', required=True,
     help='The organization name',
 )
 post_parser.add_argument(
-    'description',type=str, 
-    location='form', required=True, 
+    'description',type=str,
+    location='form', required=True,
     help='The organization description',
 )
 post_parser.add_argument(
-    'short_description',type=str, 
-    location='form', 
+    'short_description',type=str,
+    location='form',
     help='A short description for organization',
 )
 post_parser.add_argument(
@@ -40,8 +40,8 @@ class Organization(restful.Resource):
         delete_org(org_id)
         return 'organization {id} is all gone'.format(id=org_id)
 
-    def put(self, org_id, update_type):
-        new_data = request.get_json()   
+    def put(self, org_id):
+        new_data = request.get_json()
         organization = update_org(org_id, **new_data)
         return organization
 
@@ -49,7 +49,7 @@ class AllOrgs(restful.Resource):
     def get(self):
         all_orgs = get_all_orgs()
         return all_orgs
-    
+
     def post(self):
         new_org_data = request.get_json()
         #Eventuall will need to add an owner below

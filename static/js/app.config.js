@@ -18,11 +18,17 @@ define([], function () {
             })
             .state('newOrg', {
                 url: '/org/new',
-                templateUrl: 'static/template/newOrg.html'
+                templateUrl: 'static/template/editOrg.html',
+                controller: 'NewOrgCtrl'
             })
             .state('org', {
                 url: '/org/:id',
                 templateUrl: 'static/template/org.html'
+            })
+            .state('editOrg', {
+                url: '/org/:id/edit',
+                templateUrl: 'static/template/editOrg.html',
+                controller: 'EditOrgCtrl'
             });
     }];
 });

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<div class="org" ng-controller="NewOrgCtrl">
+<div class="org">
     <div class="form-horizontal">
-        <h1>Create a new Organization</h1>
+        <h1>{{heading}}</h1>
 
         <form name="orgForm" novalidate>
             <div class="form-group" ng-class="formStyle('name')">
@@ -23,8 +23,8 @@
                     <div class="well" marked="org.description" ng-show="org.description.length"></div>
                 </div>
             </div>
-            
-            
+
+
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <div class="checkbox">
@@ -42,8 +42,8 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <button type="button" class="btn btn-primary" ng-click="create()" ng-disabled="orgForm.$invalid || createSpin">
-                        <i class="fa" ng-class="{'fa-spinner': createSpin, 'fa-spin': createSpin, 'fa-plus': !createSpin}"></i> Create
+                    <button type="button" class="btn btn-primary" ng-click="action()" ng-disabled="orgForm.$invalid || spin">
+                        <i ng-class="actionIcon()"></i> {{actionLabel}}
                     </button>
                 </div>
             </div>

@@ -7,7 +7,9 @@ define([], function () {
     var factory = {};
 
     factory.OrgApi = ['$resource', function ($resource) {
-        return $resource('/api/org/:orgId', {orgId: '@unique'});
+        return $resource('/api/org/:orgId', {orgId: '@unique'}, {
+            update: { method: 'PUT' }
+        });
     }];
 
     return factory;
