@@ -15,13 +15,16 @@ requirejs.config({
         'angular-ui-router': "../lib/angular-ui-router/angular-ui-router",
         'angular-strap': "../lib/angular-strap/dist/angular-strap",
         'angular-strap-tpl': "../lib/angular-strap/dist/angular-strap.tpl",
+        marked: "../lib/marked/marked",
         fastclick: "../lib/fastclick/fastclick",
         moment: "../lib/moment/moment",
         underscore: "../lib/underscore/underscore",
         css: "../lib/require-css/css",
         less: "../lib/require-less/less",
         lessc: "../lib/require-less/lessc",
-        normalize: "../lib/require-less/normalize"
+        normalize: "../lib/require-less/normalize",
+        gapi: "https://apis.google.com/js/api",
+        'google-plus-signin': "../lib/angular-directive.g-signin/google-plus-signin"
     },
 
     shim: {
@@ -29,12 +32,16 @@ requirejs.config({
             deps: ['jquery'],
             exports: 'angular'
         },
+        gapi: {
+            exports: 'gapi'
+        },
         'angular-animate': ['angular'],
         'angular-sanitize': ['angular'],
         'angular-resource': ['angular'],
         'angular-strap': ['angular', 'angular-animate'],
         'angular-strap-tpl': ['angular', 'angular-animate', 'angular-strap'],
-        'angular-ui-router': ['angular']
+        'angular-ui-router': ['angular'],
+        'google-plus-signin': ['angular']
     },
 
     less: {

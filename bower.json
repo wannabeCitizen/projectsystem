@@ -1,39 +1,44 @@
 {
-    "name": "angular-seed",
-    "description": "A seed project for angularjs web applications",
-    "private": true,
-    "dependencies": {
-        "requirejs": "~2.1",
-        "almond": "~0.2",
-        "require-css": "~0.1",
-        "angular": "~1.2",
-        "angular-animate": "~1.2",
-        "angular-mocks": "~1.2",
-        "angular-resource": "~1.2",
-        "angular-sanitize": "~1.2",
-        "angular-strap": "~2.0",
-        "angular-motion": "~0.3",
-        "bootstrap-additions": "~0.2",
-        "angular-ui-router": "~0.2",
-        "jquery": "~1.11",
-        "fastclick": "~1",
-        "moment": "~2",
-        "underscore": "~1",
-        "fontawesome": "~4",
-        "require-less": "~0.1"
+  "name": "angular-seed",
+  "description": "A seed project for angularjs web applications",
+  "private": true,
+  "dependencies": {
+    "requirejs": "~2.1",
+    "almond": "~0.2",
+    "require-css": "~0.1",
+    "angular": "~1.2",
+    "angular-animate": "~1.2",
+    "angular-mocks": "~1.2",
+    "angular-resource": "~1.2",
+    "angular-sanitize": "~1.2",
+    "angular-strap": "~2.0",
+    "angular-motion": "~0.3",
+    "bootstrap-additions": "~0.2",
+    "angular-ui-router": "~0.2",
+    "jquery": "~1.11",
+    "fastclick": "~1",
+    "moment": "~2",
+    "underscore": "~1",
+    "fontawesome": "~4",
+    "require-less": "~0.1",
+    "marked": "~0.3",
+    "angular-directive.g-signin": "*"
+  },
+  "exportsOverride": {
+    "bootstrap": {
+      "less": "less/*.less",
+      "less/mixins": "less/mixins/*.less",
+      "fonts": "fonts/*"
     },
-    "exportsOverride": {
-        "bootstrap": {
-            "less": "less/*.less",
-            "less/mixins": "less/mixins/*.less",
-            "fonts": "fonts/*"
-        },
-        "fontawesome": {
-            "less": "less/*.less",
-            "fonts": "fonts/*"
-        },
-        "require-less": {
-            "": "*.js"
-        }
+    "fontawesome": {
+      "less": "less/*.less",
+      "fonts": "fonts/*"
+    },
+    "require-less": {
+      "": "*.js"
+    },
+    "marked": {
+      "": "lib/marked.js"
     }
+  }
 }

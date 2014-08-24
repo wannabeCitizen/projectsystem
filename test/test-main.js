@@ -30,16 +30,22 @@
             'angular-ui-router': "/base/static/lib/angular-ui-router/angular-ui-router",
             'angular-strap': "/base/static/lib/angular-strap/angular-strap.min",
             'angular-strap-tpl': "/base/static/lib/angular-strap/angular-strap.tpl.min",
+            marked: "/base/static/lib/marked/marked",
             fastclick: "/base/static/lib/fastclick/fastclick",
             moment: "/base/static/lib/moment/moment",
             underscore: "/base/static/lib/underscore/underscore",
-            css: "/base/static/lib/require-css/css"
+            css: "/base/static/lib/require-css/css",
+            gapi: "https://apis.google.com/js/api",
+            'google-plus-signin': "../lib/angular-directive.g-signin/google-plus-signin"
         },
 
         shim: {
             angular: {
                 deps: ['jquery'],
                 exports: 'angular'
+            },
+            gapi: {
+                exports: 'gapi'
             },
             'angular-animate': ['angular'],
             'angular-sanitize': ['angular'],
@@ -50,7 +56,8 @@
             },
             'angular-strap': ['angular', 'angular-animate'],
             'angular-strap-tpl': ['angular', 'angular-animate', 'angular-strap'],
-            'angular-ui-router': ['angular']
+            'angular-ui-router': ['angular'],
+            'google-plus-signin': ['angular']
         },
 
         // dynamically load all test files

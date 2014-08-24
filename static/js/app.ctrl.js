@@ -6,13 +6,15 @@ define([], function () {
 
     var ctrl = {};
 
-    ctrl.BaseCtrl = ['$scope', 'MessageSvc', function ($scope, msg) {
-        $scope.msg = msg;
-    }];
+    ctrl.BaseCtrl = ['$scope', 'MessageSvc',
+        function ($scope, msg) {
+            $scope.msg = msg;
+        }];
 
-    ctrl.P1Ctrl = ['$scope', function ($scope) {
-        $scope.data = 'Check out this data binding!';
-    }];
+    ctrl.P1Ctrl = ['$scope',
+        function ($scope) {
+            $scope.data = 'Check out this data binding!';
+        }];
 
     return ctrl;
 });

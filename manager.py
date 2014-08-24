@@ -31,7 +31,6 @@ connect('projectsystem')
 def load_user(userid):
     return User.objects(google_id=userid).first()
 
-  
 
 @app.route('/logout')
 def logout():

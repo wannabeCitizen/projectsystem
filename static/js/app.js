@@ -4,7 +4,7 @@
 // Create the main application module
 define([
     'angular',
-    
+
     // app components
     'app.config',
     'app.directive',
@@ -13,14 +13,15 @@ define([
     'app.templates',
     'org.ctrl',
     'org.svc',
-    
+
     // angular modules
     'angular-ui-router',
-    'angular-resource'
+    'angular-resource',
+    'google-plus-signin'
 ], function (angular, appConfig, appDir, appSvc, appCtrl, appTemplates, orgCtrl, orgSvc) {
     'use strict';
 
-    return angular.module('MainAppModule', ['ui.router', 'ngResource'])
+    return angular.module('MainAppModule', ['ui.router', 'ngResource', 'directive.g+signin'])
         .config(appConfig)
         .directive(appDir)
         .factory(appSvc)
