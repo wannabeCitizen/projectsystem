@@ -14,7 +14,7 @@ define([], function () {
             }, function (err) {
                 msg.debug(err);
             });
-    }];
+        }];
 
     ctrl.OrgCtrl = ['$scope', '$stateParams', 'OrgApi', 'MessageSvc',
         function ($scope, $stateParams, OrgApi, msg) {
@@ -28,7 +28,7 @@ define([], function () {
             }).finally(function () {
                 $scope.loading = false;
             });
-    }];
+        }];
 
     ctrl.NewOrgCtrl = ['$scope', '$state', 'OrgApi', 'MessageSvc',
         function ($scope, $state, OrgApi, msg) {
@@ -56,7 +56,7 @@ define([], function () {
                     $scope.createSpin = false;
                 });
             };
-    }];
+        }];
 
     return ctrl;
 });

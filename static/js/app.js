@@ -4,7 +4,7 @@
 // Create the main application module
 define([
     'angular',
-    
+
     // app components
     'app.config',
     'app.directive',
@@ -13,7 +13,7 @@ define([
     'app.templates',
     'org.ctrl',
     'org.svc',
-    
+
     // angular modules
     'angular-ui-router',
     'angular-resource'

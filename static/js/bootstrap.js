@@ -15,6 +15,7 @@ requirejs.config({
         'angular-ui-router': "../lib/angular-ui-router/angular-ui-router",
         'angular-strap': "../lib/angular-strap/dist/angular-strap",
         'angular-strap-tpl': "../lib/angular-strap/dist/angular-strap.tpl",
+        marked: "../lib/marked/marked",
         fastclick: "../lib/fastclick/fastclick",
         moment: "../lib/moment/moment",
         underscore: "../lib/underscore/underscore",

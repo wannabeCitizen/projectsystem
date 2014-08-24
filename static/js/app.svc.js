@@ -6,54 +6,57 @@ define([], function () {
 
     var factory = {};
 
-    factory.MessageSvc = ['$timeout', '$log', function ($timeout, $log) {
-        var svc = {
-            autoDismiss: 5000,
-            messages: []
-        };
-
-        svc.add = function (err, txt) {
-            var msg = {
-                error: err,
-                txt: txt,
-                dismissed: false
+    factory.MessageSvc = ['$timeout', '$log',
+        function ($timeout, $log) {
+            var svc = {
+                autoDismiss: 5000,
+                messages: []
             };
-            svc.messages.push(msg);
 
-            if (svc.autoDismiss) {
-                $timeout(function () {
-                    msg.dismissed = true;
-                }, svc.autoDismiss);
-            }
-        };
+            svc.add = function (err, txt) {
+                var msg = {
+                    error: err,
+                    txt: txt,
+                    dismissed: false
+                };
+                svc.messages.push(msg);
 
-        svc.error = function (txt) {
-            $log.error(txt);
-            svc.add(true, txt);
-        };
+                if (svc.autoDismiss) {
+                    $timeout(function () {
+                        msg.dismissed = true;
+                    }, svc.autoDismiss);
+                }
+            };
 
-        svc.success = function (txt) {
-            $log.log(txt);
-            svc.add(false, txt);
-        };
+            svc.error = function (txt) {
+                $log.error(txt);
+                svc.add(true, txt);
+            };
 
-        svc.clear = function () {
-            svc.messages.length = 0;
-        };
-        
-        svc.debug = function (txt) {
-            $log.debug(txt);
-        };
+            svc.success = function (txt) {
+                $log.log(txt);
+                svc.add(false, txt);
+            };
 
-        svc.last = function () {
-            if (svc.messages.length === 0) { return false; }
+            svc.clear = function () {
+                svc.messages.length = 0;
+            };
 
-            var msg = svc.messages[svc.messages.length - 1];
-            return msg.dismissed ? false : msg;
-        };
+            svc.debug = function (txt) {
+                $log.debug(txt);
+            };
 
-        return svc;
-    }];
+            svc.last = function () {
+                if (svc.messages.length === 0) {
+                    return false;
+                }
+
+                var msg = svc.messages[svc.messages.length - 1];
+                return msg.dismissed ? false : msg;
+            };
+
+            return svc;
+        }];
 
     return factory;
 });

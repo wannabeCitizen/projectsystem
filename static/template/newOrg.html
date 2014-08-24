@@ -13,15 +13,17 @@
             <div class="form-group" ng-class="formStyle('short')">
                 <label class="control-label col-sm-2">Short Description</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" ng-model="org.short_description" name="short" placeholder="Give your organization a tagline"/>
+                    <input type="text" class="form-control" ng-model="org.short_description" name="short" placeholder="Give this organization a tagline"/>
                 </div>
             </div>
             <div class="form-group" ng-class="formStyle('description')">
                 <label class="control-label col-sm-2">Description</label>
                 <div class="col-sm-10">
-                    <textarea class="form-control" rows="4" ng-model="org.description" name="description" placeholder="Description" required/>
+                    <textarea class="form-control" rows="6" ng-model="org.description" name="description" placeholder="Enter a description (supports markdown syntax)" required/>
+                    <div class="well" marked="org.description" ng-show="org.description.length"></div>
                 </div>
             </div>
+            
             
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">

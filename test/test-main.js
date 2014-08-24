@@ -30,6 +30,7 @@
             'angular-ui-router': "/base/static/lib/angular-ui-router/angular-ui-router",
             'angular-strap': "/base/static/lib/angular-strap/angular-strap.min",
             'angular-strap-tpl': "/base/static/lib/angular-strap/angular-strap.tpl.min",
+            marked: "/base/static/lib/marked/marked",
             fastclick: "/base/static/lib/fastclick/fastclick",
             moment: "/base/static/lib/moment/moment",
             underscore: "/base/static/lib/underscore/underscore",
