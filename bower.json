@@ -21,7 +21,8 @@
     "underscore": "~1",
     "fontawesome": "~4",
     "require-less": "~0.1",
-    "marked": "~0.3"
+    "marked": "~0.3",
+    "angular-directive.g-signin": "*"
   },
   "exportsOverride": {
     "bootstrap": {

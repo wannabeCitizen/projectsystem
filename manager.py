@@ -20,7 +20,7 @@ app.config.update(
     SECRET_KEY='a3l2kfn93+09cn]diosu9fen[Nofo3indcMJdkjJDJ29',
     GOOGLE_LOGIN_CLIENT_ID='666333715586-orteiqqs7eq4h6he61epr2eg1fkm3e55.apps.googleusercontent.com',
     GOOGLE_LOGIN_CLIENT_SECRET='dF6S3MbnyHzP5WG9eBe1u_o0',
-    GOOGLE_LOGIN_REDIRECT_URI='http://localhost:5000/oauth2callback')
+    GOOGLE_LOGIN_REDIRECT_URI='http://127.0.0.1/dev/oauth2callback')
 
 googlelogin = GoogleLogin(app)
 
@@ -31,7 +31,7 @@ def load_user(userid):
     return User.objects(google_id=userid).first()
 
 
-@app.route('/oauth2callback')
+@app.route('/dev/oauth2callback')
 @googlelogin.oauth2callback
 def login(token, userinfo, **params):
     user = User.objects(google_id=userinfo['id']).first()
@@ -42,7 +42,7 @@ def login(token, userinfo, **params):
         user.save()
 
     login_user(user)
-    return render_template('devIndex.html', json.loads(user.to_json()))   
+    return render_template('devIndex.html', json.loads(user.to_json()))
 
 @app.route('/logout')
 def logout():

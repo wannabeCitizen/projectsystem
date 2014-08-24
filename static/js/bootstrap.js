@@ -22,7 +22,9 @@ requirejs.config({
         css: "../lib/require-css/css",
         less: "../lib/require-less/less",
         lessc: "../lib/require-less/lessc",
-        normalize: "../lib/require-less/normalize"
+        normalize: "../lib/require-less/normalize",
+        gapi: "https://apis.google.com/js/api",
+        'google-plus-signin': "../lib/angular-directive.g-signin/google-plus-signin"
     },
 
     shim: {
@@ -30,12 +32,16 @@ requirejs.config({
             deps: ['jquery'],
             exports: 'angular'
         },
+        gapi: {
+            exports: 'gapi'
+        },
         'angular-animate': ['angular'],
         'angular-sanitize': ['angular'],
         'angular-resource': ['angular'],
         'angular-strap': ['angular', 'angular-animate'],
         'angular-strap-tpl': ['angular', 'angular-animate', 'angular-strap'],
-        'angular-ui-router': ['angular']
+        'angular-ui-router': ['angular'],
+        'google-plus-signin': ['angular']
     },
 
     less: {
