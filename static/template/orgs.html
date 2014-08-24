@@ -3,8 +3,8 @@
     <h1>All Organizations</h1>
     <button class="btn btn-link" ui-sref="newOrg"><i class="fa fa-plus"></i> Create a new organization</button>
     
-    <div ng-repeat="org in list" ui-sref="org({id: org.unique})">
-        <h3>{{org.name}}</h3>
-        <p>{{org.short_description}}</p>
+    <div class="org-list" ng-repeat="org in list" ui-sref="org({id: org.unique})">
+        <h2 class="org-name">{{org.name}}</h2>
+        <p class="org-desc">{{org.short_description}}</p>
     </div>
 </div>

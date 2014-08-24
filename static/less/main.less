@@ -29,3 +29,22 @@ body {
         float: right;
     }
 }
+
+.orgs {
+    .org-list {
+        margin: 0 -10px;
+        padding: 10px;
+        border: 1px solid transparent;
+        &:hover {
+            background-color: fade(@btn-primary-bg, 50%);
+            border: 1px solid @btn-primary-border;
+            cursor: pointer;
+        }
+        .org-name {
+            margin: 0;
+        }
+        .org-desc {
+            margin: 0;
+        }
+    }
+}
