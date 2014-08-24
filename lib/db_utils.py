@@ -4,7 +4,7 @@ For Handling all the db calls
 import json
 import datetime
 
-from lib.model import User, Organization, MiniUser
+from lib.model import User, Organization, MiniUser, MiniOrganization
 
 
 #<----- User Utilities
@@ -59,7 +59,8 @@ def get_org(org_id):
 def get_all_orgs():
     all_orgs = []
     for orgs in Organization.objects:
-        all_orgs.append(json.loads(orgs.minified.to_json()))
+        if orgs.minified:
+            all_orgs.append(json.loads(orgs.minified.to_json()))
     return all_orgs
 
 def delete_org(org_id):
@@ -71,6 +72,7 @@ def create_org(**kwargs):
     # my_owner = User.objects(token=owner).first()
     # new_mini = MiniUser(my_owner.name, my_owner.email, my_owner.token)
     new_org = Organization(**kwargs)
+    new_org.minified = MiniOrganization(name=kwargs['name'], description=kwargs['description'], unique=kwargs['unique'])
     new_org.save()
     return new_org
 
