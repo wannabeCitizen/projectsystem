@@ -56,7 +56,7 @@ class AllOrgs(restful.Resource):
         # user = get_user(my_args.owner)
         new_org_data['unique'] = uuid.uuid4()
         organization = create_org(**new_org_data)
-        return organization
+        return json.loads(organization.to_json())
 
 
 class OrgMember(restful.Resource):

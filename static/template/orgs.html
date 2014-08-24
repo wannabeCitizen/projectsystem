@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <div class="orgs" ng-controller="OrgsCtrl">
     <h1>All Organizations</h1>
+    <button class="btn btn-link" ui-sref="newOrg"><i class="fa fa-plus"></i> Create a new organization</button>
     
-    <div ng-repeat="org in list">
+    <div ng-repeat="org in list" ui-sref="org({id: org.unique})">
         <h3>{{org.name}}</h3>
         <p>{{org.short_description}}</p>
     </div>

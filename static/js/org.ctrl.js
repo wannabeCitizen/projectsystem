@@ -33,7 +33,7 @@ define([], function () {
             $scope.createSpin = true;
             var neworg = new OrgApi($scope.org);
             neworg.$save().then(function (org) {
-                $state.go('org', {orgId: org.unique});
+                $state.go('org', {id: org.unique});
             }, function (err) {
                 msg.debug(err);
                 $scope.errMsg = 'Failed to create the organization. Try again.';

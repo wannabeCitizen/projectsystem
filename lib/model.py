@@ -121,7 +121,7 @@ class User(Document):
 class Organization(Document):
     name = StringField()
     unique = UUIDField(required=True, binary=False)
-    open_org = BooleanField(required=True)
+    open_org = BooleanField(default=False)
     description = StringField(required=True)
     short_description = StringField(max_length=400)
     image = FileField()
