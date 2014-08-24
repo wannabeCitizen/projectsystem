@@ -6,28 +6,49 @@ define(['marked', 'gapi'], function (marked, gapi) {
 
     var dir = {};
 
-    dir.psNavbar = ['$http', 'MessageSvc', function ($http, msg) {
+    dir.psNavbar = ['$http', '$rootScope', '$log', function ($http, $rootScope, $log) {
         return {
             restrict: 'E',
             templateUrl: 'static/template/navbar.html',
             scope: true,
             link: function (scope) {
-                scope.$on('event:google-plus-signin-success', function (event, authResult) {
+                $rootScope.$on('event:google-plus-signin-success', function (event, authResult) {
                     // Send login to server or save into cookie
-                    msg.success('Login worked!');
-                    msg.success(authResult);
-                    scope.googleAuth = authResult;
+                    $log.log('user authenticated', authResult);
+                    $rootScope.googleAuth = authResult;
                     $http.post('/api/login', authResult).then(function (response) {
-                        msg.success('login api success: ' + response.data);
+                        $log.log('login api success', response.data);
+                        $rootScope.currentUser = response.data;
                     }, function (err) {
-                        msg.error('login api fail: ' + err);
+                        $log.error('login api fail', err);
+                        $rootScope.currentUser = null;
+                    });
+
+                    gapi.client.load('plus', 'v1', function () {
+                        var request = gapi.client.plus.people.get({
+                            'userId': 'me'
+                        });
+                        request.execute(function (resp) {
+                            $log.log('google plus api', resp);
+                            $rootScope.googlePlus = resp;
+                            $rootScope.$digest();
+                        });
                     });
                 });
-                scope.$on('event:google-plus-signin-failure', function (event, authResult) {
+                $rootScope.$on('event:google-plus-signin-failure', function (event, authResult) {
                     // Auth failure or signout detected
-                    msg.error('Sign-in state: ' + authResult.error);
-                    scope.googleAuth = authResult;
+                    $log.log('user logout or auth error', authResult);
+                    $rootScope.googleAuth = authResult;
+                    $rootScope.currentUser = null;
+                    $rootScope.googlePlus = null;
                 });
+
+                scope.userDrop = [
+                    {
+                        "text": "Logout",
+                        "click": "logout()"
+                    }
+                ];
 
                 scope.logout = function () {
                     gapi.auth.signOut();

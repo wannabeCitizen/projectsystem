@@ -21,11 +21,16 @@
                 <li ui-sref-active="active">
                     <a ui-sref="orgs">Organizations</a>
                 </li>
-                <li class="google" ng-hide="googleAuth.status.signed_in">
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="google" ng-hide="googleAuth.status.signed_in || currentUser || googlePlus">
                     <google-plus-signin clientid="666333715586-orteiqqs7eq4h6he61epr2eg1fkm3e55.apps.googleusercontent.com"></google-plus-signin>
                 </li>
-                <li ng-show="googleAuth.status.signed_in">
-                    <a href ng-click="logout()">Logout</a>
+                <li ng-show="googleAuth.status.signed_in || currentUser || googlePlus" class="user dropdown">
+                    <a href class="dropdown-toggle" bs-dropdown="userDrop">
+                        <img src="{{googlePlus.image.url}}"/>
+                        {{googlePlus.displayName || currentUser.name}} <span class="caret"></span>
+                    </a>
                 </li>
             </ul>
         </div>

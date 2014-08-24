@@ -17,11 +17,12 @@ define([
     // angular modules
     'angular-ui-router',
     'angular-resource',
-    'google-plus-signin'
+    'google-plus-signin',
+    'angular-strap-tpl'
 ], function (angular, appConfig, appDir, appSvc, appCtrl, appTemplates, orgCtrl, orgSvc) {
     'use strict';
 
-    return angular.module('MainAppModule', ['ui.router', 'ngResource', 'directive.g+signin'])
+    return angular.module('MainAppModule', ['ui.router', 'ngResource', 'directive.g+signin', 'mgcrea.ngStrap'])
         .config(appConfig)
         .directive(appDir)
         .factory(appSvc)
