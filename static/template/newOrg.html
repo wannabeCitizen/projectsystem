@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<div class="org" ng-controller="NewOrgCtrl">
+    <div class="form-horizontal">
+        <h1>Create a new Organization</h1>
+
+        <form name="orgForm" novalidate>
+            <div class="form-group" ng-class="formStyle('name')">
+                <label class="control-label col-sm-2">Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" ng-model="org.name" name="name" placeholder="Name" required/>
+                </div>
+            </div>
+            <div class="form-group" ng-class="formStyle('description')">
+                <label class="control-label col-sm-2">Description</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" rows="4" ng-model="org.description" name="description" placeholder="Description" required/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="org.open_org">Open organization (anyone can join without confirmation)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-10 col-sm-offset-2 text-danger" ng-show="errMsg">
+                    {{errMsg}}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" class="btn btn-primary" ng-click="create()" ng-disabled="orgForm.$invalid || createSpin">
+                        <i class="fa" ng-class="{'fa-spinner': createSpin, 'fa-spin': createSpin, 'fa-plus': !createSpin}"></i> Create
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

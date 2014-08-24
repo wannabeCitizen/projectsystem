@@ -6,7 +6,7 @@ define([], function () {
 
     var factory = {};
 
-    factory.MessageService = ['$timeout', function ($timeout) {
+    factory.MessageSvc = ['$timeout', '$log', function ($timeout, $log) {
         var svc = {
             autoDismiss: 5000,
             messages: []
@@ -28,15 +28,21 @@ define([], function () {
         };
 
         svc.error = function (txt) {
+            $log.error(txt);
             svc.add(true, txt);
         };
 
         svc.success = function (txt) {
+            $log.log(txt);
             svc.add(false, txt);
         };
 
         svc.clear = function () {
             svc.messages.length = 0;
+        };
+        
+        svc.debug = function (txt) {
+            $log.debug(txt);
         };
 
         svc.last = function () {

@@ -6,7 +6,7 @@ define([], function () {
 
     var ctrl = {};
 
-    ctrl.BaseCtrl = ['$scope', 'MessageService', function ($scope, msg) {
+    ctrl.BaseCtrl = ['$scope', 'MessageSvc', function ($scope, msg) {
         $scope.msg = msg;
     }];
 

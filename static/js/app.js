@@ -2,13 +2,30 @@
 /*global define */
 
 // Create the main application module
-define(['angular', 'app.config', 'app.directive', 'app.svc', 'app.ctrl', 'app.templates', 'angular-ui-router'], function (angular, appConfig, appDir, appSvc, appCtrl, appTemplates) {
+define([
+    'angular',
+    
+    // app components
+    'app.config',
+    'app.directive',
+    'app.svc',
+    'app.ctrl',
+    'app.templates',
+    'org.ctrl',
+    'org.svc',
+    
+    // angular modules
+    'angular-ui-router',
+    'angular-resource'
+], function (angular, appConfig, appDir, appSvc, appCtrl, appTemplates, orgCtrl, orgSvc) {
     'use strict';
 
-    return angular.module('MainAppModule', ['ui.router'])
+    return angular.module('MainAppModule', ['ui.router', 'ngResource'])
         .config(appConfig)
         .directive(appDir)
         .factory(appSvc)
         .controller(appCtrl)
-        .run(appTemplates);
+        .run(appTemplates)
+        .controller(orgCtrl)
+        .factory(orgSvc);
 });
