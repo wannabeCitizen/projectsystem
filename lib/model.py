@@ -96,7 +96,7 @@ class Notification(EmbeddedDocument):
 class User(Document):
     name = StringField(max_length=50, required=True)
     email = EmailField(required=True)
-    token = StringField(required=True)
+    google_id = StringField(required=True)
     organizations = ListField(EmbeddedDocumentField(MiniOrganization))
     projects = ListField(EmbeddedDocumentField(Project))
     ideas = ListField(EmbeddedDocumentField(Idea))

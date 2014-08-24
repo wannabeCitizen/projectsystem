@@ -12,19 +12,14 @@ from lib.model import User, Organization, MiniUser, MiniOrganization
 
 #Returns a json-formatted single user based on google oauth token
 def get_user(g_token):
-    my_user = User.objects(token=g_token)
+    my_user = User.objects(google_id=g_token)
     user_str = my_user.first().to_json()
     data = json.loads(user_str)
     return data
 
-def create_user(name, address, token):
-    current_time = datetime.datetime.now()
-    new_user = User(name=name, email=address, token=token, join_on=current_time)
-    new_user.save()
-    return new_user
 
 def delete_user(token):
-    old_user = User.objects(token=token)
+    old_user = User.objects(google_id=token)
     old_user.first().delete()
     return old_user
 
@@ -41,7 +36,7 @@ def update_user_add(token, **kwargs):
     return my_user
 
 def update_user(token, **kwargs):
-    my_user = User.objects(token=token).first()
+    my_user = User.objects(google_id=token).first()
     for k in kwargs.keys():
         my_user.update(**{"set__%s" % k : kwargs[k]})
     return my_user

@@ -31,11 +31,7 @@ update_parser.add_argument(
 
 
 
-class UserEP(restful.Resource):
-    def post(self):
-        my_args = post_parser.parse_args()
-        user = create_user(my_args['name'], my_args['email'], myargs['token'])
-        return user
+class User(restful.Resource):
 
     #user_id will be an oauth token from google
     def get(self, user_id):

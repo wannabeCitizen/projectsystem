@@ -10,17 +10,43 @@ from resources.organization import Organization, OrgMember, OrgOwner, AllOrgs
 
 from mongoengine import connect
 
-app = Flask(__name__)
-app.secret_key = 'a3l2kfn93+09cn]diosu9fen[Nofo3indcMJdkjJDJ29'
+import json
+import datetime
 
+app = Flask(__name__)
 api = restful.Api(app)
+
+app.config.update(
+    SECRET_KEY='a3l2kfn93+09cn]diosu9fen[Nofo3indcMJdkjJDJ29',
+    GOOGLE_LOGIN_CLIENT_ID='666333715586-orteiqqs7eq4h6he61epr2eg1fkm3e55.apps.googleusercontent.com',
+    GOOGLE_LOGIN_CLIENT_SECRET='dF6S3MbnyHzP5WG9eBe1u_o0',
+    GOOGLE_LOGIN_REDIRECT_URI='http://localhost:5000/oauth2callback')
+
 googlelogin = GoogleLogin(app)
 
 connect('projectsystem')
 
 @googlelogin.user_loader
-def load_user(token):
-    return User.objects(token=token).first()
+def load_user(userid):
+    return User.objects(google_id=userid).first()
+
+
+@app.route('/oauth2callback')
+@googlelogin.oauth2callback
+def login(token, userinfo, **params):
+    user = User.objects(google_id=userinfo['id']).first()
+    if not user:
+        current_time = datetime.datetime.now()
+        user = User(google_id=userinfo['id'], email=userinfo['email'], name=userinfo['name'], joined_on=current_time )
+        user.save()
+
+    login_user(user)
+    return render_template('devIndex.html', json.loads(user.to_json()))   
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return render_template('devIndex.html')
 
 
 @app.route('/')
@@ -39,31 +65,6 @@ api.add_resource(Organization, '/api/org/<string:org_id>')
 api.add_resource(OrgMember, '/api/org/<string:org_id>/member')
 api.add_resource(OrgOwner, '/api/org/<string:org_id>/owner')
 
-
-"""
-
-Eventually we will need to get everything set with GoogleOAuth
-Let's do this after we get the base API working and are happy.
-
-#Taken from http://pythonhosted.org/Flask-GoogleLogin/
-#Change once we start working on users
-@app.route('/login')
-@googlelogin.oauth2callback
-def create_or_update_user(token, userinfo, **params):
-    user = User.filter_by(google_id=userinfo['id']).first()
-    if user:
-        user.name = userinfo['name']
-        user.avatar = userinfo['picture']
-    else:
-        user = User(google_id=userinfo['id'],
-                    name=userinfo['name'],
-                    avatar=userinfo['picture'])
-    db.session.add(user)
-    db.session.flush()
-    login_user(user)
-    return redirect(url_for('index'))
-
-"""
 
 
 if __name__ == "__main__":
