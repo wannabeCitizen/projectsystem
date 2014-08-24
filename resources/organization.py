@@ -32,14 +32,6 @@ post_parser.add_argument(
 
 
 class Organization(restful.Resource):
-    def post(self):
-        new_org_data = json.loads(request.get_json())
-        #Eventuall will need to add an owner below
-        # user = get_user(my_args.owner)
-        new_org_data['unique'] = str(bson.objectid.ObjectId())
-        organization = create_org(**new_org_data)
-        return organization
-
     def get(self, org_id):
         organization = get_org(org_id)
         return organization
@@ -57,6 +49,14 @@ class AllOrgs(restful.Resource):
     def get(self):
         all_orgs = get_all_orgs()
         return all_orgs
+    
+    def post(self):
+        new_org_data = request.get_json()
+        #Eventuall will need to add an owner below
+        # user = get_user(my_args.owner)
+        new_org_data['unique'] = str(bson.objectid.ObjectId())
+        organization = create_org(**new_org_data)
+        return organization
 
 
 class OrgMember(restful.Resource):
