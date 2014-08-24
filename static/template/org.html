@@ -10,6 +10,12 @@
         <div class="col-sm-10">
             <img ng-show="org.image" class="img-thumbnail" src="{{org.image}}"/>
             <h1>{{org.name}}</h1>
+            <p ng-if="org.short_description">
+                <i class="fa fa-quote-left"></i>
+                {{org.short_description}}
+                <i class="fa fa-quote-right"></i>
+            </p>
+            <div class="well">{{org.description}}</div>
 
             <h2>Projects</h2>
             <h2>Ideas</h2>

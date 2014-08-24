@@ -16,7 +16,7 @@ class MiniUser(EmbeddedDocument):
 
 class MiniOrganization(EmbeddedDocument):
     name = StringField(required=True)
-    unique = UUIDField(required=True)
+    unique = StringField(required=True)
     short_description = StringField(max_length=400)
 
 
