@@ -114,14 +114,14 @@ class User(Document):
         return False
 
     def get_id(self):
-        pass
+        return unicode(self.token)
 
 
 # Organizations are parents of everything except users
 class Organization(Document):
-    name = StringField()
+    name = StringField(required=True)
     unique = UUIDField(required=True, binary=False)
-    open_org = BooleanField(required=True)
+    open_org = BooleanField(default=False)
     description = StringField(required=True)
     short_description = StringField(max_length=400)
     image = FileField()

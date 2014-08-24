@@ -1,19 +1,26 @@
 from flask import Flask, session, redirect, url_for, escape, request, render_template
 from flask.ext import restful
-from flask_login import (UserMixin, login_required, login_user, logout_user,
+from flask_login import (login_required, login_user, logout_user,
                          current_user)
 from flask_googlelogin import GoogleLogin
 
+from lib.model import User
 
 from resources.organization import Organization, OrgMember, OrgOwner, AllOrgs
 
 from mongoengine import connect
 
 app = Flask(__name__)
+app.secret_key = 'a3l2kfn93+09cn]diosu9fen[Nofo3indcMJdkjJDJ29'
+
 api = restful.Api(app)
-#google_login = GoogleLogin(app)
+googlelogin = GoogleLogin(app)
 
 connect('projectsystem')
+
+@googlelogin.user_loader
+def load_user(token):
+    return User.objects(token=token).first()
 
 
 @app.route('/')
