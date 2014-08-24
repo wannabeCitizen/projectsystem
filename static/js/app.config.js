@@ -11,6 +11,18 @@ define([], function () {
             .state('home', {
                 url: '/',
                 templateUrl: 'static/template/home.html'
+            })
+            .state('orgs', {
+                url: '/org',
+                templateUrl: 'static/template/orgs.html'
+            })
+            .state('newOrg', {
+                url: '/org/new',
+                templateUrl: 'static/template/newOrg.html'
+            })
+            .state('org', {
+                url: '/org/:id',
+                templateUrl: 'static/template/org.html'
             });
     }];
 });

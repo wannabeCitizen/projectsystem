@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<div class="org" ng-controller="OrgCtrl">
+    <div ng-show="loading">
+        Loading...
+    </div>
+    <div class="row" ng-show="org && !loading">
+        <div class="col-sm-2">
+            <h3>Members</h3>
+        </div>
+        <div class="col-sm-10">
+            <img ng-show="org.image" class="img-thumbnail" src="{{org.image}}"/>
+            <h1>{{org.name}}</h1>
+
+            <h2>Projects</h2>
+            <h2>Ideas</h2>
+        </div>
+    </div>
+</div>

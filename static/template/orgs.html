@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<div class="orgs" ng-controller="OrgsCtrl">
+    <h1>All Organizations</h1>
+    
+    <div ng-repeat="org in list">
+        <h3>{{org.name}}</h3>
+        <p>{{org.short_description}}</p>
+    </div>
+</div>
