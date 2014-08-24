@@ -55,22 +55,26 @@ class AllOrgs(restful.Resource):
         #Eventuall will need to add an owner below
         # user = get_user(my_args.owner)
         new_org_data['unique'] = str(uuid.uuid4())
-        organization = create_org(**new_org_data)
+        organization = create_org(current_user.google_id, **new_org_data)
         return json.loads(organization.to_json())
 
 
 class OrgMember(restful.Resource):
     def put(self, org_id):
-        return "worked"
+        new_member = add_member(org_id, current_user.google_id)
+        return "Success"
 
     def delete(self, org_id):
-        return "worked"
+        old_member = remove_member(org_id, current_user.google_id)
+        return "Success"
 
 class OrgOwner(restful.Resource):
     def put(self, org_id):
-        return "worked"
+        new_owner = add_owner(org_id, current_user.google_id)
+        return "Success"
 
     def delete(self, org_id):
-        return "worked"
+        old_owner = remove_owner(org_id, current_user.google_id)
+        return "Success"
 
 

@@ -1,8 +1,8 @@
-from flask import request
+from flask import request, session
 
 from flask.ext import restful
 from flask.ext.restful import fields, marshal_with, reqparse
-from flask_login import login_user, make_secure_token
+from flask_login import login_user, make_secure_token, current_user
 
 from lib.db_utils import get_user, delete_user, update_user
 from lib.model import User, MiniUser
@@ -64,9 +64,20 @@ class Login(restful.Resource):
             user.save()
 
         #Add user to the flask-login
-        login_user(user)        
+        login_user(user, remember=True)      
 
         return json.loads(user.to_json())
+
+class UserOrg(restful.Resource):
+    #Get list of organizations user is part of
+    def get(self):
+        data = []
+        for orgs in User.objects(google_id=current_user.google_id).first().organizations:
+            new_org = json.loads(orgs.to_json())
+            data.append(new_org)
+        return data
+
+
 
 
 class UserEP(restful.Resource):

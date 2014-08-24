@@ -63,13 +63,44 @@ def delete_org(org_id):
     old_org.first().delete()
     return old_org
 
-def create_org(**kwargs):
-    # my_owner = User.objects(token=owner).first()
-    # new_mini = MiniUser(my_owner.name, my_owner.email, my_owner.token)
+def create_org(creator, **kwargs):
+    my_owner = User.objects(google_id=creator).first()
     new_org = Organization(**kwargs)
     new_org.minified = MiniOrganization(**kwargs)
+    new_org.created_by = my_owner.minified
+    new_org.owners = [my_owner.minified]
     new_org.save()
+    my_owner.organizations = new_org.minified
+    my_owner.save()
     return new_org
+
+def add_member(org_id, user_id):
+    my_org = Organization.objects(unique=org_id).first()
+    my_user = User.objects(google_id=user_id).first()
+    my_org.update(push__members=my_user.minified)
+    my_user.update(push__organizations=my_org.minified)
+    return my_user
+
+def remove_member(org_id, user_id):
+    my_org = Organization.objects(unique=org_id).first()
+    my_user = User.objects(google_id=user_id).first()
+    my_org.update(pull__members=my_user.minified)
+    my_user.update(pull__organizations=my_org.minified)
+    return my_user
+
+def add_owner(org_id, user_id):
+    my_org = Organization.objects(unique=org_id).first()
+    my_user = User.objects(google_id=user_id).first()
+    my_org.update(push__owners=my_user.minified)
+    my_user.update(push__organizations=my_org.minified)
+    return my_user
+
+def remove_owner(org_id, user_id):
+    my_org = Organization.objects(unique=org_id).first()
+    my_user = User.objects(google_id=user_id).first()
+    my_org.update(pull__owners=my_user.minified)
+    my_user.update(pull__organizations=my_org.minified)
+    return my_user
 
 def update_org(org_id, **kwargs):
     my_org = Organization.objects(unique=org_id).first()

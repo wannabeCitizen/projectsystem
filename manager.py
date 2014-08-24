@@ -7,13 +7,11 @@ from app import app, api, googlelogin
 from lib.model import User, MiniUser
 
 from resources.organization import Organization, OrgMember, OrgOwner, AllOrgs
-from resources.user import Login
+from resources.user import Login, UserOrg
 
 from mongoengine import connect
 
 import json
-import datetime
-
 
 
 connect('projectsystem')
@@ -45,6 +43,7 @@ api.add_resource(Organization, '/api/org/<string:org_id>')
 api.add_resource(OrgMember, '/api/org/<string:org_id>/member')
 api.add_resource(OrgOwner, '/api/org/<string:org_id>/owner')
 api.add_resource(Login, '/api/login')
+api.add_resource(UserOrg,'/api/userorg')
 
 
 

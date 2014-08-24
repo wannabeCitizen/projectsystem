@@ -125,6 +125,7 @@ class Organization(Document):
     description = StringField(required=True)
     short_description = StringField(max_length=400)
     image = FileField()
+    created_by = EmbeddedDocumentField(MiniUser)
     owners = ListField(EmbeddedDocumentField(MiniUser))
     members = ListField(EmbeddedDocumentField(MiniUser))
     projects = ListField(EmbeddedDocumentField(Project))
