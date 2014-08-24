@@ -72,7 +72,7 @@ def create_org(**kwargs):
     # my_owner = User.objects(token=owner).first()
     # new_mini = MiniUser(my_owner.name, my_owner.email, my_owner.token)
     new_org = Organization(**kwargs)
-    new_org.minified = MiniOrganization(name=kwargs['name'], description=kwargs['description'], unique=kwargs['unique'])
+    new_org.minified = MiniOrganization(**kwargs)
     new_org.save()
     return new_org
 
