@@ -11,7 +11,7 @@ import datetime
 class MiniUser(EmbeddedDocument):
     name = StringField(required=True)
     email = EmailField(required=True)
-    token = StringField(required=True)
+    google_id = StringField(required=True)
 
 
 class MiniOrganization(EmbeddedDocument):

@@ -4,7 +4,7 @@ from flask_login import (login_required, login_user, logout_user,
                          current_user)
 from flask_googlelogin import GoogleLogin
 
-from lib.model import User
+from lib.model import User, MiniUser
 
 from resources.organization import Organization, OrgMember, OrgOwner, AllOrgs
 
@@ -38,6 +38,7 @@ def login(token, userinfo, **params):
     if not user:
         current_time = datetime.datetime.now()
         user = User(google_id=userinfo['id'], email=userinfo['email'], name=userinfo['name'], joined_on=current_time )
+        user.minified = MiniUser(google_id=userinfo['id'], email=userinfo['email'], name=userinfo['name'])
         user.save()
 
     login_user(user)
