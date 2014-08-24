@@ -120,7 +120,7 @@ class User(Document):
 # Organizations are parents of everything except users
 class Organization(Document):
     name = StringField(required=True)
-    unique = UUIDField(required=True, binary=False)
+    unique = StringField(required=True)
     open_org = BooleanField(default=False)
     description = StringField(required=True)
     short_description = StringField(max_length=400)
