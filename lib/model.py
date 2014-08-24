@@ -114,7 +114,7 @@ class User(Document):
         return False
 
     def get_id(self):
-        return unicode(self.token)
+        return unicode(self.google_id)
 
 
 # Organizations are parents of everything except users

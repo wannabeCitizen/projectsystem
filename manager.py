@@ -1,29 +1,20 @@
-from flask import Flask, session, redirect, url_for, escape, request, render_template
-from flask.ext import restful
+from flask import session, redirect, url_for, escape, request, render_template
 from flask_login import (login_required, login_user, logout_user,
                          current_user)
-from flask_googlelogin import GoogleLogin
+
+from app import app, api, googlelogin
 
 from lib.model import User, MiniUser
 
-from resources.organization import (Organization, OrgMember, OrgOwner, AllOrgs,
-                                    Login)
+from resources.organization import Organization, OrgMember, OrgOwner, AllOrgs
+from resources.user import Login
 
 from mongoengine import connect
 
 import json
 import datetime
 
-app = Flask(__name__)
-api = restful.Api(app)
 
-app.config.update(
-    SECRET_KEY='a3l2kfn93+09cn]diosu9fen[Nofo3indcMJdkjJDJ29',
-    GOOGLE_LOGIN_CLIENT_ID='666333715586-orteiqqs7eq4h6he61epr2eg1fkm3e55.apps.googleusercontent.com',
-    GOOGLE_LOGIN_CLIENT_SECRET='dF6S3MbnyHzP5WG9eBe1u_o0',
-    GOOGLE_LOGIN_REDIRECT_URI='http://127.0.0.1/dev/oauth2callback')
-
-googlelogin = GoogleLogin(app)
 
 connect('projectsystem')
 
@@ -53,7 +44,7 @@ api.add_resource(AllOrgs, '/api/org')
 api.add_resource(Organization, '/api/org/<string:org_id>')
 api.add_resource(OrgMember, '/api/org/<string:org_id>/member')
 api.add_resource(OrgOwner, '/api/org/<string:org_id>/owner')
-api.add_resource(Login, 'api/login')
+api.add_resource(Login, '/api/login')
 
 
 

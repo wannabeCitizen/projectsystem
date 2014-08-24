@@ -4,12 +4,14 @@ from flask.ext import restful
 from flask.ext.restful import fields, marshal_with, reqparse
 from flask_login import login_user, make_secure_token
 
-from lib.db_utils import create_user, get_user, delete_user, update_user
+from lib.db_utils import get_user, delete_user, update_user
 from lib.model import User, MiniUser
 
-from manager import googlelogin
+from app import googlelogin
 
 import json
+import datetime
+
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument(
@@ -41,12 +43,15 @@ class Login(restful.Resource):
         #Grab code from authorization
         data = request.get_json()
         code = data['code']
-
+        access_token = data['access_token']
         #Get redirect uri for next request
-        redirect uri = googlelogin.redirect_uri
+        redirect_uri = googlelogin.redirect_uri
 
         #Make token request
-        token, userinfo = googlelogin.login(code, redirect_uri)
+        #token = googlelogin.exchange_code(code, redirect_uri)
+
+
+        userinfo = googlelogin.get_userinfo(access_token)
 
         #Check for user in DB
         user = User.objects(google_id=userinfo['id']).first()
@@ -64,7 +69,7 @@ class Login(restful.Resource):
         return json.loads(user.to_json())
 
 
-class User(restful.Resource):
+class UserEP(restful.Resource):
 
     #user_id will be an oauth token from google
     def get(self, user_id):

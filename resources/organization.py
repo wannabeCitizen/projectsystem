@@ -41,7 +41,7 @@ class Organization(restful.Resource):
         return 'organization {id} is all gone'.format(id=org_id)
 
     def put(self, org_id, update_type):
-        new_data = request.form   
+        new_data = request.get_json()   
         organization = update_org(org_id, **new_data)
         return organization
 
