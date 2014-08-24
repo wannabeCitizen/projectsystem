@@ -70,7 +70,7 @@ def create_org(creator, **kwargs):
     new_org.created_by = my_owner.minified
     new_org.owners = [my_owner.minified]
     new_org.save()
-    my_owner.organizations = new_org.minified
+    my_owner.organizations = [new_org.minified]
     my_owner.save()
     return new_org
 
@@ -103,9 +103,14 @@ def remove_owner(org_id, user_id):
     return my_user
 
 def update_org(org_id, **kwargs):
+    org_keys = ['name', 'open_org', "short_description", "description", 
+                'image']
+
     my_org = Organization.objects(unique=org_id).first()
-    my_org.update(**{"set__%s" % k : kwargs[k] for k in kwargs.keys()})
-    return my_org
+    for k in org_keys:
+        if k in kwargs.keys():
+            my_org.update(**{"set__%s" % k : kwargs[k]})
+    return json.loads(my_org.to_json())
 
 def update_org_rem(org_id, **kwargs):
     my_org = Organization.objects(unique=org_id).first()

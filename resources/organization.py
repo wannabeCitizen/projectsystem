@@ -1,12 +1,14 @@
 from flask import request, jsonify
 
 from flask.ext import restful
-from flask.ext.restful import fields, reqparse
+from flask.ext.restful import fields, reqparse, abort
+from flask_login import current_user
+
 from lib.db_utils import (get_org, get_all_orgs, delete_org, create_org,
                       update_org)
+from lib.verify import is_owner
 
 import uuid
-
 import json
 
 post_parser = reqparse.RequestParser()
@@ -65,8 +67,12 @@ class OrgMember(restful.Resource):
         return "Success"
 
     def delete(self, org_id):
-        old_member = remove_member(org_id, current_user.google_id)
-        return "Success"
+        verify = is_owner(org_id, current_user.google_id)
+        if verify == True:
+            old_member = remove_member(org_id, current_user.google_id)
+            return "Success"
+        else: 
+            return abort(401, message="User is not an owner")
 
 class OrgOwner(restful.Resource):
     def put(self, org_id):
