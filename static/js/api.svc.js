@@ -16,5 +16,11 @@ define([], function () {
         });
     }];
 
+    factory.IdeaApi = ['$resource', function ($resource) {
+        return $resource('/api/org/:orgId/idea/:ideaId', {orgId: '@orgId', ideaId: '@unique'}, {
+            update: { method: 'PUT' }
+        });
+    }];
+
     return factory;
 });

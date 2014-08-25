@@ -79,5 +79,31 @@ define(['marked', 'gapi'], function (marked, gapi) {
         };
     }];
 
+    dir.formValidStyle = [function () {
+        return {
+            restrict: 'A',
+            require: '^form',
+            link: function (scope, element, attrs, formCtrl) {
+                var name = attrs.formValidStyle;
+
+                var updateClass = function () {
+                    var formElem = formCtrl[name];
+                    if (!formElem || !formElem.$dirty) { return; }
+
+                    if (formElem.$valid) {
+                        element.addClass('has-success');
+                        element.removeClass('has-error');
+                    } else {
+                        element.removeClass('has-success');
+                        element.addClass('has-error');
+                    }
+                };
+
+                scope.$watch(function () { return formCtrl[name] && formCtrl[name].$dirty; }, updateClass);
+                scope.$watch(function () { return formCtrl[name] && formCtrl[name].$valid; }, updateClass);
+            }
+        };
+    }];
+
     return dir;
 });

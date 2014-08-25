@@ -23,7 +23,12 @@ define(['angular', 'underscore'], function (angular, _) {
                 orgId: $stateParams.id
             }).$promise.then(function (org) {
                 $scope.org = org;
-                $scope.userIsOwner = function () { return _(org.owners).find(function (u) { return UserSvc.isCurrentUser(u); }); };
+                $scope.userIsOwner = function () {
+                    return _(org.owners).find(function (u) { return UserSvc.isCurrentUser(u); });
+                };
+                $scope.userIsMember = function () {
+                    return $scope.userIsOwner() || _(org.members).find(function (u) { return UserSvc.isCurrentUser(u); });
+                };
             }, function (err) {
                 msg.error('Failed to load the specified organization.');
             }).finally(function () {
@@ -89,21 +94,10 @@ define(['angular', 'underscore'], function (angular, _) {
             };
         }];
 
-    var orgFormStyle = function (name, $scope) {
-        return {
-            'has-error': $scope.orgForm[name].$invalid && $scope.orgForm[name].$dirty,
-            'has-success': $scope.orgForm[name].$valid && $scope.orgForm[name].$dirty
-        };
-    };
-
     ctrl.NewOrgCtrl = ['$scope', '$state', 'OrgApi', 'MsgSvc',
         function ($scope, $state, OrgApi, msg) {
             $scope.org = {};
             $scope.heading = 'Create a new Organization';
-
-            $scope.formStyle = function (name) {
-                return orgFormStyle(name, $scope);
-            };
 
             $scope.actionLabel = 'Create';
             $scope.action = function () {
@@ -156,10 +150,6 @@ define(['angular', 'underscore'], function (angular, _) {
             }).finally(function () {
                 $scope.loading = false;
             });
-
-            $scope.formStyle = function (name) {
-                return orgFormStyle(name, $scope);
-            };
 
             $scope.actionLabel = 'Save';
             $scope.actionIcon = function () {

@@ -29,6 +29,10 @@ define([], function () {
                 url: '/org/:id/edit',
                 templateUrl: 'static/template/editOrg.html',
                 controller: 'EditOrgCtrl'
+            })
+            .state('newIdea', {
+                url: '/org/:orgId/idea/new',
+                templateUrl: 'static/template/newIdea.html'
             });
     }];
 });
