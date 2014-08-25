@@ -36,7 +36,8 @@
             underscore: "/base/static/lib/underscore/underscore",
             css: "/base/static/lib/require-css/css",
             gapi: "https://apis.google.com/js/api",
-            'google-plus-signin': "../lib/angular-directive.g-signin/google-plus-signin"
+            'google-plus-signin': "../lib/angular-directive.g-signin/google-plus-signin",
+            toaster: "/base/static/lib/AngularJS-Toaster/toaster"
         },
 
         shim: {
@@ -57,7 +58,8 @@
             'angular-strap': ['angular', 'angular-animate'],
             'angular-strap-tpl': ['angular', 'angular-animate', 'angular-strap'],
             'angular-ui-router': ['angular'],
-            'google-plus-signin': ['angular']
+            'google-plus-signin': ['angular'],
+            toaster: ['angular', 'angular-animate']
         },
 
         // dynamically load all test files

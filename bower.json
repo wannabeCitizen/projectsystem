@@ -22,7 +22,8 @@
     "fontawesome": "~4",
     "require-less": "~0.1",
     "marked": "~0.3",
-    "angular-directive.g-signin": "*"
+    "angular-directive.g-signin": "*",
+    "AngularJS-Toaster": "jirikavi/AngularJS-Toaster#~0.4.7"
   },
   "exportsOverride": {
     "bootstrap": {

@@ -20,11 +20,13 @@ define([
     'angular-ui-router',
     'angular-resource',
     'google-plus-signin',
-    'angular-strap-tpl'
+    'angular-strap-tpl',
+    'angular-animate',
+    'toaster'
 ], function (angular, appConfig, appDir, appSvc, appCtrl, appTemplates, orgCtrl, orgSvc, userSvc, userDir) {
     'use strict';
 
-    return angular.module('MainAppModule', ['ui.router', 'ngResource', 'directive.g+signin', 'mgcrea.ngStrap'])
+    return angular.module('MainAppModule', ['ui.router', 'ngResource', 'directive.g+signin', 'mgcrea.ngStrap', 'ngAnimate', 'toaster'])
         .config(appConfig)
         .directive(appDir)
         .factory(appSvc)
