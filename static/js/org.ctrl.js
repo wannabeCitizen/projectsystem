@@ -37,6 +37,7 @@ define(['angular', 'underscore'], function (angular, _) {
                     msg.error('Failed to add a new owner.');
                 }).finally(function () {
                     $scope.showAddOwn = false;
+                    $scope.ownerToAdd = '';
                 });
             };
             $scope.delOwner = function (user) {
@@ -57,7 +58,7 @@ define(['angular', 'underscore'], function (angular, _) {
                     msg.error('Failed to add a new member.');
                 }).finally(function () {
                     $scope.showAddMember = false;
-                    $scope.memberToAdd = null;
+                    $scope.memberToAdd = '';
                 });
             };
             $scope.delMember = function (user) {
