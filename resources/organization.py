@@ -63,8 +63,7 @@ class OrgMember(restful.Resource):
         else:
             return abort(401, message="User is not an owner")
 
-    def delete(self, org_id):
-        user_id = request.get_json()['google_id']
+    def delete(self, org_id, user_id):
         verify = is_owner(org_id, current_user.google_id)
         if verify is True:
             old_member = remove_member(org_id, user_id)
@@ -82,8 +81,7 @@ class OrgOwner(restful.Resource):
         else:
             return abort(401, message="User is not an owner")
 
-    def delete(self, org_id):
-        user_id = request.get_json()['google_id']
+    def delete(self, org_id, user_id):
         verify = is_owner(org_id, current_user.google_id)
         if verify is True:
             old_owner = remove_owner(org_id, user_id)

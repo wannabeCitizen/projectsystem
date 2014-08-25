@@ -23,30 +23,42 @@ class MiniIdea(EmbeddedDocument):
     unique = UUIDField(required=True, binary=False)
     title = StringField(required=True)
 
+class Karma(EmbeddedDocument):
+    who = StringField(required=True)
+    karma_to = StringField(required=True) 
+
+class Reply(EmbeddedDocument):
+    replier = EmbeddedDocumentField(MiniUser)
+    text = StringField(required=True)
+
+class Comment(EmbeddedDocument):
+    commenter = EmbeddedDocumentField(MiniUser)
+    text = StringField(required=True)
+    replies = ListField(EmbeddedDocumentField(Reply))
+
+
 class IdeaVersion(EmbeddedDocument):
     thinker = EmbeddedDocumentField(MiniUser)
-    karma = IntField()
+    karma = ListField(EmbeddedDocumentField(Karma))
     text = StringField()
-    unique = UUIDField(required=True)
+    unique = StringField(required=True)
     created_on = DateTimeField(required=True, default=datetime.datetime.now)
     last_edit = DateTimeField(default=datetime.datetime.now)
 
-
-
     meta = {'allow_inheritance': True}
-
-
 
 # Idea is the parent classe of project and proposals
 class IdeaMeta(EmbeddedDocument):
     title = StringField(required=True)
-    unique = UUIDField(required=True, binary=False)
+    unique = StringField(required=True)
     short_description = StringField()
     created_on = DateTimeField(required=True, default=datetime.datetime.now)
     last_edit = DateTimeField(default=datetime.datetime.now)
+    last_edit_by = EmbeddedDocumentField(MiniUser)
     created_by = EmbeddedDocumentField(MiniUser)
     followers = ListField(EmbeddedDocumentField(MiniUser))
     versions = ListField(EmbeddedDocumentField(IdeaVersion))
+    comments = ListField(EmbeddedDocumentField(Comment))
 
     meta = {'allow_inheritance': True}
 

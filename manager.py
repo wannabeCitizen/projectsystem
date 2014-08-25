@@ -40,8 +40,8 @@ def devIndex():
 #Expected variables are placed in carrot brackets with a type declaration
 api.add_resource(AllOrgs, '/api/org')
 api.add_resource(OrganizationEP, '/api/org/<string:org_id>')
-api.add_resource(OrgMember, '/api/org/<string:org_id>/member')
-api.add_resource(OrgOwner, '/api/org/<string:org_id>/owner')
+api.add_resource(OrgMember, '/api/org/<string:org_id>/member/<string:user_id>', '/api/org/<string:org_id>/member')
+api.add_resource(OrgOwner, '/api/org/<string:org_id>/owner/<string:user_id>', '/api/org/<string:org_id>/owner')
 api.add_resource(Login, '/api/login')
 api.add_resource(AllUsers, '/api/user')
 api.add_resource(UserEP, '/api/user/<string:user_id>')
