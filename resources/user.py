@@ -81,7 +81,8 @@ class UserOrg(restful.Resource):
 class AllUsers(restful.Resource):
 
     #Returns all users matching a string
-    def get(self, search):
+    def get(self):
+        search = request.args['search']
         ten_users = match_users(search)
         return ten_users
 

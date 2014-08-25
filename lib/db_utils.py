@@ -25,7 +25,7 @@ def delete_user(token):
 
 
 def match_users(search_string):
-    list_o_users = User.objects(name__contains=search_string)[:10]
+    list_o_users = User.objects(name__icontains=search_string)[:10]
     return json.loads(list_o_users.to_json())
 
 def update_user_rem(token, **kwargs):
