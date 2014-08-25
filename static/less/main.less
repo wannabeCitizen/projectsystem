@@ -5,6 +5,7 @@
 @import "../lib/fontawesome/less/font-awesome";
 @fa-font-path: "/static/lib/fontawesome/fonts";
 @import (inline) "../lib/angular-motion/angular-motion.min.css";
+@import (inline) "../lib/AngularJS-Toaster/toaster.css";
 
 /* angularjs cloaking */
 .ng-cloak {
@@ -27,6 +28,17 @@ body {
     .img-thumbnail {
         margin-top: 20px;
         float: right;
+    }
+
+    .owners, .members {
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            li {
+                list-style: none;
+            }
+        }
     }
 }
 

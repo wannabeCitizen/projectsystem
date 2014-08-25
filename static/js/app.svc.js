@@ -6,54 +6,35 @@ define([], function () {
 
     var factory = {};
 
-    factory.MessageSvc = ['$timeout', '$log',
-        function ($timeout, $log) {
-            var svc = {
-                autoDismiss: 5000,
-                messages: []
+    factory.MsgSvc = ['$timeout', '$log', 'toaster',
+        function ($timeout, $log, toaster) {
+            var svc = {};
+
+            svc.success = function (title, body) {
+                $log.log.apply(this, arguments);
+                toaster.pop('success', title, body);
             };
 
-            svc.add = function (err, txt) {
-                var msg = {
-                    error: err,
-                    txt: txt,
-                    dismissed: false
-                };
-                svc.messages.push(msg);
-
-                if (svc.autoDismiss) {
-                    $timeout(function () {
-                        msg.dismissed = true;
-                    }, svc.autoDismiss);
-                }
+            svc.error = function (title, body) {
+                $log.error.apply(this, arguments);
+                toaster.pop('error', title, body);
             };
 
-            svc.error = function (txt) {
-                $log.error(txt);
-                svc.add(true, txt);
+            svc.warning = function (title, body) {
+                $log.warn.apply(this, arguments);
+                toaster.pop('warning', title, body);
             };
 
-            svc.success = function (txt) {
-                $log.log(txt);
-                svc.add(false, txt);
+            svc.info = function (title, body) {
+                $log.info.apply(this, arguments);
+                toaster.pop('info', title, body);
             };
 
-            svc.clear = function () {
-                svc.messages.length = 0;
+            svc.debug = function () {
+                $log.debug.apply(this, arguments);
             };
 
-            svc.debug = function (txt) {
-                $log.debug(txt);
-            };
-
-            svc.last = function () {
-                if (svc.messages.length === 0) {
-                    return false;
-                }
-
-                var msg = svc.messages[svc.messages.length - 1];
-                return msg.dismissed ? false : msg;
-            };
+            svc.clear = toaster.clear;
 
             return svc;
         }];

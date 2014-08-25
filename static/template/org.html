@@ -5,13 +5,55 @@
     </div>
     <div class="row" ng-show="org && !loading">
         <div class="col-sm-2">
-            <h3>Members</h3>
+            <div class="owners">
+                <h3>
+                    Owners
+                    <button ng-show="userIsOwner()" class="btn btn-link" ng-click="showAddOwn = !showAddOwn">
+                        <i class="fa fa-plus" data-title="Add owner" data-container="body" bs-tooltip></i>
+                    </button>
+                </h3>
+                <div ng-show="userIsOwner() && showAddOwn">
+                    <user-selector user="ownerToAdd"></user-selector>
+                    <button class="btn btn-primary" ng-click="addOwner(ownerToAdd)" ng-disabled="!canAddUser(ownerToAdd, org.owners)">
+                        <i class="fa fa-plus"></i> Add
+                    </button>
+                </div>
+                <ul>
+                    <li ng-repeat="owner in org.owners">
+                        <a href ng-show="userIsOwner()" ng-click="delOwner(owner)"><i class="fa fa-trash-o" data-title="Delete this owner" bs-tooltip></i></a>
+                        {{owner.name}}
+                    </li>
+                </ul>
+            </div>
+
+
+            <div class="members">
+                <h3>
+                    Members
+                    <button ng-show="userIsOwner()" class="btn btn-link" ng-click="showAddMember = !showAddMember">
+                        <i class="fa fa-plus" data-title="Add member" data-container="body" bs-tooltip></i>
+                    </button>
+                </h3>
+
+                <div ng-show="userIsOwner() && showAddMember">
+                    <user-selector user="memberToAdd"></user-selector>
+                    <button class="btn btn-primary" ng-click="addMember(memberToAdd)" ng-disabled="!canAddUser(memberToAdd, org.members)">
+                        <i class="fa fa-plus"></i> Add
+                    </button>
+                </div>
+                <ul>
+                    <li ng-repeat="member in org.members">
+                        <a href ng-show="userIsOwner()" ng-click="delMember(member)"><i class="fa fa-trash-o" data-title="Delete this member" bs-tooltip></i></a>
+                        {{member.name}}
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="col-sm-10">
             <img ng-show="org.image" class="img-thumbnail" src="{{org.image}}"/>
             <h1>
                 {{org.name}}
-                <button class="btn btn-link" ui-sref="editOrg({id: org.unique})"><i class="fa fa-pencil"></i> Edit</button>
+                <button ng-show="userIsOwner()" class="btn btn-link" ui-sref="editOrg({id: org.unique})"><i class="fa fa-pencil"></i> Edit</button>
             </h1>
 
             <p ng-if="org.short_description">

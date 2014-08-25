@@ -21,8 +21,8 @@
 
     <body ng-controller="BaseCtrl">
         <ps-navbar></ps-navbar>
-
         <div class="container" ui-view></div>
+        <toaster-container toaster-options="{'position-class': 'toast-bottom-right'}"></toaster-container>
 
         <!-- build:js static/js/dist/app.min.js-->
         <script src="static/lib/requirejs/require.js" data-main="static/js/bootstrap"></script>

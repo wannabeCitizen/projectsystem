@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<input type="text"
+       class="form-control"
+       ng-model="user"
+       ng-options="user as user.name for user in search($viewValue)"
+       placeholder="Find a user..."
+       bs-typeahead>

@@ -4,7 +4,7 @@
 define(['angular', 'angular-mocks', 'app'], function (angular, mocks, app) {
     'use strict';
 
-    describe('Controller: P1Ctrl', function () {
+    describe('Controller: BaseCtrl', function () {
         var $scope, P1Ctrl;
 
         beforeEach(mocks.module(app.name));
@@ -13,11 +13,11 @@ define(['angular', 'angular-mocks', 'app'], function (angular, mocks, app) {
             var $controller = $injector.get('$controller');
 
             $scope = $rootScope.$new();
-            P1Ctrl = $controller('P1Ctrl', { $scope: $scope });
+            P1Ctrl = $controller('BaseCtrl', { $scope: $scope });
         }));
 
         it('should attach to the scope', function () {
-            expect($scope.data).toBe('Check out this data binding!');
+            expect($scope.test).toBe('it works');
         });
     });
 });
