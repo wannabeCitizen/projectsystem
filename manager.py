@@ -43,7 +43,7 @@ api.add_resource(Organization, '/api/org/<string:org_id>')
 api.add_resource(OrgMember, '/api/org/<string:org_id>/member')
 api.add_resource(OrgOwner, '/api/org/<string:org_id>/owner')
 api.add_resource(Login, '/api/login')
-api.add_resource(UserOrg,'/api/userorg')
+api.add_resource(AllUsers, '/api/user/<string:search>')
 
 
 

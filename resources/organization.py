@@ -39,13 +39,21 @@ class Organization(restful.Resource):
         return organization
 
     def delete(self, org_id):
-        delete_org(org_id)
-        return 'organization {id} is all gone'.format(id=org_id)
+        verify = is_owner(org_id, current_user.google_id)
+        if verify is True:
+            delete_org(org_id)
+            return "Success"
+        else:
+            return abort(401, message="User is not an owner")
 
     def put(self, org_id):
         new_data = request.get_json()
-        organization = update_org(org_id, **new_data)
-        return organization
+        verify = is_owner(org_id, current_user.google_id)
+        if verify is True:
+            organization = update_org(org_id, **new_data)
+            return organization
+        else:
+            return abort(401, message="User is not an owner")
 
 class AllOrgs(restful.Resource):
     def get(self):
@@ -63,12 +71,16 @@ class AllOrgs(restful.Resource):
 
 class OrgMember(restful.Resource):
     def put(self, org_id):
-        new_member = add_member(org_id, current_user.google_id)
-        return "Success"
+        verify = can_add(org_id, current_user.google_id)
+        if verify is True:
+            new_member = add_member(org_id, current_user.google_id)
+            return "Success"
+        else:
+            return abort(401, message="User is not an owner")
 
     def delete(self, org_id):
         verify = is_owner(org_id, current_user.google_id)
-        if verify == True:
+        if verify is True:
             old_member = remove_member(org_id, current_user.google_id)
             return "Success"
         else: 
@@ -76,11 +88,19 @@ class OrgMember(restful.Resource):
 
 class OrgOwner(restful.Resource):
     def put(self, org_id):
-        new_owner = add_owner(org_id, current_user.google_id)
-        return "Success"
+        verify = can_add(org_id, current_user.google_id)
+        if verify is True:
+            new_owner = add_owner(org_id, current_user.google_id)
+            return "Success"
+        else:
+            return abort(401, message="User is not an owner")
 
     def delete(self, org_id):
-        old_owner = remove_owner(org_id, current_user.google_id)
-        return "Success"
+        verify = is_owner(org_id, current_user.google_id)
+        if verify is True:
+            old_owner = remove_owner(org_id, current_user.google_id)
+            return "Success"
+        else: 
+            return abort(401, message="User is not an owner")
 
 

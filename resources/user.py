@@ -77,7 +77,12 @@ class UserOrg(restful.Resource):
             data.append(new_org)
         return data
 
+class AllUsers(restful.Resource):
 
+    #Returns all users matching a string
+    def get(self, search):
+        ten_users = match_users(search)
+        return ten_users
 
 
 class UserEP(restful.Resource):
