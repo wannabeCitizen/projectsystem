@@ -5,7 +5,8 @@ from flask.ext.restful import abort
 from flask_login import current_user
 
 from lib.db_utils import (get_org, get_all_orgs, delete_org, create_org,
-                      update_org)
+                      update_org, add_member, remove_member, remove_owner
+                      add_owner, match_orgs)
 from lib.verify import is_owner, can_add
 
 import uuid
