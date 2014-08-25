@@ -50,7 +50,7 @@
             </div>
         </div>
         <div class="col-sm-10">
-            <img ng-show="org.image" class="img-thumbnail" src="{{org.image}}"/>
+            <img class="img-thumbnail" ng-src="{{org.image}}"/>
             <h1>
                 {{org.name}}
                 <button ng-show="userIsOwner()" class="btn btn-link" ui-sref="editOrg({id: org.unique})"><i class="fa fa-pencil"></i> Edit</button>

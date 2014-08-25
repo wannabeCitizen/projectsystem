@@ -28,7 +28,7 @@
                 </li>
                 <li ng-show="googleAuth.status.signed_in || currentUser || googlePlus" class="user dropdown">
                     <a href class="dropdown-toggle" bs-dropdown="userDrop">
-                        <img src="{{googlePlus.image.url}}"/>
+                        <img ng-src="{{googlePlus.image.url}}"/>
                         {{googlePlus.displayName || currentUser.name}} <span class="caret"></span>
                     </a>
                 </li>
