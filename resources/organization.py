@@ -37,13 +37,14 @@ class OrganizationEP(restful.Resource):
 
 class AllOrgs(restful.Resource):
     def get(self):
-        search = request.args['search']
-        if search:
+        if 'search' in request.args and request.args['search'] != None:
+            search = request.args['search']
             ten_orgs = match_orgs(search)
             return ten_orgs
+        elif request.args:
+            abort(400, message="Bad Pe-ram-it-ers")
         else:
-            all_orgs = get_all_orgs()
-            return all_orgs
+            return get_all_orgs()
 
     def post(self):
         new_org_data = request.get_json()

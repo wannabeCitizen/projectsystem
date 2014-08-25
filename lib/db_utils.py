@@ -34,7 +34,7 @@ def match_users(search_string):
 def get_all_users():
     data = []
     for users in User.objects:
-        data.append(json.loads(users.minified.to_json))
+        data.append(json.loads(users.minified.to_json()))
     return data
 
 
@@ -73,9 +73,8 @@ def get_org(org_id):
 
 def get_all_orgs():
     all_orgs = []
-    for orgs in Organization.objects.only('minified'):
-        if orgs.minified:
-            all_orgs.append(json.loads(orgs.minified.to_json()))
+    for orgs in Organization.objects:
+        all_orgs.append(json.loads(orgs.minified.to_json()))
     return all_orgs
 
 def delete_org(org_id):
@@ -123,8 +122,12 @@ def remove_owner(org_id, user_id):
     return my_user
 
 def match_orgs(search_string):
-    list_o_orgs = Organization.objects(name__icontains=search_string).only('minified')[:10]
-    return json.loads(list_o_orgs.to_json())
+    list_o_orgs = Organization.objects(name__icontains=search_string)[:10]
+    data = []
+    for minis in list_o_orgs:
+        if minis.minified:
+            data.append(json.loads(minis.minified.to_json()))
+    return data
 
 def update_org(org_id, **kwargs):
     org_keys = ['name', 'open_org', "short_description", "description", 

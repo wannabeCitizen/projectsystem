@@ -2,9 +2,9 @@ from flask import request, session
 
 from flask.ext import restful
 from flask_login import login_user, make_secure_token, current_user
-from flask.ext.restful import abort
+from flask.ext.restful import abort, reqparse
 
-from lib.db_utils import get_user, delete_user, match_users
+from lib.db_utils import get_user, delete_user, match_users, get_all_users
 from lib.verify import is_owner, can_add
 from lib.model import User, MiniUser
 
@@ -12,6 +12,9 @@ from app import googlelogin
 
 import json
 import datetime
+
+# search_parser = reqparse.RequestParser()
+# search_parser.add_argument('search', required=False, location='args')
 
 
 class Login(restful.Resource):
@@ -34,6 +37,7 @@ class Login(restful.Resource):
         user = User.objects(google_id=userinfo['id']).first()
         
         #If we don't know you, we add your ass
+        #CHANGE THIS SHIT!
         if not user:
             current_time = datetime.datetime.now()
             user = User(google_id=userinfo['id'], email=userinfo['email'], name=userinfo['name'], joined_on=current_time )
@@ -50,10 +54,12 @@ class AllUsers(restful.Resource):
 
     #Returns all users matching a string
     def get(self):
-        if request.args['search']:
+        if 'search' in request.args and request.args['search'] != None:
             search = request.args['search']
             ten_users = match_users(search)
             return ten_users
+        elif request.args:
+            abort(400, message="bad parameter")
         else: 
             return get_all_users()
 
