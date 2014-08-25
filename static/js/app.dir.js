@@ -9,7 +9,7 @@ define(['marked', 'gapi'], function (marked, gapi) {
     dir.psNavbar = ['$http', '$rootScope', '$log', function ($http, $rootScope, $log) {
         return {
             restrict: 'E',
-            templateUrl: 'static/template/navbar.html',
+            templateUrl: 'static/template/dir/navbar.html',
             scope: true,
             link: function (scope) {
                 $rootScope.$on('event:google-plus-signin-success', function (event, authResult) {

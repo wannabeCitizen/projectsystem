@@ -65,13 +65,13 @@ module.exports = function (grunt) {
                 }
             },
             app: {
-                src: 'static/template/**.html',
+                src: 'static/template/**/*.html',
                 cwd: './',
                 dest: 'static/js/dist/app.js',
                 options: { append: true }
             },
             test: {
-                src: 'static/template/**.html',
+                src: 'static/template/**/*.html',
                 cwd: './',
                 dest: 'test/app.templates.js'
             }
