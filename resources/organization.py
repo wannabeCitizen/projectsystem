@@ -46,11 +46,9 @@ class AllOrgs(restful.Resource):
 
     def post(self):
         new_org_data = request.get_json()
-        #Eventuall will need to add an owner below
-        # user = get_user(my_args.owner)
         new_org_data['unique'] = str(uuid.uuid4())
         organization = create_org(current_user.google_id, **new_org_data)
-        return json.loads(organization.to_json())
+        return organization
 
 
 class OrgMember(restful.Resource):

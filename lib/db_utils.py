@@ -30,6 +30,14 @@ def match_users(search_string):
         data.append(json.loads(minis.minified.to_json()))
     return data
 
+#Return all current app users
+def get_all_users():
+    data = []
+    for users in User.objects:
+        data.append(json.loads(users.minified.to_json))
+    return data
+
+
 
 """
 Not in use:
@@ -84,7 +92,7 @@ def create_org(creator, **kwargs):
     new_org.save()
     my_owner.organizations = [new_org.minified]
     my_owner.save()
-    return new_org
+    return json.loads(new_org.to_json())
 
 def add_member(org_id, user_id):
     my_org = Organization.objects.get(unique=org_id)
@@ -150,10 +158,28 @@ def update_org_add(org_id, **kwargs):
 #<--------- Idea Utilities
 
 
-def get_idea(idea_id):
-    my_idea = Organization.objects.get(ideas__unique=idea_id)
-    idea_str = my_idea.to_json()
-    data = json.loads(idea_str)
+def create_idea(creator, **kwargs):
+    my_owner = User.objects.get(google_id=creator)
+    new_idea = IdeaMeta(**kwargs)
+    new_idea.minified = MiniOrganization(**kwargs)
+    new_org.created_by = my_owner.minified
+    new_org.owners = [my_owner.minified]
+    new_org.save()
+    my_owner.organizations = [new_org.minified]
+    my_owner.save()
+
+def get_all_ideas(org_id):
+    all_ideas = []
+    my_org = Organization.objects(unique=org_id).only('ideas')
+    for ideas in my_org.ideas:
+        all_ideas.append(json.loads(ideas.to_json()))
+    return all_ideas
+
+def match_ideas(search_string):
+    list_o_ideas = Organization.objects.only('ideas')(Q(ideas__title__icontains=search_string) | Q(ideas__text__icontains=search_string))[:10]
+    data = []
+    for ideas in list_o_ideas:
+        data.append(json.loads(ideas.to_json()))
     return data
 
 def delete_idea(idea_id):

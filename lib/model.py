@@ -22,6 +22,7 @@ class MiniOrganization(EmbeddedDocument):
 class MiniIdea(EmbeddedDocument):
     unique = UUIDField(required=True, binary=False)
     title = StringField(required=True)
+    short_description = StringField(required=True)
 
 class Karma(EmbeddedDocument):
     who = StringField(required=True)
@@ -59,6 +60,7 @@ class IdeaMeta(EmbeddedDocument):
     followers = ListField(EmbeddedDocumentField(MiniUser))
     versions = ListField(EmbeddedDocumentField(IdeaVersion))
     comments = ListField(EmbeddedDocumentField(Comment))
+    minified = EmbeddedDocumentField(MiniIdea)
 
     meta = {'allow_inheritance': True}
 

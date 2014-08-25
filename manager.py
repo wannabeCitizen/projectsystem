@@ -6,8 +6,11 @@ from app import app, api, googlelogin
 
 from lib.model import User, MiniUser
 
-from resources.organization import OrganizationEP, OrgMember, OrgOwner, AllOrgs
+from resources.organization import (OrganizationEP, OrgMember, OrgOwner, 
+                                    AllOrgs)
 from resources.user import Login, AllUsers, UserEP
+from resources.idea import (MetaIdea, VersionIdea, KarmaChange, IdeaComment, 
+                            ReplyComment, AllIdeas)
 
 from mongoengine import connect
 
@@ -45,6 +48,13 @@ api.add_resource(OrgOwner, '/api/org/<string:org_id>/owner/<string:user_id>', '/
 api.add_resource(Login, '/api/login')
 api.add_resource(AllUsers, '/api/user')
 api.add_resource(UserEP, '/api/user/<string:user_id>')
+api.add_resource(AllIdeas, '/api/org/<string:org_id>/idea')
+api.add_resource(MetaIdea, '/api/org/<string:org_id>/idea/<string:idea_id>')
+api.add_resource(VersionIdea, '/api/org/<string:org_id>/idea/<string:idea_id>/version/<string:version_id>')
+api.add_resource(KarmaChange, '/api/org/<string:org_id>/idea/<string:idea_id>/karma/<string:version_id>')
+api.add_resource(IdeaComment, '/api/org/<string:org_id>/idea/<string:idea_id>/comment', '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<string:comment_id>')
+api.add_resource(ReplyComment, '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<string:comment_id>/reply', '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<string:comment_id>/reply/<string:reply_id>')
+
 
 
 
