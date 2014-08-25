@@ -136,6 +136,10 @@ def update_org(org_id, **kwargs):
             my_org.update(**{"set__%s" % k : kwargs[k]})
     return json.loads(my_org.to_json())
 
+def add_idea(org_id, idea):
+    my_org = Organization.objects.get(unique=org_id)
+    my_org.update(push__ideas=idea)
+
 """   
  Not in use:
 
@@ -158,14 +162,21 @@ def update_org_add(org_id, **kwargs):
 #<--------- Idea Utilities
 
 
-def create_idea(creator, **kwargs):
+def create_idea(creator, org_id, **kwargs):
+    #Get my creator's object
     my_owner = User.objects.get(google_id=creator)
+
+    #Create object and set mini + creator + followers
     new_idea = IdeaMeta(**kwargs)
-    new_idea.minified = MiniOrganization(**kwargs)
-    new_org.created_by = my_owner.minified
-    new_org.owners = [my_owner.minified]
-    new_org.save()
-    my_owner.organizations = [new_org.minified]
+    new_idea.minified = MiniIdea(**kwargs)
+    new_idea.created_by = my_owner.minified
+    new_idea.followers = [my_owner.minified]
+    
+    my_org = Organization.objects.get(unique=org_id)
+    my_org.ideas.update()
+
+    new_idea.save()
+    my_owner.organizations = [new_idea.minified]
     my_owner.save()
 
 def get_all_ideas(org_id):

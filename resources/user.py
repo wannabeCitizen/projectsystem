@@ -50,9 +50,12 @@ class AllUsers(restful.Resource):
 
     #Returns all users matching a string
     def get(self):
-        search = request.args['search']
-        ten_users = match_users(search)
-        return ten_users
+        if request.args['search']:
+            search = request.args['search']
+            ten_users = match_users(search)
+            return ten_users
+        else: 
+            return get_all_users()
 
 
 class UserEP(restful.Resource):

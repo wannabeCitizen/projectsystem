@@ -37,7 +37,8 @@ class OrganizationEP(restful.Resource):
 
 class AllOrgs(restful.Resource):
     def get(self):
-        if request.args['search']:
+        search = request.args['search']
+        if search:
             ten_orgs = match_orgs(search)
             return ten_orgs
         else:

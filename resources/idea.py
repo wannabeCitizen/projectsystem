@@ -79,12 +79,12 @@ class ReplyComment(restful.Resource):
 class AllIdeas(restful.Resource):
 
     #Get all meta-ideas or search by string
-    def get(self):
+    def get(self, org_id):
         if request.args['search']:
-            ten_ideas = match_ideas(search)
+            ten_ideas = match_ideas(org_id, search)
             return ten_ideas
         else:
-            all_ideas = get_all_ideas()
+            all_ideas = get_all_ideas(org_id)
             return all_ideas
 
     #Create a new meta-idea, check for version
@@ -93,7 +93,7 @@ class AllIdeas(restful.Resource):
         verify = is_in_org(current_user.google_id, org_id)
         if verify is True:
             new_idea_data['unique'] = str(uuid.uuid4())
-            idea = create_idea(current_user.google_id, **new_idea_data)
+            idea = create_idea(current_user.google_id, org_id, **new_idea_data)
             return idea
         else: 
             return abort(401, message="User not in org")
