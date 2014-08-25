@@ -88,7 +88,7 @@ def create_org(creator, **kwargs):
 
 def add_member(org_id, user_id):
     my_org = Organization.objects.get(unique=org_id)
-    my_user = User.get(google_id=user_id)
+    my_user = User.objects.get(google_id=user_id)
     my_org.update(add_to_set__members=my_user.minified)
     my_user.update(add_to_set__organizations=my_org.minified)
     return my_user

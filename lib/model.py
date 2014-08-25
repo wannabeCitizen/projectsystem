@@ -25,6 +25,13 @@ class MiniIdea(EmbeddedDocument):
 
 class IdeaVersion(EmbeddedDocument):
     thinker = EmbeddedDocumentField(MiniUser)
+    karma = IntField()
+    text = StringField()
+    unique = UUIDField(required=True)
+    created_on = DateTimeField(required=True, default=datetime.datetime.now)
+    last_edit = DateTimeField(default=datetime.datetime.now)
+
+
 
     meta = {'allow_inheritance': True}
 
@@ -37,14 +44,9 @@ class IdeaMeta(EmbeddedDocument):
     short_description = StringField()
     created_on = DateTimeField(required=True, default=datetime.datetime.now)
     last_edit = DateTimeField(default=datetime.datetime.now)
-    # May want to consider a reverse_delete_rule for owner
     created_by = EmbeddedDocumentField(MiniUser)
     followers = ListField(EmbeddedDocumentField(MiniUser))
     versions = ListField(EmbeddedDocumentField(IdeaVersion))
-    # we may want to consider how far down we store references
-    # to base_nodes
-    base_node = ReferenceField('self')
-    karma = IntField()
 
     meta = {'allow_inheritance': True}
 
