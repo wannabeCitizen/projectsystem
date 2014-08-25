@@ -1,36 +1,16 @@
+from flask import request, jsonify
+
 from flask.ext import restful
-from flask.ext.restful import fields, marshal_with, reqparse
+from flask.ext.restful import abort
+from flask_login import current_user
 
-import bson
+from lib.db_utils import (get_org, get_all_orgs, delete_org, create_org,
+                      update_org)
+from lib.verify import is_owner
 
-post_parser = reqparse.RequestParser()
-post_parser.add_argument(
-    'title',type=str, 
-    location='form', required=True, 
-    help='Title of Idea',
-)
-post_parser.add_argument(
-    'text',type=str, 
-    location='form', required=True, 
-    help='Text of Idea - Markdown Renderable',
-)
-post_parser.add_argument(
-    'short_description',type=str, 
-    location='form', 
-    help='A short description of the idea',
-)
-post_parser.add_argument(
-    'org_id', type=str,
-    location='form', required=True,
-    help='the organization this idea is under')
-post_parser.add_argument(
-    'owner', type=str,
-    location='form', required=True,
-    help='the user posting this idea')
-post_parser.add_argument(
-    'base_node', type=str,
-    location='form', 
-    help='the idea this is a modifcation of')
+import uuid
+import json
+
 
 
 class Idea(restful.Resource):

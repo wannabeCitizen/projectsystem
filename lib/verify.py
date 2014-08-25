@@ -8,7 +8,7 @@ from lib.model import User, Organization, MiniUser, MiniOrganization
 
 #Checks if someone is an owner of an organization they are trying to modify
 def is_owner(org_id, user_id):
-	my_org = Organization.objects(unique=org_id).first()
+	my_org = Organization.objects.get(unique=org_id)
 	for users in my_org.owners:
 		if users.google_id == user_id:
 			return True

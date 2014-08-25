@@ -6,7 +6,7 @@ from flask_login import current_user
 
 from lib.db_utils import (get_org, get_all_orgs, delete_org, create_org,
                       update_org)
-from lib.verify import is_owner
+from lib.verify import is_owner, can_add
 
 import uuid
 import json

@@ -31,7 +31,8 @@ def match_users(search_string):
     return data
 
 
-# **-------- NOT IN USE
+"""
+Not in use:
 
 def update_user_rem(token, **kwargs):
     my_user = User.objects.get(token=token)
@@ -50,7 +51,7 @@ def update_user(token, **kwargs):
     for k in kwargs.keys():
         my_user.update(**{"set__%s" % k : kwargs[k]})
     return my_user
-# -------------**
+"""
 
 #------>
 
@@ -127,6 +128,9 @@ def update_org(org_id, **kwargs):
             my_org.update(**{"set__%s" % k : kwargs[k]})
     return json.loads(my_org.to_json())
 
+"""   
+ Not in use:
+
 def update_org_rem(org_id, **kwargs):
     my_org = Organization.objects.get(unique=org_id)
     for k in kwargs.keys():
@@ -139,7 +143,7 @@ def update_org_add(org_id, **kwargs):
         my_org.update(**{"push__%s" % k : kwargs[k]})
     return my_org
 
-
+"""
 
 #--------->
 

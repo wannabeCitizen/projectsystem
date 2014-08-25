@@ -19,19 +19,26 @@ class MiniOrganization(EmbeddedDocument):
     unique = StringField(required=True)
     short_description = StringField(max_length=400)
 
+class MiniIdea(EmbeddedDocument):
+    unique = UUIDField(required=True, binary=False)
+    title = StringField(required=True)
+
+class IdeaVersion(EmbeddedDocument):
+    pass
+
+
 
 # Idea is the parent classe of project and proposals
-class Idea(EmbeddedDocument):
+class IdeaMeta(EmbeddedDocument):
     title = StringField(required=True)
-    text = StringField(required=True)
     unique = UUIDField(required=True, binary=False)
-    short_description = StringField(max_length=250)
+    short_description = StringField()
     created_on = DateTimeField(required=True, default=datetime.datetime.now)
     last_edit = DateTimeField(default=datetime.datetime.now)
     # May want to consider a reverse_delete_rule for owner
-    owner = EmbeddedDocumentField(MiniUser)
-    organization = EmbeddedDocumentField(MiniOrganization)
+    created_by = EmbeddedDocumentField(MiniUser)
     followers = ListField(EmbeddedDocumentField(MiniUser))
+    versions = ListField(EmbeddedDocumentField(IdeaVersion))
     # we may want to consider how far down we store references
     # to base_nodes
     base_node = ReferenceField('self')
