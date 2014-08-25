@@ -1,8 +1,8 @@
 from flask import request, session
 
 from flask.ext import restful
-from flask.ext.restful import fields, marshal_with, reqparse
 from flask_login import login_user, make_secure_token, current_user
+from flask.ext.restful import abort
 
 from lib.db_utils import get_user, delete_user, update_user, match_users
 from lib.verify import is_owner, can_add
@@ -13,30 +13,6 @@ from app import googlelogin
 import json
 import datetime
 
-
-post_parser = reqparse.RequestParser()
-post_parser.add_argument(
-    'name',type=str,
-    location='form', required=True,
-    help='The user name',
-)
-post_parser.add_argument(
-    'email',type=str,
-    location='form', required=True,
-    help='The user email address',
-)
-post_parser.add_argument(
-    'token',type=str,
-    location='form',
-    help='The user oauth token',
-)
-
-update_parser = reqparse.RequestParser()
-update_parser.add_argument(
-    'task', type=str,
-    location='args', 
-    help='Figure out if its an add or removal',
-)
 
 class Login(restful.Resource):
 
@@ -69,14 +45,6 @@ class Login(restful.Resource):
 
         return json.loads(user.to_json())
 
-class UserOrg(restful.Resource):
-    #Get list of organizations user is part of
-    def get(self):
-        data = []
-        for orgs in User.objects(google_id=current_user.google_id).first().organizations:
-            new_org = json.loads(orgs.to_json())
-            data.append(new_org)
-        return data
 
 class AllUsers(restful.Resource):
 
@@ -95,15 +63,9 @@ class UserEP(restful.Resource):
         return user
 
     def delete(self, user_id):
-        delete_user(user_id)
-        return 'user {id} is all gone'.format(id=user_id)
-
-    def put(self, user_id, update_type):
-        new_data = request.form
-        if update_type == 'remove':
-            user = update_user_rem(user_id, **new_data)
-        elif update_type == 'add':
-            user = update_user_add(user_id, **new_data)
+        if current_user.google_id == user_id:
+            delete_user(user_id)
+            return "Success - User Deleted!"
         else:
-            user = update_user(user_id, **new_data)
-        return user
+            abort(401, message="Another user trying to delete this user")
+

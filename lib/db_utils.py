@@ -11,8 +11,8 @@ from lib.model import User, Organization, MiniUser, MiniOrganization
 
 
 #Returns a json-formatted single user based on google oauth token
-def get_user(g_token):
-    my_user = User.objects.get(google_id=g_token)
+def get_user(user_id):
+    my_user = User.objects.get(google_id=user_id)
     user_str = my_user.to_json()
     data = json.loads(user_str)
     return data
@@ -23,10 +23,12 @@ def delete_user(token):
     old_user.delete()
     return old_user
 
-
 def match_users(search_string):
-    list_o_users = User.objects(name__icontains=search_string)[:10]
+    list_o_users = User.objects(name__icontains=search_string).only('minified')[:10]
     return json.loads(list_o_users.to_json())
+
+
+# **-------- NOT IN USE
 
 def update_user_rem(token, **kwargs):
     my_user = User.objects.get(token=token)
@@ -45,6 +47,7 @@ def update_user(token, **kwargs):
     for k in kwargs.keys():
         my_user.update(**{"set__%s" % k : kwargs[k]})
     return my_user
+# -------------**
 
 #------>
 
@@ -82,8 +85,8 @@ def create_org(creator, **kwargs):
 def add_member(org_id, user_id):
     my_org = Organization.objects.get(unique=org_id)
     my_user = User.get(google_id=user_id)
-    my_org.update(push__members=my_user.minified)
-    my_user.update(push__organizations=my_org.minified)
+    my_org.update(add_to_set__members=my_user.minified)
+    my_user.update(add_to_set__organizations=my_org.minified)
     return my_user
 
 def remove_member(org_id, user_id):
@@ -96,8 +99,8 @@ def remove_member(org_id, user_id):
 def add_owner(org_id, user_id):
     my_org = Organization.objects.get(unique=org_id)
     my_user = User.objects.get(google_id=user_id)
-    my_org.update(push__owners=my_user.minified)
-    my_user.update(push__organizations=my_org.minified)
+    my_org.update(add_to_set__owners=my_user.minified)
+    my_user.update(add_to_set__organizations=my_org.minified)
     return my_user
 
 def remove_owner(org_id, user_id):
@@ -106,6 +109,10 @@ def remove_owner(org_id, user_id):
     my_org.update(pull__owners=my_user.minified)
     my_user.update(pull__organizations=my_org.minified)
     return my_user
+
+def match_orgs(search_string):
+    list_o_orgs = Organization.objects(name__icontains=search_string).only('minified')[:10]
+    return json.loads(list_o_orgs.to_json())
 
 def update_org(org_id, **kwargs):
     org_keys = ['name', 'open_org', "short_description", "description", 

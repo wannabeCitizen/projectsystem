@@ -1,7 +1,7 @@
 from flask import request, jsonify
 
 from flask.ext import restful
-from flask.ext.restful import fields, reqparse, abort
+from flask.ext.restful import abort
 from flask_login import current_user
 
 from lib.db_utils import (get_org, get_all_orgs, delete_org, create_org,
@@ -11,29 +11,8 @@ from lib.verify import is_owner
 import uuid
 import json
 
-post_parser = reqparse.RequestParser()
-post_parser.add_argument(
-    'name',type=str,
-    location='form', required=True,
-    help='The organization name',
-)
-post_parser.add_argument(
-    'description',type=str,
-    location='form', required=True,
-    help='The organization description',
-)
-post_parser.add_argument(
-    'short_description',type=str,
-    location='form',
-    help='A short description for organization',
-)
-post_parser.add_argument(
-    'owner', type=str,
-    required=True, location='form',
-    help='The user that owns the organization')
 
-
-class Organization(restful.Resource):
+class OrganizationEP(restful.Resource):
     def get(self, org_id):
         organization = get_org(org_id)
         return organization
@@ -57,8 +36,12 @@ class Organization(restful.Resource):
 
 class AllOrgs(restful.Resource):
     def get(self):
-        all_orgs = get_all_orgs()
-        return all_orgs
+        if request.args['search']:
+            ten_orgs = match_orgs(search)
+            return ten_orgs
+        else:
+            all_orgs = get_all_orgs()
+            return all_orgs
 
     def post(self):
         new_org_data = request.get_json()
@@ -71,34 +54,38 @@ class AllOrgs(restful.Resource):
 
 class OrgMember(restful.Resource):
     def put(self, org_id):
+        user_id = request.get_json()['google_id']
         verify = can_add(org_id, current_user.google_id)
         if verify is True:
-            new_member = add_member(org_id, current_user.google_id)
+            new_member = add_member(org_id, user_id)
             return "Success"
         else:
             return abort(401, message="User is not an owner")
 
     def delete(self, org_id):
+        user_id = request.get_json()['google_id']
         verify = is_owner(org_id, current_user.google_id)
         if verify is True:
-            old_member = remove_member(org_id, current_user.google_id)
+            old_member = remove_member(org_id, user_id)
             return "Success"
         else: 
             return abort(401, message="User is not an owner")
 
 class OrgOwner(restful.Resource):
     def put(self, org_id):
+        user_id = request.get_json()['google_id']
         verify = can_add(org_id, current_user.google_id)
         if verify is True:
-            new_owner = add_owner(org_id, current_user.google_id)
+            new_owner = add_owner(org_id, user_id)
             return "Success"
         else:
             return abort(401, message="User is not an owner")
 
     def delete(self, org_id):
+        user_id = request.get_json()['google_id']
         verify = is_owner(org_id, current_user.google_id)
         if verify is True:
-            old_owner = remove_owner(org_id, current_user.google_id)
+            old_owner = remove_owner(org_id, user_id)
             return "Success"
         else: 
             return abort(401, message="User is not an owner")
