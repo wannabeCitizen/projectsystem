@@ -56,8 +56,7 @@ class AllUsers(restful.Resource):
     def get(self):
         if 'search' in request.args and request.args['search'] != None:
             search = request.args['search']
-            ten_users = match_users(search)
-            return ten_users
+            return match_users(search)
         elif request.args:
             abort(400, message="bad parameter")
         else: 

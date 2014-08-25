@@ -124,7 +124,7 @@ class User(Document):
     google_id = StringField(required=True)
     organizations = ListField(EmbeddedDocumentField(MiniOrganization))
     projects = ListField(EmbeddedDocumentField(Project))
-    ideas = ListField(EmbeddedDocumentField(IdeaVersion))
+    ideas = ListField(EmbeddedDocumentField(MiniIdea))
     joined_on = DateTimeField(default=datetime.datetime.now)
     notifications = ListField(EmbeddedDocumentField(Notification))
     minified = EmbeddedDocumentField(MiniUser)

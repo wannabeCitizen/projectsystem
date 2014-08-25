@@ -4,7 +4,8 @@ For Handling all the db calls
 import json
 import datetime
 
-from lib.model import User, Organization, MiniUser, MiniOrganization
+from lib.model import (User, Organization, MiniUser, MiniOrganization, IdeaMeta, IdeaVersion,
+                        MiniIdea)
 
 
 #<----- User Utilities
@@ -176,15 +177,17 @@ def create_idea(creator, org_id, **kwargs):
     new_idea.followers = [my_owner.minified]
     
     my_org = Organization.objects.get(unique=org_id)
-    my_org.ideas.update()
+    my_org.ideas.append(new_idea)
+    my_org.save()
 
-    new_idea.save()
-    my_owner.organizations = [new_idea.minified]
+    my_owner.ideas = [new_idea.minified]
     my_owner.save()
+
+    return json.loads(new_idea.to_json())
 
 def get_all_ideas(org_id):
     all_ideas = []
-    my_org = Organization.objects(unique=org_id).only('ideas')
+    my_org = Organization.objects.get(unique=org_id)
     for ideas in my_org.ideas:
         all_ideas.append(json.loads(ideas.to_json()))
     return all_ideas

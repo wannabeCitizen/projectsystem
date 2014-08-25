@@ -49,9 +49,7 @@ class AllOrgs(restful.Resource):
     def post(self):
         new_org_data = request.get_json()
         new_org_data['unique'] = str(uuid.uuid4())
-        organization = create_org(current_user.google_id, **new_org_data)
-        return organization
-
+        return create_org(current_user.google_id, **new_org_data)
 
 class OrgMember(restful.Resource):
     def put(self, org_id):

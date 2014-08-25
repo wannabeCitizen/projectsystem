@@ -4,9 +4,9 @@ from flask.ext import restful
 from flask.ext.restful import abort
 from flask_login import current_user
 
-from lib.db_utils import (get_org, get_all_orgs, delete_org, create_org,
-                      update_org)
-from lib.verify import is_owner
+from lib.db_utils import (get_org, get_all_ideas, delete_org, create_idea,
+                      update_org, match_ideas)
+from lib.verify import is_owner, is_in_org
 
 import uuid
 import json
@@ -80,12 +80,11 @@ class AllIdeas(restful.Resource):
 
     #Get all meta-ideas or search by string
     def get(self, org_id):
-        if request.args['search']:
-            ten_ideas = match_ideas(org_id, search)
-            return ten_ideas
+        if 'search' in request.args and request.args['search'] != None:
+            search = request.args['search']
+            return match_ideas(org_id, search)
         else:
-            all_ideas = get_all_ideas(org_id)
-            return all_ideas
+            return get_all_ideas(org_id)
 
     #Create a new meta-idea, check for version
     def post(self, org_id):
@@ -93,8 +92,7 @@ class AllIdeas(restful.Resource):
         verify = is_in_org(current_user.google_id, org_id)
         if verify is True:
             new_idea_data['unique'] = str(uuid.uuid4())
-            idea = create_idea(current_user.google_id, org_id, **new_idea_data)
-            return idea
+            return create_idea(current_user.google_id, org_id, **new_idea_data)
         else: 
             return abort(401, message="User not in org")
 
