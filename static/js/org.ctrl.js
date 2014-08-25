@@ -30,6 +30,9 @@ define(['angular', 'underscore'], function (angular, _) {
                 $scope.loading = false;
             });
 
+            $scope.ownerToAdd = '';
+            $scope.memberToAdd = '';
+
             $scope.addOwner = function () {
                 OrgApi.addOwner({orgId: $scope.org.unique}, $scope.ownerToAdd).$promise.then(function () {
                     $scope.org.owners.push($scope.ownerToAdd);
