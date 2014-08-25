@@ -4,7 +4,7 @@ from flask.ext import restful
 from flask_login import login_user, make_secure_token, current_user
 from flask.ext.restful import abort
 
-from lib.db_utils import get_user, delete_user, update_user, match_users
+from lib.db_utils import get_user, delete_user, match_users
 from lib.verify import is_owner, can_add
 from lib.model import User, MiniUser
 

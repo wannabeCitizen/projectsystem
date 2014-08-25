@@ -24,7 +24,9 @@ class MiniIdea(EmbeddedDocument):
     title = StringField(required=True)
 
 class IdeaVersion(EmbeddedDocument):
-    pass
+    thinker = EmbeddedDocumentField(MiniUser)
+
+    meta = {'allow_inheritance': True}
 
 
 
@@ -56,7 +58,7 @@ class Vote(EmbeddedDocument):
     vote_time = DateTimeField
 
 
-class Proposal(Idea):
+class Proposal(IdeaVersion):
     owner = EmbeddedDocumentField(MiniUser)
     budget = FloatField
     voted_on = BooleanField
@@ -106,7 +108,7 @@ class User(Document):
     google_id = StringField(required=True)
     organizations = ListField(EmbeddedDocumentField(MiniOrganization))
     projects = ListField(EmbeddedDocumentField(Project))
-    ideas = ListField(EmbeddedDocumentField(Idea))
+    ideas = ListField(EmbeddedDocumentField(IdeaVersion))
     joined_on = DateTimeField(default=datetime.datetime.now)
     notifications = ListField(EmbeddedDocumentField(Notification))
     minified = EmbeddedDocumentField(MiniUser)
@@ -137,7 +139,7 @@ class Organization(Document):
     owners = ListField(EmbeddedDocumentField(MiniUser))
     members = ListField(EmbeddedDocumentField(MiniUser))
     projects = ListField(EmbeddedDocumentField(Project))
-    ideas = ListField(EmbeddedDocumentField(Idea))
+    ideas = ListField(EmbeddedDocumentField(IdeaMeta))
     proposals = ListField(EmbeddedDocumentField(Proposal))
     pending_members = ListField(EmbeddedDocumentField(MiniUser))
     pending_owners = ListField(EmbeddedDocumentField(MiniUser))
