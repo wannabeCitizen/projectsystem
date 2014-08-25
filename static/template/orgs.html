@@ -2,9 +2,11 @@
 <div class="orgs" ng-controller="OrgsCtrl">
     <h1>All Organizations</h1>
     <button class="btn btn-link" ui-sref="newOrg"><i class="fa fa-plus"></i> Create a new organization</button>
-    
-    <div class="org-list" ng-repeat="org in list" ui-sref="org({id: org.unique})">
-        <h2 class="org-name">{{org.name}}</h2>
-        <p class="org-desc">{{org.short_description}}</p>
-    </div>
+
+    <ul>
+        <li ng-repeat="org in list" ui-sref="org({id: org.unique})">
+            <h2 class="org-name">{{org.name}}</h2>
+            <p class="org-desc">{{org.short_description}}</p>
+        </li>
+    </ul>
 </div>

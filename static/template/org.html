@@ -64,13 +64,24 @@
             </p>
             <div class="well" marked="org.description"></div>
 
-            <h2>Projects</h2>
-            <h2>
-                Ideas
-                <button ng-show="userIsMember()" class="btn btn-link" ui-sref="newIdea({orgId: org.unique})">
-                    <i class="fa fa-plus" data-title="Add member" data-container="body" bs-tooltip></i>
-                </button>
-            </h2>
+            <div class="projects"><h2><collapse-btn collapsed="hideProjects"></collapse-btn> Projects</h2></div>
+
+            <div class="ideas">
+                <h2>
+                    <collapse-btn collapsed="collapseIdeas"></collapse-btn>
+                    Ideas
+                    <button ng-show="userIsMember()" class="btn btn-link" ui-sref="newIdea({orgId: org.unique})">
+                        <i class="fa fa-plus" data-title="Add idea" data-container="body" bs-tooltip></i>
+                    </button>
+                </h2>
+
+                <ul ng-hide="collapseIdeas">
+                    <li ng-repeat="idea in org.ideas" ui-sref="idea({orgId: org.unique, ideaId: idea.unique})">
+                        <h2 class="org-name">{{idea.name}}</h2>
+                        <p class="org-desc">{{idea.short_description}}</p>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

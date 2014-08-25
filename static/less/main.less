@@ -24,34 +24,54 @@ body {
     }
 }
 
+.clickable-block {
+    margin: -10px;
+    padding: 10px;
+    border: 1px solid transparent;
+    &:hover {
+        background-color: fade(@btn-primary-bg, 50%);
+        border: 1px solid @btn-primary-border;
+        cursor: pointer;
+    }
+}
+
+.blockify-li {
+    ul {
+        display: block;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        li {
+            display: block;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+    }
+}
+
 .org {
     .img-thumbnail {
         margin-top: 20px;
         float: right;
     }
 
-    .owners, .members {
-        ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            li {
-                list-style: none;
-            }
+    .owners, .members, .projects, .ideas {
+        .blockify-li();
+    }
+
+    .projects, .ideas {
+        ul li {
+            .clickable-block();
         }
     }
 }
 
 .orgs {
-    .org-list {
+    .blockify-li();
+    ul li {
+        .clickable-block();
         margin: 0 -10px;
-        padding: 10px;
-        border: 1px solid transparent;
-        &:hover {
-            background-color: fade(@btn-primary-bg, 50%);
-            border: 1px solid @btn-primary-border;
-            cursor: pointer;
-        }
         .org-name {
             margin: 0;
         }

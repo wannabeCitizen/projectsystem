@@ -105,5 +105,28 @@ define(['marked', 'gapi'], function (marked, gapi) {
         };
     }];
 
+    dir.collapseBtn = [function () {
+        return {
+            restrict: 'E',
+            template: '<i class="fa" ng-class="icon()"></i>',
+            scope: {
+                collapsed: '='
+            },
+            link: function (scope, element) {
+                scope.icon = function () {
+                    return {
+                        'fa-angle-double-right': scope.collapsed,
+                        'fa-angle-double-down': !scope.collapsed
+                    };
+                };
+
+                element.on('click', function () {
+                    scope.collapsed = !scope.collapsed;
+                    scope.$digest();
+                });
+            }
+        };
+    }];
+
     return dir;
 });
