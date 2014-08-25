@@ -23,7 +23,8 @@ def delete_user(token):
     old_user.delete()
     return old_user
 
- def match_users(search_string):
+
+def match_users(search_string):
     list_o_users = User.objects(name__contains=search_string)[:10]
     return json.loads(list_o_users.to_json())
 

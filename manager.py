@@ -7,7 +7,7 @@ from app import app, api, googlelogin
 from lib.model import User, MiniUser
 
 from resources.organization import Organization, OrgMember, OrgOwner, AllOrgs
-from resources.user import Login, UserOrg
+from resources.user import Login, UserOrg, AllUsers
 
 from mongoengine import connect
 

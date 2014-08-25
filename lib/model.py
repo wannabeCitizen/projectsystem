@@ -102,7 +102,7 @@ class User(Document):
     ideas = ListField(EmbeddedDocumentField(Idea))
     joined_on = DateTimeField(default=datetime.datetime.now)
     notifications = ListField(EmbeddedDocumentField(Notification))
-    minified = EmbeddedDocumentField(MiniUser)]
+    minified = EmbeddedDocumentField(MiniUser)
 
 
     def is_active(self):
