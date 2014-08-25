@@ -54,6 +54,7 @@
             <h1>
                 {{org.name}}
                 <button ng-show="userIsOwner()" class="btn btn-link" ui-sref="editOrg({id: org.unique})"><i class="fa fa-pencil"></i> Edit</button>
+                <button ng-show="userIsOwner()" class="btn btn-link" ng-click="delOrg()"><i class="fa fa-trash-o"></i> Delete</button>
             </h1>
 
             <p ng-if="org.short_description">

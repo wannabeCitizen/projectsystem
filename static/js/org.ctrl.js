@@ -16,8 +16,8 @@ define(['angular', 'underscore'], function (angular, _) {
             });
         }];
 
-    ctrl.OrgCtrl = ['$scope', '$stateParams', 'OrgApi', 'UserSvc', 'MsgSvc',
-        function ($scope, $stateParams, OrgApi, UserSvc, msg) {
+    ctrl.OrgCtrl = ['$scope', '$state', '$stateParams', 'OrgApi', 'UserSvc', 'MsgSvc',
+        function ($scope, $state, $stateParams, OrgApi, UserSvc, msg) {
             $scope.loading = true;
             OrgApi.get({
                 orgId: $stateParams.id
@@ -43,6 +43,7 @@ define(['angular', 'underscore'], function (angular, _) {
                     $scope.ownerToAdd = '';
                 });
             };
+
             $scope.delOwner = function (user) {
                 if ($scope.org.owners.length <= 1) {
                     msg.error('You cannot delete the only owner.', 'Add a new owner first.');
@@ -54,6 +55,7 @@ define(['angular', 'underscore'], function (angular, _) {
                     msg.error('Failed to delete the specified owner.', user.name);
                 });
             };
+
             $scope.addMember = function () {
                 OrgApi.addMember({orgId: $scope.org.unique}, $scope.memberToAdd).$promise.then(function () {
                     $scope.org.members.push($scope.memberToAdd);
@@ -64,6 +66,7 @@ define(['angular', 'underscore'], function (angular, _) {
                     $scope.memberToAdd = '';
                 });
             };
+
             $scope.delMember = function (user) {
                 OrgApi.delMember({orgId: $scope.org.unique, userId: user.google_id}).$promise.then(function () {
                     $scope.org.members = _($scope.org.members).without(user);
@@ -71,8 +74,18 @@ define(['angular', 'underscore'], function (angular, _) {
                     msg.error('Failed to delete the specified member.', user.name);
                 });
             };
+
             $scope.canAddUser = function (user, group) {
                 return user && user.google_id && !_(group).find(function (u) { return UserSvc.usersEqual(u, user); });
+            };
+
+            $scope.delOrg = function () {
+                $scope.org.$delete().then(function () {
+                    msg.success('The organization was deleted.');
+                    $state.go('orgs');
+                }, function (err) {
+                    msg.error('Failed to delete the organization.');
+                });
             };
         }];
 
