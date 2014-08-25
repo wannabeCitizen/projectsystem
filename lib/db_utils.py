@@ -24,8 +24,11 @@ def delete_user(token):
     return old_user
 
 def match_users(search_string):
-    list_o_users = User.objects(name__icontains=search_string).only('minified')[:10]
-    return json.loads(list_o_users.to_json())
+    list_o_users = User.objects(name__icontains=search_string)[:10]
+    data = []
+    for minis in list_o_users:
+        data.append(json.loads(minis.minified.to_json()))
+    return data
 
 
 # **-------- NOT IN USE
