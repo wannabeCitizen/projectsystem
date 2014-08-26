@@ -7,6 +7,8 @@ import datetime
 from lib.model import (User, Organization, MiniUser, MiniOrganization, IdeaMeta, IdeaVersion,
                         MiniIdea)
 
+from mongoengine import Q
+
 
 #<----- User Utilities
 
@@ -28,14 +30,16 @@ def match_users(search_string):
     list_o_users = User.objects(name__icontains=search_string)[:10]
     data = []
     for minis in list_o_users:
-        data.append(json.loads(minis.minified.to_json()))
+        if minis.minified:
+            data.append(json.loads(minis.minified.to_json()))
     return data
 
 #Return all current app users
 def get_all_users():
     data = []
     for users in User.objects:
-        data.append(json.loads(users.minified.to_json()))
+        if users.minified:
+            data.append(json.loads(users.minified.to_json()))
     return data
 
 
@@ -68,14 +72,13 @@ def update_user(token, **kwargs):
 
 def get_org(org_id):
     my_org = Organization.objects.get(unique=org_id)
-    org_str = my_org.to_json()
-    data = json.loads(org_str)
-    return data
+    return json.loads(my_org.to_json())
 
 def get_all_orgs():
     all_orgs = []
     for orgs in Organization.objects:
-        all_orgs.append(json.loads(orgs.minified.to_json()))
+        if orgs.minified:
+            all_orgs.append(json.loads(orgs.minified.to_json()))
     return all_orgs
 
 def delete_org(org_id):
@@ -185,6 +188,19 @@ def create_idea(creator, org_id, **kwargs):
 
     return json.loads(new_idea.to_json())
 
+def create_version(creator, idea_id, **kwargs):
+    my_creator = User.objects.get(google_id=creator)
+
+    new_version = IdeaVersion(**kwargs)
+    new_version.thinker = my_creator.minified
+    new_version.karma = 0
+
+    my_idea = Organization.objects.get(ideas__unique=idea_id)
+    my_idea.update(push__versions=new_version)
+
+    return json.loads(new_version.to_json())
+
+
 def get_all_ideas(org_id):
     all_ideas = []
     my_org = Organization.objects.get(unique=org_id)
@@ -202,10 +218,31 @@ def match_ideas(search_string):
 def delete_idea(idea_id):
     old_idea = Organization.objects.get(ideas__unique=idea_id)
     old_idea.update(pull__ideas={'unique' : idea_id})
-    return json.loads(old_idea.first().to_json())
+    return json.loads(old_idea.to_json())
 
-def update_idea():
+
+def update_idea(idea_id, **kwargs):
+    idea_keys = ['title', 'short_description']
+
+    my_idea = Organization.objects.get(ideas__unique=idea_id)
+    current_time = datetime.datetime.now
+    for k in idea_keys:
+        if k in kwargs.keys():
+            my_idea.update(**{"set__%s" % k : kwargs[k]})
+    my_idea.update(set__last_edit=current_time)
+    return json.loads(my_idea.to_json())
+
+def get_idea(idea_id):
+    my_idea = Organization.objects.get(ideas__unique=idea_id)
+    return json.loads(my_idea.to_json())
+
+def add_follower(user_id, idea_id):
     pass
+    # my_user = User.objects.get(google_id=user_id)
+
+    # my_idea = Organization.objects.get(ideas__unique=idea_id)
+    # my_idea.
+
 
 #--------->
 

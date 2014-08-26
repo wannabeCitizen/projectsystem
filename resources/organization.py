@@ -15,8 +15,7 @@ import json
 
 class OrganizationEP(restful.Resource):
     def get(self, org_id):
-        organization = get_org(org_id)
-        return organization
+        return get_org(org_id)
 
     def delete(self, org_id):
         verify = is_owner(org_id, current_user.google_id)
@@ -30,8 +29,7 @@ class OrganizationEP(restful.Resource):
         new_data = request.get_json()
         verify = is_owner(org_id, current_user.google_id)
         if verify is True:
-            organization = update_org(org_id, **new_data)
-            return organization
+            return update_org(org_id, **new_data)
         else:
             return abort(401, message="User is not an owner")
 

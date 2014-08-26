@@ -10,7 +10,7 @@ from resources.organization import (OrganizationEP, OrgMember, OrgOwner,
                                     AllOrgs)
 from resources.user import Login, AllUsers, UserEP
 from resources.idea import (MetaIdea, VersionIdea, KarmaChange, IdeaComment, 
-                            ReplyComment, AllIdeas)
+                            ReplyComment, AllIdeas, FollowIdea)
 
 from mongoengine import connect
 
@@ -54,7 +54,7 @@ api.add_resource(VersionIdea, '/api/org/<string:org_id>/idea/<string:idea_id>/ve
 api.add_resource(KarmaChange, '/api/org/<string:org_id>/idea/<string:idea_id>/karma/<string:version_id>')
 api.add_resource(IdeaComment, '/api/org/<string:org_id>/idea/<string:idea_id>/comment', '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<string:comment_id>')
 api.add_resource(ReplyComment, '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<string:comment_id>/reply', '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<string:comment_id>/reply/<string:reply_id>')
-
+api.add_resource(FollowIdea, '/api/org/<string:org_id>/idea/<string:idea_id>/follow')
 
 
 

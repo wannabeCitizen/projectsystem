@@ -27,6 +27,8 @@ def can_add(org_id, user_id):
 
 #Checks if user is in organization
 def is_in_org(user_id, org_id):
+	if is_owner(org_id, user_id):
+		return True
 	my_org = Organization.objects.get(unique=org_id)
 	for members in my_org.members:
 		if members.google_id == user_id:
