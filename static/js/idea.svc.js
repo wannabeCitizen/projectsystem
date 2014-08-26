@@ -10,6 +10,7 @@ define(['angular', 'underscore'], function (angular, _) {
         // This is a class ctor
         return function (resource) {
             var idea = angular.copy(resource, this);
+            return idea;
         };
     }];
 
