@@ -45,7 +45,7 @@ define(['angular', 'underscore'], function (angular, _) {
 
                 $scope.action = function () {
                     $scope.spin = true;
-                    $scope.idea.$update().then(function () {
+                    $scope.idea.$update({orgId: $stateParams.orgId}).then(function () {
                         $state.go('idea', $stateParams);
                     }, function (err) {
                         msg.error('Failed to save the idea.', 'Please try again.');
