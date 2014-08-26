@@ -1,21 +1,60 @@
 /*jslint browser:true */
 /*global define */
 
-define([], function () {
+define(['angular', 'gapi'], function (angular, gapi) {
     'use strict';
 
     var factory = {};
 
-    factory.UserSvc = ['$rootScope', function ($rootScope) {
+    factory.UserSvc = ['$q', '$rootScope', '$log', '$http', function ($q, $rootScope, $log, $http) {
         var svc = {};
+        svc.currentUser = {};
+        $rootScope.currentUser = svc.currentUser;
 
         svc.usersEqual = function (u1, u2) {
             return u1 && u2 && (u1.google_id === u2.google_id);
         };
 
         svc.isCurrentUser = function (u) {
-            return svc.usersEqual(u, $rootScope.currentUser);
+            return svc.usersEqual(u, svc.currentUser);
         };
+
+        $rootScope.$on('event:google-plus-signin-success', function (event, authResult) {
+            // Send login to server or save into cookie
+            $log.log('user authenticated with google', authResult);
+            svc.currentUser.googleAuth = authResult;
+            var api = $http.post('/api/login', authResult).then(function (response) {
+                $log.log('login api success', response.data);
+                svc.currentUser.api = response.data;
+            }, function (err) {
+                $log.error('login api fail', err);
+                svc.currentUser.api = null;
+            });
+
+            var plus = $q.defer();
+            gapi.client.load('plus', 'v1', function () {
+                gapi.client.plus.people.get({userId: 'me'}).execute(function (resp) {
+                    $log.log('google plus api', resp);
+                    svc.currentUser.googlePlus = resp;
+                    return resp.error ? plus.reject(resp.error) : plus.resolve(resp);
+                });
+            });
+
+            $q.all([api, plus.promise]).finally(function () {
+                svc.currentUser.loggedIn = true;
+                svc.currentUser.name = (svc.currentUser.googlePlus && svc.currentUser.googlePlus.displayName) ||
+                    (svc.currentUser.googleAuth && svc.currentUser.googleAuth.name) ||
+                    (svc.currentUser.api && svc.currentUser.api.name);
+                svc.currentUser.imageUrl = svc.currentUser.googlePlus && svc.currentUser.googlePlus.image && svc.currentUser.googlePlus.image.url;
+            });
+        });
+
+        $rootScope.$on('event:google-plus-signin-failure', function (event, authResult) {
+            // Auth failure or signout detected
+            $log.log('user logout or auth error', authResult);
+            $http.post('/api/logout');
+            angular.copy({}, svc.currentUser);
+        });
 
         return svc;
     }];

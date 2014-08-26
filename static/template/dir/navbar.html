@@ -23,13 +23,13 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li class="google" ng-hide="googleAuth.status.signed_in || currentUser || googlePlus">
+                <li class="google" ng-hide="currentUser.loggedIn">
                     <google-plus-signin clientid="666333715586-orteiqqs7eq4h6he61epr2eg1fkm3e55.apps.googleusercontent.com"></google-plus-signin>
                 </li>
-                <li ng-show="googleAuth.status.signed_in || currentUser || googlePlus" class="user dropdown">
+                <li ng-show="currentUser.loggedIn" class="user dropdown">
                     <a href class="dropdown-toggle" bs-dropdown="userDrop">
-                        <img ng-src="{{googlePlus.image.url}}"/>
-                        {{googlePlus.displayName || currentUser.name}} <span class="caret"></span>
+                        <img ng-src="{{currentUser.imageUrl}}"/>
+                        {{currentUser.name}} <span class="caret"></span>
                     </a>
                 </li>
             </ul>
