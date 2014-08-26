@@ -104,6 +104,10 @@ class Vote(EmbeddedDocument):
 
     new_project = DynamicField()
 
+class MiniProject(EmbeddedDocument):
+    title = StringField(required=True)
+    unique = StringField(required=True)
+    short_description = StringField()
 
 class Project(Document):
     title = StringField(required=True)
@@ -118,8 +122,7 @@ class Project(Document):
     voted_on = BooleanField()
     quorum = DecimalField(min_value=.5, max_value=1.0)
 
-
-    minified = EmbeddedDocumentField(MiniIdea)
+    minified = EmbeddedDocumentField(MiniProject)
 
     roles = ListField(EmbeddedDocumentField(Role))
     phases = ListField(EmbeddedDocumentField(Phase))
@@ -132,7 +135,7 @@ class User(Document):
     email = EmailField(required=True)
     google_id = StringField(required=True)
     organizations = ListField(EmbeddedDocumentField(MiniOrganization))
-    projects = ListField(EmbeddedDocumentField(Project))
+    projects = ListField(EmbeddedDocumentField(MiniProject))
     ideas = ListField(EmbeddedDocumentField(MiniIdea))
     joined_on = DateTimeField(default=datetime.datetime.now)
     notifications = ListField(EmbeddedDocumentField(Notification))
@@ -151,6 +154,8 @@ class User(Document):
     def get_id(self):
         return unicode(self.google_id)
 
+class Proposal(EmbeddedDocument):
+    pass
 
 # Organizations are parents of everything except users
 class Organization(Document):
@@ -163,7 +168,7 @@ class Organization(Document):
     created_by = EmbeddedDocumentField(MiniUser)
     owners = ListField(EmbeddedDocumentField(MiniUser))
     members = ListField(EmbeddedDocumentField(MiniUser))
-    projects = ListField(EmbeddedDocumentField(Project))
+    projects = ListField(EmbeddedDocumentField(MiniProject))
     ideas = ListField(EmbeddedDocumentField(MiniIdea))
     proposals = ListField(EmbeddedDocumentField(Proposal))
     pending_members = ListField(EmbeddedDocumentField(MiniUser))
