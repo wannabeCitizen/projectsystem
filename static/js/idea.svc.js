@@ -9,7 +9,7 @@ define(['angular', 'underscore'], function (angular, _) {
     factory.Idea = [function () {
         // This is a class ctor
         return function (resource) {
-            var idea = angular.extend(this, resource);
+            var idea = angular.copy(resource, this);
         };
     }];
 

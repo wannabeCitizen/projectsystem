@@ -104,7 +104,7 @@ define(['angular', 'underscore'], function (angular, _) {
             };
         }];
 
-    ctrl.EditOrgCtrl = ['$scope', '$state', '$stateParams', 'OrgApi', 'MsgSvc',
+    ctrl.EditOrgCtrl = ['$scope', '$state', '$stateParams', 'OrgSvc', 'MsgSvc',
         function ($scope, $state, $stateParams, OrgSvc, msg) {
             $scope.heading = 'Edit this Organization';
 

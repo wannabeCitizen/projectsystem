@@ -9,7 +9,7 @@ define(['angular', 'underscore'], function (angular, _) {
     factory.Org = ['$q', 'OrgApi', 'UserSvc', function ($q, OrgApi, UserSvc) {
         // This is a class ctor
         return function (resource) {
-            var org = angular.extend(this, resource);
+            var org = angular.copy(resource, this);
 
             org.userInList = function (list) {
                 return _(list).find(function (u) { return UserSvc.isCurrentUser(u); });
