@@ -38,7 +38,7 @@ define(['angular', 'underscore'], function (angular, _) {
 
     ctrl.EditIdeaCtrl = ['$scope', '$state', '$stateParams', 'IdeaSvc', 'MsgSvc',
         function ($scope, $state, $stateParams, IdeaSvc, msg) {
-            $scope.heading = 'Edit this Organization';
+            $scope.heading = 'Edit this Idea';
 
             IdeaSvc.getById($stateParams.orgId, $stateParams.ideaId).then(function (idea) {
                 $scope.idea = idea;
