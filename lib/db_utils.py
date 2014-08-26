@@ -170,21 +170,24 @@ def update_org_add(org_id, **kwargs):
 
 
 def create_idea(creator, org_id, **kwargs):
-    #Get my creator's object
+    #Get my creator's object and my org
     my_owner = User.objects.get(google_id=creator)
+    my_org = Organization.objects.get(unique=org_id)
 
     #Create object and set mini + creator + followers
     new_idea = IdeaMeta(**kwargs)
     new_idea.minified = MiniIdea(**kwargs)
     new_idea.created_by = my_owner.minified
     new_idea.followers = [my_owner.minified]
-    
-    my_org = Organization.objects.get(unique=org_id)
-    my_org.ideas.append(new_idea)
-    my_org.save()
+    new_idea.my_org = my_org.minified
+    new_idea.num_comments = 0
+    new_idea.save()
 
-    my_owner.ideas = [new_idea.minified]
+    my_owner.ideas.append(new_idea.minified)
     my_owner.save()
+
+    my_org.ideas.append(new_idea.minified)
+    my_org.save()
 
     return json.loads(new_idea.to_json())
 
@@ -193,9 +196,8 @@ def create_version(creator, idea_id, **kwargs):
 
     new_version = IdeaVersion(**kwargs)
     new_version.thinker = my_creator.minified
-    new_version.karma = 0
 
-    my_idea = Organization.objects.get(ideas__unique=idea_id)
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
     my_idea.update(push__versions=new_version)
 
     return json.loads(new_version.to_json())
@@ -208,40 +210,165 @@ def get_all_ideas(org_id):
         all_ideas.append(json.loads(ideas.to_json()))
     return all_ideas
 
-def match_ideas(search_string):
-    list_o_ideas = Organization.objects.only('ideas')(Q(ideas__title__icontains=search_string) | Q(ideas__text__icontains=search_string))[:10]
+def match_ideas(org_id, search_string):
+    list_o_ideas = IdeaMeta.objects(Q(my_org__unique__exact=org_id) and (Q(title__icontains=search_string) | Q(short_description__icontains=search_string)))[:10]
     data = []
     for ideas in list_o_ideas:
         data.append(json.loads(ideas.to_json()))
     return data
 
-def delete_idea(idea_id):
-    old_idea = Organization.objects.get(ideas__unique=idea_id)
-    old_idea.update(pull__ideas={'unique' : idea_id})
+def delete_idea(user_id, org_id, idea_id):
+    old_idea = IdeaMeta.objects.get(unique=idea_id)
+    
+    
+    my_org = Organization.objects.get(unique=org_id)
+    my_org.ideas.update(pull__ideas__unique=idea_id)
+
+    for people in old_idea.followers:
+        my_user = User.objects.get(unique=people.google_id)
+        my_user.update(pull__ideas__unique=idea_id)
+
+    old_idea.delete()
     return json.loads(old_idea.to_json())
 
 
 def update_idea(idea_id, **kwargs):
     idea_keys = ['title', 'short_description']
 
-    my_idea = Organization.objects.get(ideas__unique=idea_id)
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
     current_time = datetime.datetime.now
     for k in idea_keys:
         if k in kwargs.keys():
-            my_idea.update(**{"set__%s" % k : kwargs[k]})
-    my_idea.update(set__last_edit=current_time)
+            my_idea.k = kwargs[k]
+    my_idea.last_edit = current_time
+    my_idea.save()
     return json.loads(my_idea.to_json())
 
 def get_idea(idea_id):
-    my_idea = Organization.objects.get(ideas__unique=idea_id)
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
     return json.loads(my_idea.to_json())
 
 def add_follower(user_id, idea_id):
-    pass
-    # my_user = User.objects.get(google_id=user_id)
+    my_user = User.objects.get(google_id=user_id)
 
-    # my_idea = Organization.objects.get(ideas__unique=idea_id)
-    # my_idea.
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
+    my_idea.update(push__followers=my_user.minified)
+
+    my_user.update(push__ideas=my_idea.minified)
+
+    return my_user
+
+def remove_follower(user_id, idea_id):
+    my_user = User.objects.get(google_id=user_id)
+    my_user.update(pull__ideas__unique=idea_id)
+
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
+    my_idea.update(pull__followers__unique=idea_id)
+
+    return my_user
+
+def update_version(idea_id, version_id, **kwargs):
+    idea_keys = ['text']
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
+    for versions in my_idea.versions:
+        if versions.unique == version_id:
+            my_version = versions
+    current_time = datetime.datetime.now
+    for k in idea_keys:
+        if k in kwargs.keys():
+            my_version.k = kwargs[k]
+    my_version.last_edit = current_time
+    my_idea.save()
+    return json.loads(my_idea.to_json())
+
+def remove_version(idea_id, version_id):
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
+    my_idea.upate(pull__versions__unique=version_id)
+    return my_idea
+
+def change_karma(user_id, idea_id, version_id):
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
+    my_idea.karma[user_id] = version_id
+    my_idea.save()
+    return my_idea
+
+def create_comment(user_id, idea_id, **kwargs):
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
+    my_user = User.objects.get(google_id=user_id)
+    my_index = my_idea.num_comments
+    my_idea.update_one(inc__num_comments=1)
+
+    my_comment = Comment(**kwargs)
+    my_comment.my_order = my_index
+    my_comment.num_replies = 0
+    my_comment.time = datetime.datetime.now
+    my_comment.commenter = my_user.minified
+
+    my_idea.comments.append(my_comment)
+
+    my_idea.save()
+    return my_comment
+
+
+def update_comment(idea_id, comment_id, **kwargs):
+    comment_keys = ['text']
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
+    my_comment = my_idea.comments[comment_id]
+    for k in comments_keys:
+        if k in kwargs.keys():
+            my_comment.k = kwargs[k]
+    my_comment.time = datetime.datetime.now
+
+    my_idea.save()
+
+    return my_comment
+
+
+def remove_comment(idea_id, comment_id):
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
+    my_idea.comments[comment_id] = None
+    my_idea.save()
+
+    return my_idea
+
+def create_reply(user_id, idea_id, comment_id, **kwargs):
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
+    my_user = User.objects.get(google_id=user_id)
+    my_comment = my_idea.comments[comment_id]
+
+    my_index = my_comment.num_replies
+    mycomment.num_replies += 1
+
+    my_reply = Reply(**kwargs)
+    my_reply.my_order = my_index
+    my_reply.time = datetime.datetime.now
+    my_reply.replier = my_user.minified
+
+    my_idea.comments[comment_id].replies.append(my_reply)
+
+    my_idea.save()
+    return my_reply
+
+
+def update_reply(idea_id, comment_id, reply_id, **kwargs):
+    reply_keys = ['text']
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
+    my_reply = my_idea.comments[comment_id].replies[reply_id]
+    for k in reply_keys:
+        if k in kwargs.keys():
+            my_reply.k = kwargs[k]
+    my_reply.time = datetime.datetime.now
+
+    my_idea.save()
+
+    return reply
+
+def remove_reply(idea_id, comment_id, reply_id):
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
+    my_idea.comments[comment_id].replies[reply_id] = None
+    my_idea.save()
+
+    return my_idea
 
 
 #--------->

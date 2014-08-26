@@ -4,9 +4,12 @@ from flask.ext import restful
 from flask.ext.restful import abort
 from flask_login import current_user
 
-from lib.db_utils import (get_org, get_all_ideas, delete_idea, create_idea,
-                      update_org, match_ideas, add_follower)
-from lib.verify import is_owner, is_in_org
+from lib.db_utils import (get_idea, get_all_ideas, delete_idea, create_idea,
+                      update_idea, match_ideas, add_follower, create_version,
+                      remove_follower, update_version, remove_version, change_karma,
+                      create_comment, update_comment, remove_comment, create_reply,
+                      update_reply, remove_reply)
+from lib.verify import is_owner, is_in_org, is_in_org, is_thinker, is_commenter, is_replier
 
 import uuid
 import json
@@ -42,10 +45,10 @@ class MetaIdea(restful.Resource):
     def delete(self, org_id, idea_id):
         verify = is_owner(org_id, current_user.google_id)
         if verify is True:
-            delete_idea(idea_id)
+            delete_idea(current_user.google_id, org_id, idea_id)
             return "Success"
         else: 
-            return abort(401, "User is not an owner")
+            return abort(401, message="User is not an owner")
 
 class FollowIdea(restful.Resource):
 
@@ -56,55 +59,112 @@ class FollowIdea(restful.Resource):
             add_follower(current_user.google_id, idea_id)
             return "Success"
         else:
-            return abort(401, "User not in organization")
+            return abort(401, message="User not in organization")
 
     #Remove yourself as a follower
     def delete(self, org_id, idea_id):
-        pass
+        verify = is_in_org(current_user.google_id, org_id)
+        if verify is True:
+            remove_follower(current_user.google_id, idea_id)
+            return "Success"
+        else:
+            return abort(401, message="User not in organization")
 
 class VersionIdea(restful.Resource):
 
     #Update a version of an idea
-    def put(self):
-        pass
+    def put(self, org_id, idea_id, version_id):
+        new_data = request.get_json()
+        verify = is_thinker(current_user.google_id, idea_id, version_id)
+        if verify is True:
+            update_version(idea_id, **new_data)
+            return "Success"
+        else:
+            return abort(401, message="Not Owner of Idea")
 
     #remove a version of an idea
-    def delete(self):
-        pass
+    def delete(self, org_id, idea_id, version_id):
+        verify = is_thinker(current_user.google_id, idea_id, version_id)
+        if verify is True:
+            remove_version(idea_id, version_id)
+            return "Success"
+        else:
+            return abort(401, message="Not Owner of Idea") 
 
 class KarmaChange(restful.Resource):
 
     #Put Karma somewhere and remove it from elsewhere
-    def put(self):
-        pass
+    def put(self, org_id, idea_id, version_id):
+        verify = is_in_org(current_user.google_id, org_id)
+        if verify is True:
+            change_karma(current_user.google_id, idea_id, version_id)
+            return "Success"
+        else:
+            return abort(401, message="Not in Organization")
+        
 
 class IdeaComment(restful.Resource):
 
     #Add a new comment to a meta-idea
-    def post(self):
-        pass
-
+    def post(self, org_id, idea_id):
+        new_comment_data = request.get_json()
+        verify = is_in_org(current_user.google_id, org_id)
+        if verify is True:
+            create_comment(current_user.google_id, idea_id, **new_comment_data)
+            return "Success"
+        else:
+            return abort(401, message="Not in Organization")
+             
     #Edit a comment
-    def put(self):
-        pass
+    def put(self, org_id, idea_id, comment_id):
+        new_comment_data = request.get_json()
+        verify = is_commenter(current_user.google_id, idea_id, comment_id)
+        if verify is True:
+            update_comment(idea_id, comment_id, **new_comment_data)
+            return "Success"
+        else:
+            return abort(401, message="Not Comment Owner")
 
     #remove comment and replies
-    def delete(self):
-        pass
+    def delete(self, org_id, idea_id, comment_id):
+        verify = is_commenter(current_user.google_id, idea_id, comment_id)
+        if verify is True:
+            remove_comment(idea_id, comment_id)
+            return "Success"
+        else:
+            return abort(401, message="Not Comment Owner")
+        
 
 class ReplyComment(restful.Resource):
 
     #Add a reply to a comment
-    def post(self):
-        pass
+    def post(self, org_id, idea_id, comment_id):
+        new_reply_data = request.get_json()
+        verify = is_in_org(current_user.google_id, org_id)
+        if verify is True:
+            create_reply(current_user.google_id, idea_id, comment_id, **new_reply_data)
+            return "Success"
+        else:
+            return abort(401, message="Not in Organization")
 
     #Edit a reply to a comment
-    def put(self):
-        pass
+    def put(self, org_id, idea_id, comment_id, reply_id):
+        new_reply_data = request.get_json()
+        verify = is_replier(current_user.google_id, idea_id, comment_id, reply_id)
+        if verify is True:
+            update_reply(idea_id, comment_id, reply_id, **new_reply_data)
+            return "Success"
+        else:
+            return abort(401, message="Not Reply Owner")
 
     #Remove a reply
-    def delete(self):
-        pass
+    def delete(self, org_id, idea_id, comment_id, reply_id):
+        verify = is_replier(current_user.google_id, idea_id, comment_id, reply_id)
+        if verify is True:
+            remove_reply(idea_id, comment_id, reply_id)
+            return "Success"
+        else:
+            return abort(401, message="Not Reply Owner")
 
 class AllIdeas(restful.Resource):
 
@@ -112,7 +172,7 @@ class AllIdeas(restful.Resource):
     def get(self, org_id):
         if 'search' in request.args and request.args['search'] != None:
             search = request.args['search']
-            return match_ideas(search)
+            return match_ideas(org_id, search)
         else:
             return get_all_ideas(org_id)
 

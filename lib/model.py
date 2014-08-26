@@ -23,24 +23,24 @@ class MiniIdea(EmbeddedDocument):
     unique = UUIDField(required=True, binary=False)
     title = StringField(required=True)
     short_description = StringField(required=True)
-
-class Karma(EmbeddedDocument):
-    who = StringField(required=True)
-    karma_to = StringField(required=True) 
-
+ 
 class Reply(EmbeddedDocument):
     replier = EmbeddedDocumentField(MiniUser)
     text = StringField(required=True)
+    time = DateTimeField(default=datetime.datetime.now)
+    my_order = IntField()
 
 class Comment(EmbeddedDocument):
     commenter = EmbeddedDocumentField(MiniUser)
     text = StringField(required=True)
+    time = DateTimeField(default=datetime.datetime.now)
     replies = ListField(EmbeddedDocumentField(Reply))
+    num_replies = IntField()
+    my_order = IntField()
 
 
 class IdeaVersion(EmbeddedDocument):
     thinker = EmbeddedDocumentField(MiniUser)
-    karma = ListField(EmbeddedDocumentField(Karma))
     text = StringField()
     unique = StringField(required=True)
     created_on = DateTimeField(required=True, default=datetime.datetime.now)
@@ -49,21 +49,22 @@ class IdeaVersion(EmbeddedDocument):
     meta = {'allow_inheritance': True}
 
 # Idea is the parent classe of project and proposals
-class IdeaMeta(EmbeddedDocument):
+class IdeaMeta(Document):
     title = StringField(required=True)
     unique = StringField(required=True)
     short_description = StringField()
     created_on = DateTimeField(required=True, default=datetime.datetime.now)
     last_edit = DateTimeField(default=datetime.datetime.now)
-    last_edit_by = EmbeddedDocumentField(MiniUser)
     created_by = EmbeddedDocumentField(MiniUser)
     followers = ListField(EmbeddedDocumentField(MiniUser))
     versions = ListField(EmbeddedDocumentField(IdeaVersion))
     comments = ListField(EmbeddedDocumentField(Comment))
+    num_comments = IntField()
     minified = EmbeddedDocumentField(MiniIdea)
+    my_org = EmbeddedDocumentField(MiniOrganization)
+    karma = DictField()
 
     meta = {'allow_inheritance': True}
-
 
 class Vote(EmbeddedDocument):
     initiator = EmbeddedDocumentField(MiniUser, required=True)
@@ -72,7 +73,6 @@ class Vote(EmbeddedDocument):
     verdict = BooleanField
     comments = StringField
     vote_time = DateTimeField
-
 
 class Proposal(IdeaVersion):
     owner = EmbeddedDocumentField(MiniUser)
@@ -155,7 +155,7 @@ class Organization(Document):
     owners = ListField(EmbeddedDocumentField(MiniUser))
     members = ListField(EmbeddedDocumentField(MiniUser))
     projects = ListField(EmbeddedDocumentField(Project))
-    ideas = ListField(EmbeddedDocumentField(IdeaMeta))
+    ideas = ListField(EmbeddedDocumentField(MiniIdea))
     proposals = ListField(EmbeddedDocumentField(Proposal))
     pending_members = ListField(EmbeddedDocumentField(MiniUser))
     pending_owners = ListField(EmbeddedDocumentField(MiniUser))
