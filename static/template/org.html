@@ -77,8 +77,8 @@
 
                 <ul ng-hide="collapseIdeas">
                     <li ng-repeat="idea in org.ideas" ui-sref="idea({orgId: org.unique, ideaId: idea.unique})">
-                        <h2 class="org-name">{{idea.name}}</h2>
-                        <p class="org-desc">{{idea.short_description}}</p>
+                        <h2>{{idea.title}}</h2>
+                        <p>{{idea.short_description}}</p>
                     </li>
                 </ul>
             </div>

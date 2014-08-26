@@ -122,7 +122,7 @@ define(['marked', 'gapi'], function (marked, gapi) {
 
                 element.on('click', function () {
                     scope.collapsed = !scope.collapsed;
-                    scope.$digest();
+                    scope.$apply();
                 });
             }
         };
