@@ -19,6 +19,9 @@ class MiniOrganization(EmbeddedDocument):
     unique = StringField(required=True)
     short_description = StringField(max_length=400)
 
+class Notification(EmbeddedDocument):
+    pass
+
 class MiniIdea(EmbeddedDocument):
     unique = UUIDField(required=True, binary=False)
     title = StringField(required=True)
@@ -37,7 +40,6 @@ class Comment(EmbeddedDocument):
     replies = ListField(EmbeddedDocumentField(Reply))
     num_replies = IntField()
     my_order = IntField()
-
 
 class IdeaVersion(EmbeddedDocument):
     thinker = EmbeddedDocumentField(MiniUser)
@@ -66,28 +68,12 @@ class IdeaMeta(Document):
 
     meta = {'allow_inheritance': True}
 
-class Vote(EmbeddedDocument):
-    initiator = EmbeddedDocumentField(MiniUser, required=True)
-    members = ListField(EmbeddedDocumentField(MiniUser), required=True)
-    description = StringField
-    verdict = BooleanField
-    comments = StringField
-    vote_time = DateTimeField
 
-class Proposal(IdeaVersion):
-    owner = EmbeddedDocumentField(MiniUser)
-    budget = FloatField
-    voted_on = BooleanField
-    # always delete pending votes as they get counted
-    pending_votes = ListField(EmbeddedDocumentField(Vote))
-    completed_votes = ListField(EmbeddedDocumentField(Vote))
-    votes = IntField
-    quorum = DecimalField(min_value=.5, max_value=1.0)
-
-    meta = {'allow_inheritance': True}
+class Role(EmbeddedDocument):
+    pass
 
 
-class Tasks(EmbeddedDocument):
+class Task(EmbeddedDocument):
     task = StringField(required=True)
     person = ListField(EmbeddedDocumentField(MiniUser))
     due = DateTimeField
@@ -97,7 +83,7 @@ class Tasks(EmbeddedDocument):
 class Phase(EmbeddedDocument):
     text = StringField
     complete = BooleanField
-    tasks = ListField(EmbeddedDocumentField(Tasks))
+    tasks = ListField(EmbeddedDocumentField(Task))
     goal_date = DateTimeField
 
 
@@ -106,16 +92,39 @@ class Revision(EmbeddedDocument):
     time = DateTimeField(required=True)
     revision_of = UUIDField(required=True)
 
+class Vote(EmbeddedDocument):
+    initiator = EmbeddedDocumentField(MiniUser, required=True)
+    description = StringField()
+    verdict = BooleanField()
+    vote_time = DateTimeField()
+    pending_votes = ListField()
+    completed_votes = ListField()
+    toted_votes = IntField()
+    required_votes = IntField()
 
-class Project(Proposal):
-    complete = BooleanField
+    new_project = DynamicField()
+
+
+class Project(Document):
+    title = StringField(required=True)
+    unique = StringField(required=True)
+    short_description = StringField()
+    created_on = DateTimeField(required=True, default=datetime.datetime.now)
+    last_edit = DateTimeField(default=datetime.datetime.now)
+    members = ListField(EmbeddedDocumentField(MiniUser))
+    followers = ListField(EmbeddedDocumentField(MiniUser))
+    complete = BooleanField()
+    budget = FloatField()
+    voted_on = BooleanField()
+    quorum = DecimalField(min_value=.5, max_value=1.0)
+
+
+    minified = EmbeddedDocumentField(MiniIdea)
+
+    roles = ListField(EmbeddedDocumentField(Role))
     phases = ListField(EmbeddedDocumentField(Phase))
-    tasks = ListField(EmbeddedDocumentField(Tasks))
+    tasks = ListField(EmbeddedDocumentField(Task))
     revisions = ListField(EmbeddedDocumentField(Revision))
-
-
-class Notification(EmbeddedDocument):
-    pass
 
 
 class User(Document):

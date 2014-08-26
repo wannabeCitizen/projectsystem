@@ -4,12 +4,12 @@ from flask.ext import restful
 from flask.ext.restful import abort
 from flask_login import current_user
 
-from lib.db_utils import (get_idea, get_all_ideas, delete_idea, create_idea,
+from lib.verify import is_owner, is_in_org, is_in_org, is_thinker, is_commenter, is_replier
+from lib.idea_utils import (get_idea, get_all_ideas, delete_idea, create_idea,
                       update_idea, match_ideas, add_follower, create_version,
                       remove_follower, update_version, remove_version, change_karma,
                       create_comment, update_comment, remove_comment, create_reply,
                       update_reply, remove_reply)
-from lib.verify import is_owner, is_in_org, is_in_org, is_thinker, is_commenter, is_replier
 
 import uuid
 import json
