@@ -104,11 +104,15 @@ class Vote(EmbeddedDocument):
 
     new_project = DynamicField()
 
+class MiniProject(EmbeddedDocument):
+    pass
+
 
 class Project(Document):
     title = StringField(required=True)
     unique = StringField(required=True)
     short_description = StringField()
+    text = StringField()
     created_on = DateTimeField(required=True, default=datetime.datetime.now)
     last_edit = DateTimeField(default=datetime.datetime.now)
     members = ListField(EmbeddedDocumentField(MiniUser))
@@ -163,9 +167,8 @@ class Organization(Document):
     created_by = EmbeddedDocumentField(MiniUser)
     owners = ListField(EmbeddedDocumentField(MiniUser))
     members = ListField(EmbeddedDocumentField(MiniUser))
-    projects = ListField(EmbeddedDocumentField(Project))
+    projects = ListField(EmbeddedDocumentField(MiniProject))
     ideas = ListField(EmbeddedDocumentField(MiniIdea))
-    proposals = ListField(EmbeddedDocumentField(Proposal))
     pending_members = ListField(EmbeddedDocumentField(MiniUser))
     pending_owners = ListField(EmbeddedDocumentField(MiniUser))
     minified = EmbeddedDocumentField(MiniOrganization)
