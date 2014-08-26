@@ -9,6 +9,7 @@ define(['angular', 'underscore'], function (angular, _) {
     ctrl.NewIdeaCtrl = ['$scope', '$state', '$stateParams', 'IdeaApi', 'MsgSvc',
         function ($scope, $state, $stateParams, IdeaApi, msg) {
             $scope.idea = {};
+            $scope.heading = 'Create a new Idea';
 
             $scope.action = function () {
                 $scope.spin = true;
@@ -31,6 +32,40 @@ define(['angular', 'underscore'], function (angular, _) {
                     'fa-spinner': $scope.spin,
                     'fa-spin': $scope.spin,
                     'fa-plus': !$scope.spin
+                };
+            };
+        }];
+
+    ctrl.EditIdeaCtrl = ['$scope', '$state', '$stateParams', 'IdeaSvc', 'MsgSvc',
+        function ($scope, $state, $stateParams, IdeaSvc, msg) {
+            $scope.heading = 'Edit this Organization';
+
+            IdeaSvc.getById($stateParams.orgId, $stateParams.ideaId).then(function (idea) {
+                $scope.idea = idea;
+
+                $scope.action = function () {
+                    $scope.spin = true;
+                    $scope.idea.$update().then(function () {
+                        $state.go('idea', $stateParams);
+                    }, function (err) {
+                        msg.error('Failed to save the idea.', 'Please try again.');
+                    }).finally(function () {
+                        $scope.spin = false;
+                    });
+                };
+            }, function (err) {
+                msg.error('Failed to load the requested idea.');
+            }).finally(function () {
+                $scope.loading = false;
+            });
+
+            $scope.actionLabel = 'Save';
+            $scope.actionIcon = function () {
+                return {
+                    fa: true,
+                    'fa-spinner': $scope.spin,
+                    'fa-spin': $scope.spin,
+                    'fa-save-o': !$scope.spin
                 };
             };
         }];

@@ -32,11 +32,17 @@ define([], function () {
             })
             .state('newIdea', {
                 url: '/org/:orgId/idea/new',
-                templateUrl: 'static/template/newIdea.html'
+                templateUrl: 'static/template/editIdea.html',
+                controller: 'NewIdeaCtrl'
             })
             .state('idea', {
                 url: '/org/:orgId/idea/:ideaId',
                 templateUrl: 'static/template/idea.html'
+            })
+            .state('editIdea', {
+                url: '/org/:orgId/idea/:ideaId/edit',
+                templateUrl: 'static/template/editIdea.html',
+                controller: 'EditIdeaCtrl'
             });
     }];
 });
