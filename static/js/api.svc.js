@@ -6,6 +6,12 @@ define([], function () {
 
     var factory = {};
 
+    factory.UserApi = ['$resource', function ($resource) {
+        return $resource('/api/user', {userId: '@unique'}, {
+            search: { method: 'GET', isArray: true }
+        });
+    }];
+
     factory.OrgApi = ['$resource', function ($resource) {
         return $resource('/api/org/:orgId', {orgId: '@unique'}, {
             update: { method: 'PUT' },

@@ -22,17 +22,21 @@ define([], function () {
                 controller: 'NewOrgCtrl'
             })
             .state('org', {
-                url: '/org/:id',
+                url: '/org/:orgId',
                 templateUrl: 'static/template/org.html'
             })
             .state('editOrg', {
-                url: '/org/:id/edit',
+                url: '/org/:orgId/edit',
                 templateUrl: 'static/template/editOrg.html',
                 controller: 'EditOrgCtrl'
             })
             .state('newIdea', {
                 url: '/org/:orgId/idea/new',
                 templateUrl: 'static/template/newIdea.html'
+            })
+            .state('idea', {
+                url: '/org/:orgId/idea/:ideaId',
+                templateUrl: 'static/template/idea.html'
             });
     }];
 });

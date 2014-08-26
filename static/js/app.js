@@ -12,7 +12,9 @@ define([
     'app.ctrl',
     'app.templates',
     'org.ctrl',
+    'org.svc',
     'idea.ctrl',
+    'idea.svc',
     'api.svc',
     'user.svc',
     'user.dir',
@@ -24,7 +26,7 @@ define([
     'angular-strap-tpl',
     'angular-animate',
     'toaster'
-], function (angular, appConfig, appDir, appSvc, appCtrl, appTemplates, orgCtrl, ideaCtrl, apiSvc, userSvc, userDir) {
+], function (angular, appConfig, appDir, appSvc, appCtrl, appTemplates, orgCtrl, orgSvc, ideaCtrl, ideaSvc, apiSvc, userSvc, userDir) {
     'use strict';
 
     return angular.module('MainAppModule', ['ui.router', 'ngResource', 'directive.g+signin', 'mgcrea.ngStrap', 'ngAnimate', 'toaster'])
@@ -34,7 +36,9 @@ define([
         .controller(appCtrl)
         .run(appTemplates)
         .controller(orgCtrl)
+        .factory(orgSvc)
         .controller(ideaCtrl)
+        .factory(ideaSvc)
         .factory(apiSvc)
         .factory(userSvc)
         .directive(userDir);

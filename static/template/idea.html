@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<div class="idea" ng-controller="IdeaCtrl">
+    <div ng-show="loading">
+        Loading...
+    </div>
+    <div ng-show="idea && !loading">
+        <h1>
+            {{idea.title}}
+            <button ng-show="org.userIsOwner()" class="btn btn-link" ui-sref="editIdea({orgId: org.unique, ideaId: idea.unique})"><i class="fa fa-pencil"></i> Edit</button>
+            <button ng-show="org.userIsOwner()" class="btn btn-link" ng-click="delIdea()"><i class="fa fa-trash-o"></i> Delete</button>
+        </h1>
+
+        <p ng-if="idea.short_description">
+            <i class="fa fa-quote-left"></i>
+            {{idea.short_description}}
+            <i class="fa fa-quote-right"></i>
+        </p>
+    </div>
+</div>

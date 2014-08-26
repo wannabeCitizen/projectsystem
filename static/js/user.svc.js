@@ -6,12 +6,6 @@ define([], function () {
 
     var factory = {};
 
-    factory.UserApi = ['$resource', function ($resource) {
-        return $resource('/api/user', {userId: '@unique'}, {
-            search: { method: 'GET', isArray: true }
-        });
-    }];
-
     factory.UserSvc = ['$rootScope', function ($rootScope) {
         var svc = {};
 

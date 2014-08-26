@@ -8,11 +8,11 @@
             <div class="owners">
                 <h3>
                     Owners
-                    <button ng-show="userIsOwner()" class="btn btn-link" ng-click="showAddOwn = !showAddOwn">
+                    <button ng-show="org.userIsOwner()" class="btn btn-link" ng-click="showAddOwn = !showAddOwn">
                         <i class="fa fa-plus" data-title="Add owner" data-container="body" bs-tooltip></i>
                     </button>
                 </h3>
-                <div ng-show="userIsOwner() && showAddOwn">
+                <div ng-show="org.userIsOwner() && showAddOwn">
                     <user-selector user="ownerToAdd"></user-selector>
                     <button class="btn btn-primary" ng-click="addOwner(ownerToAdd)" ng-disabled="!canAddUser(ownerToAdd, org.owners)">
                         <i class="fa fa-plus"></i> Add
@@ -20,7 +20,7 @@
                 </div>
                 <ul>
                     <li ng-repeat="owner in org.owners">
-                        <a href ng-show="userIsOwner()" ng-click="delOwner(owner)"><i class="fa fa-trash-o" data-title="Delete this owner" bs-tooltip></i></a>
+                        <a href ng-show="org.userIsOwner()" ng-click="delOwner(owner)"><i class="fa fa-trash-o" data-title="Delete this owner" bs-tooltip></i></a>
                         {{owner.name}}
                     </li>
                 </ul>
@@ -30,12 +30,12 @@
             <div class="members">
                 <h3>
                     Members
-                    <button ng-show="userIsOwner()" class="btn btn-link" ng-click="showAddMember = !showAddMember">
+                    <button ng-show="org.userIsOwner()" class="btn btn-link" ng-click="showAddMember = !showAddMember">
                         <i class="fa fa-plus" data-title="Add member" data-container="body" bs-tooltip></i>
                     </button>
                 </h3>
 
-                <div ng-show="userIsOwner() && showAddMember">
+                <div ng-show="org.userIsOwner() && showAddMember">
                     <user-selector user="memberToAdd"></user-selector>
                     <button class="btn btn-primary" ng-click="addMember(memberToAdd)" ng-disabled="!canAddUser(memberToAdd, org.members)">
                         <i class="fa fa-plus"></i> Add
@@ -43,7 +43,7 @@
                 </div>
                 <ul>
                     <li ng-repeat="member in org.members">
-                        <a href ng-show="userIsOwner()" ng-click="delMember(member)"><i class="fa fa-trash-o" data-title="Delete this member" bs-tooltip></i></a>
+                        <a href ng-show="org.userIsOwner()" ng-click="delMember(member)"><i class="fa fa-trash-o" data-title="Delete this member" bs-tooltip></i></a>
                         {{member.name}}
                     </li>
                 </ul>
@@ -53,8 +53,8 @@
             <img class="img-thumbnail" ng-src="{{org.image}}"/>
             <h1>
                 {{org.name}}
-                <button ng-show="userIsOwner()" class="btn btn-link" ui-sref="editOrg({id: org.unique})"><i class="fa fa-pencil"></i> Edit</button>
-                <button ng-show="userIsOwner()" class="btn btn-link" ng-click="delOrg()"><i class="fa fa-trash-o"></i> Delete</button>
+                <button ng-show="org.userIsOwner()" class="btn btn-link" ui-sref="editOrg({orgId: org.unique})"><i class="fa fa-pencil"></i> Edit</button>
+                <button ng-show="org.userIsOwner()" class="btn btn-link" ng-click="delOrg()"><i class="fa fa-trash-o"></i> Delete</button>
             </h1>
 
             <p ng-if="org.short_description">
@@ -70,7 +70,7 @@
                 <h2>
                     <collapse-btn collapsed="collapseIdeas"></collapse-btn>
                     Ideas
-                    <button ng-show="userIsMember()" class="btn btn-link" ui-sref="newIdea({orgId: org.unique})">
+                    <button ng-show="org.userIsMember()" class="btn btn-link" ui-sref="newIdea({orgId: org.unique})">
                         <i class="fa fa-plus" data-title="Add idea" data-container="body" bs-tooltip></i>
                     </button>
                 </h2>
