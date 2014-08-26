@@ -74,9 +74,14 @@ def match_orgs(search_string):
 def update_org(org_id, **kwargs):
     org_keys = ['name', 'open_org', "short_description", "description", 
                 'image']
+    mini_keys = ['name', 'short_description']
 
     my_org = Organization.objects.get(unique=org_id)
     for k in org_keys:
         if k in kwargs.keys():
             my_org.update(**{"set__%s" % k : kwargs[k]})
+
+    for k in mini_keys:
+        if k in kwargs.keys():
+            my_org.update(**{"set__minified__%s" % k : kwargs[k]})
     return json.loads(my_org.to_json())

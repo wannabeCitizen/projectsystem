@@ -79,9 +79,11 @@ def update_idea(idea_id, **kwargs):
     current_time = datetime.datetime.now
     for k in idea_keys:
         if k in kwargs.keys():
-            my_idea.k = kwargs[k]
+            my_idea[k] = kwargs[k]
     my_idea.last_edit = current_time
     my_idea.save()
+
+    ##Need to update mini
     return json.loads(my_idea.to_json())
 
 def get_idea(idea_id):
@@ -116,7 +118,7 @@ def update_version(idea_id, version_id, **kwargs):
     current_time = datetime.datetime.now
     for k in idea_keys:
         if k in kwargs.keys():
-            my_version.k = kwargs[k]
+            my_version[k] = kwargs[k]
     my_version.last_edit = current_time
     my_idea.save()
     return json.loads(my_idea.to_json())
@@ -156,7 +158,7 @@ def update_comment(idea_id, comment_id, **kwargs):
     my_comment = my_idea.comments[comment_id]
     for k in comments_keys:
         if k in kwargs.keys():
-            my_comment.k = kwargs[k]
+            my_comment[k] = kwargs[k]
     my_comment.time = datetime.datetime.now
 
     my_idea.save()
@@ -196,7 +198,7 @@ def update_reply(idea_id, comment_id, reply_id, **kwargs):
     my_reply = my_idea.comments[comment_id].replies[reply_id]
     for k in reply_keys:
         if k in kwargs.keys():
-            my_reply.k = kwargs[k]
+            my_reply[k] = kwargs[k]
     my_reply.time = datetime.datetime.now
 
     my_idea.save()

@@ -4,7 +4,7 @@ For handling permission and verification requests
 import json
 import datetime
 
-from lib.model import User, Organization, MiniUser, MiniOrganization
+from lib.model import User, Organization, MiniUser, MiniOrganization, IdeaMeta
 
 #Checks if someone is an owner of an organization they are trying to modify
 def is_owner(org_id, user_id):
@@ -35,8 +35,15 @@ def is_in_org(user_id, org_id):
 			return True
 	return False
 
+def is_idea_owner(idea_id, user_id):
+	my_idea = IdeaMeta.objects.get(unique=idea_id)
+	if my_idea.created_by.google_id == user_id:
+		return True
+	else:
+		return False
+
 def is_thinker(user_id, idea_id, version_id):
-	my_idea = IdeasMeta.objects.get(unique=idea_id)
+	my_idea = IdeaMeta.objects.get(unique=idea_id)
 	for versions in my_idea.versions:
 		if versions.unique == version_id:
 			my_version = versions
@@ -46,7 +53,7 @@ def is_thinker(user_id, idea_id, version_id):
 		return False
 
 def is_commenter(user_id, idea_id, comment_id):
-	my_idea = IdeasMeta.objects.get(unique=idea_id)
+	my_idea = IdeaMeta.objects.get(unique=idea_id)
 	my_commenter = my_idea.comments[comment_id].commenter.google_id
 	if my_commenter == user_id:
 		return True
@@ -54,7 +61,7 @@ def is_commenter(user_id, idea_id, comment_id):
 		return False
 
 def is_replier(user_id, idea_id, comment_id, reply_id):
-	my_idea = IdeasMeta.objects.get(unique=idea_id)
+	my_idea = IdeaMeta.objects.get(unique=idea_id)
 	my_replier = my_idea.comments[comment_id].replies[reply_id].replier.google_id
 	if my_replier == user_id:
 		return True

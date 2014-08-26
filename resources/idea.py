@@ -4,7 +4,7 @@ from flask.ext import restful
 from flask.ext.restful import abort
 from flask_login import current_user
 
-from lib.verify import is_owner, is_in_org, is_in_org, is_thinker, is_commenter, is_replier
+from lib.verify import is_owner, is_in_org, is_in_org, is_thinker, is_idea_owner, is_commenter, is_replier
 from lib.idea_utils import (get_idea, get_all_ideas, delete_idea, create_idea,
                       update_idea, match_ideas, add_follower, create_version,
                       remove_follower, update_version, remove_version, change_karma,
@@ -31,6 +31,7 @@ class MetaIdea(restful.Resource):
     #update a meta-idea
     def put(self, org_id, idea_id):
         new_data = request.get_json()
+        print new_data
         verify = is_idea_owner(idea_id, current_user.google_id)
         if verify is True:
             return update_idea(idea_id, **new_data)
@@ -178,9 +179,7 @@ class AllIdeas(restful.Resource):
 
     #Create a new meta-idea, check for version
     def post(self, org_id):
-        print "made it"
         new_idea_data = request.get_json()
-        print "got data"
         verify = is_in_org(current_user.google_id, org_id)
         if verify is True:
             new_idea_data['unique'] = str(uuid.uuid4())
