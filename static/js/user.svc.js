@@ -46,6 +46,8 @@ define(['angular', 'gapi'], function (angular, gapi) {
                     (svc.currentUser.googleAuth && svc.currentUser.googleAuth.name) ||
                     (svc.currentUser.api && svc.currentUser.api.name);
                 svc.currentUser.imageUrl = svc.currentUser.googlePlus && svc.currentUser.googlePlus.image && svc.currentUser.googlePlus.image.url;
+                svc.currentUser.google_id = (svc.currentUser.googlePlus && svc.currentUser.googlePlus.id) ||
+                    (svc.currentUser.api && svc.currentUser.api.google_id);
             });
         });
 
