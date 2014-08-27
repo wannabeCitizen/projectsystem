@@ -6,7 +6,7 @@ define(['marked', 'gapi'], function (marked, gapi) {
 
     var dir = {};
 
-    dir.psNavbar = [function () {
+    dir.psNavbar = ['UserSvc', function (UserSvc) {
         return {
             restrict: 'E',
             templateUrl: 'static/template/dir/navbar.html',
