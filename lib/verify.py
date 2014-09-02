@@ -4,7 +4,7 @@ For handling permission and verification requests
 import json
 import datetime
 
-from lib.model import User, Organization, MiniUser, MiniOrganization, IdeaMeta
+from lib.model import User, Organization, MiniOrganization, IdeaMeta
 
 #Checks if someone is an owner of an organization they are trying to modify
 def is_owner(org_id, user_id):

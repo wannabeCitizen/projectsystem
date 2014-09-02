@@ -8,10 +8,7 @@ import datetime
 # projects, and ideas
 
 # A mini version of the user document to embed in other things
-class MiniUser(EmbeddedDocument):
-    name = StringField(required=True)
-    email = EmailField(required=True)
-    google_id = StringField(required=True)
+
 
 
 class MiniOrganization(EmbeddedDocument):
@@ -28,13 +25,15 @@ class MiniIdea(EmbeddedDocument):
     short_description = StringField(required=True)
  
 class Reply(EmbeddedDocument):
-    replier = EmbeddedDocumentField(MiniUser)
+    #Google ID
+    replier = StringField()
     text = StringField(required=True)
     time = DateTimeField(default=datetime.datetime.now)
     my_order = IntField()
 
 class Comment(EmbeddedDocument):
-    commenter = EmbeddedDocumentField(MiniUser)
+    #Google ID
+    commenter = StringField()
     text = StringField(required=True)
     time = DateTimeField(default=datetime.datetime.now)
     replies = ListField(EmbeddedDocumentField(Reply))
@@ -42,7 +41,8 @@ class Comment(EmbeddedDocument):
     my_order = IntField()
 
 class IdeaVersion(EmbeddedDocument):
-    thinker = EmbeddedDocumentField(MiniUser)
+    #Google ID
+    thinker = StringField()
     text = StringField()
     unique = StringField(required=True)
     created_on = DateTimeField(required=True, default=datetime.datetime.now)
@@ -57,8 +57,10 @@ class IdeaMeta(Document):
     short_description = StringField()
     created_on = DateTimeField(required=True, default=datetime.datetime.now)
     last_edit = DateTimeField(default=datetime.datetime.now)
-    created_by = EmbeddedDocumentField(MiniUser)
-    followers = ListField(EmbeddedDocumentField(MiniUser))
+    #This takes GoogleID
+    created_by = StringField()
+    
+    followers = ListField(StringField())
     versions = ListField(EmbeddedDocumentField(IdeaVersion))
     comments = ListField(EmbeddedDocumentField(Comment))
     num_comments = IntField()
@@ -75,7 +77,8 @@ class Role(EmbeddedDocument):
 
 class Task(EmbeddedDocument):
     task = StringField(required=True)
-    person = ListField(EmbeddedDocumentField(MiniUser))
+    #Google ID
+    person = ListField(StringField())
     due = DateTimeField
     complete = BooleanField
 
@@ -93,7 +96,8 @@ class Revision(EmbeddedDocument):
     revision_of = UUIDField(required=True)
 
 class Vote(EmbeddedDocument):
-    initiator = EmbeddedDocumentField(MiniUser, required=True)
+    #Google ID
+    initiator = StringField()
     description = StringField()
     verdict = BooleanField()
     vote_time = DateTimeField()
@@ -101,8 +105,6 @@ class Vote(EmbeddedDocument):
     completed_votes = ListField()
     toted_votes = IntField()
     required_votes = IntField()
-
-    new_project = DynamicField()
 
 class MiniProject(EmbeddedDocument):
     title = StringField(required=True)
@@ -113,17 +115,18 @@ class Project(Document):
     title = StringField(required=True)
     unique = StringField(required=True)
     short_description = StringField()
-    text = StringField()
     created_on = DateTimeField(required=True, default=datetime.datetime.now)
     last_edit = DateTimeField(default=datetime.datetime.now)
-    members = ListField(EmbeddedDocumentField(MiniUser))
-    followers = ListField(EmbeddedDocumentField(MiniUser))
+    #List of Google IDs
+    members = ListField(StringField())
+    followers = ListField(StringField())
     complete = BooleanField()
     budget = FloatField()
     voted_on = BooleanField()
     quorum = DecimalField(min_value=.5, max_value=1.0)
 
     minified = EmbeddedDocumentField(MiniProject)
+    my_org = EmbeddedDocumentField(MiniOrganization)
 
     roles = ListField(EmbeddedDocumentField(Role))
     phases = ListField(EmbeddedDocumentField(Phase))
@@ -135,13 +138,8 @@ class User(Document):
     name = StringField(max_length=50, required=True)
     email = EmailField(required=True)
     google_id = StringField(required=True)
-    organizations = ListField(EmbeddedDocumentField(MiniOrganization))
-    projects = ListField(EmbeddedDocumentField(MiniProject))
-    ideas = ListField(EmbeddedDocumentField(MiniIdea))
     joined_on = DateTimeField(default=datetime.datetime.now)
     notifications = ListField(EmbeddedDocumentField(Notification))
-    minified = EmbeddedDocumentField(MiniUser)
-
 
     def is_active(self):
         return True
@@ -155,8 +153,6 @@ class User(Document):
     def get_id(self):
         return unicode(self.google_id)
 
-class Proposal(EmbeddedDocument):
-    pass
 
 # Organizations are parents of everything except users
 class Organization(Document):
@@ -166,12 +162,13 @@ class Organization(Document):
     description = StringField(required=True)
     short_description = StringField(max_length=400)
     image = FileField()
-    created_by = EmbeddedDocumentField(MiniUser)
-    owners = ListField(EmbeddedDocumentField(MiniUser))
-    members = ListField(EmbeddedDocumentField(MiniUser))
+    created_by = StringField()
+    #owners and members have Google IDs
+    owners = ListField(StringField())
+    members = ListField(StringField())
     projects = ListField(EmbeddedDocumentField(MiniProject))
     ideas = ListField(EmbeddedDocumentField(MiniIdea))
-    pending_members = ListField(EmbeddedDocumentField(MiniUser))
-    pending_owners = ListField(EmbeddedDocumentField(MiniUser))
+    pending_members = ListField(StringField())
+    pending_owners = ListField(StringField())
     minified = EmbeddedDocumentField(MiniOrganization)
 

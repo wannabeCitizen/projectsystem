@@ -4,9 +4,9 @@ from flask.ext import restful
 from flask_login import login_user, make_secure_token, current_user
 from flask.ext.restful import abort, reqparse
 
-from lib.user_utils import get_user, delete_user, match_users, get_all_users
+from lib.user_utils import get_user, delete_user, match_users, get_all_users, get_list
 from lib.verify import is_owner, can_add
-from lib.model import User, MiniUser
+from lib.model import User
 
 from app import googlelogin
 
@@ -41,10 +41,9 @@ class Login(restful.Resource):
         if not user:
             current_time = datetime.datetime.now()
             user = User(google_id=userinfo['id'], email=userinfo['email'], name=userinfo['name'], joined_on=current_time )
-            user.minified = MiniUser(google_id=userinfo['id'], email=userinfo['email'], name=userinfo['name'])
             user.save()
 
-        #Add user to the flask-login
+        #Add user to the flask-login session (remember me auto-enabled)
         login_user(user, remember=True)      
 
         return json.loads(user.to_json())
@@ -61,6 +60,13 @@ class AllUsers(restful.Resource):
             abort(400, message="bad parameter")
         else: 
             return get_all_users()
+
+class UserList(restful.Resource):
+    def get(self):
+        data = request.get_json()
+        my_list = data['user_list']
+
+        return get_list(my_list)
 
 
 class UserEP(restful.Resource):

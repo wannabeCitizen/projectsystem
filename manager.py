@@ -4,11 +4,11 @@ from flask_login import (login_required, login_user, logout_user,
 
 from app import app, api, googlelogin
 
-from lib.model import User, MiniUser
+from lib.model import User
 
 from resources.organization import (OrganizationEP, OrgMember, OrgOwner, 
                                     AllOrgs)
-from resources.user import Login, AllUsers, UserEP
+from resources.user import Login, AllUsers, UserEP, UserList
 from resources.idea import (MetaIdea, VersionIdea, KarmaChange, IdeaComment, 
                             ReplyComment, AllIdeas, FollowIdea)
 
@@ -55,7 +55,7 @@ api.add_resource(KarmaChange, '/api/org/<string:org_id>/idea/<string:idea_id>/ka
 api.add_resource(IdeaComment, '/api/org/<string:org_id>/idea/<string:idea_id>/comment', '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<int:comment_id>')
 api.add_resource(ReplyComment, '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<int:comment_id>/reply', '/api/org/<string:org_id>/idea/<int:idea_id>/comment/<string:comment_id>/reply/<int:reply_id>')
 api.add_resource(FollowIdea, '/api/org/<string:org_id>/idea/<string:idea_id>/follow')
-
+api.add_resource(UserList, '/api/user/list')
 
 
 if __name__ == "__main__":
