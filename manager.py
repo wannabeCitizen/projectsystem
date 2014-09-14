@@ -10,7 +10,7 @@ from resources.organization import (OrganizationEP, OrgMember, OrgOwner,
                                     AllOrgs)
 from resources.user import Login, AllUsers, UserEP, UserList
 from resources.idea import (MetaIdea, VersionIdea, KarmaChange, IdeaComment, 
-                            ReplyComment, AllIdeas, FollowIdea)
+                            IdeaReply, AllIdeas, FollowIdea)
 
 from mongoengine import connect
 
@@ -53,7 +53,7 @@ api.add_resource(MetaIdea, '/api/org/<string:org_id>/idea/<string:idea_id>')
 api.add_resource(VersionIdea, '/api/org/<string:org_id>/idea/<string:idea_id>/version/<string:version_id>')
 api.add_resource(KarmaChange, '/api/org/<string:org_id>/idea/<string:idea_id>/karma/<string:version_id>')
 api.add_resource(IdeaComment, '/api/org/<string:org_id>/idea/<string:idea_id>/comment', '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<int:comment_id>')
-api.add_resource(ReplyComment, '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<int:comment_id>/reply', '/api/org/<string:org_id>/idea/<int:idea_id>/comment/<string:comment_id>/reply/<int:reply_id>')
+api.add_resource(IdeaReply, '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<int:comment_id>/reply', '/api/org/<string:org_id>/idea/<int:idea_id>/comment/<string:comment_id>/reply/<int:reply_id>')
 api.add_resource(FollowIdea, '/api/org/<string:org_id>/idea/<string:idea_id>/follow')
 api.add_resource(UserList, '/api/user/list')
 

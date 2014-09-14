@@ -31,7 +31,6 @@ class MetaIdea(restful.Resource):
     #update a meta-idea
     def put(self, org_id, idea_id):
         new_data = request.get_json()
-        print new_data
         verify = is_idea_owner(idea_id, current_user.google_id)
         if verify is True:
             return update_idea(idea_id, **new_data)
@@ -136,7 +135,7 @@ class IdeaComment(restful.Resource):
             return abort(401, message="Not Comment Owner")
         
 
-class ReplyComment(restful.Resource):
+class IdeaReply(restful.Resource):
 
     #Add a reply to a comment
     def post(self, org_id, idea_id, comment_id):

@@ -59,7 +59,7 @@ def delete_idea(user_id, org_id, idea_id):
     
     
     my_org = Organization.objects.get(unique=org_id)
-    my_org.ideas.update(pull__ideas__unique=idea_id)
+    my_org.update(pull__ideas__unique=idea_id)
 
     old_idea.delete()
     return json.loads(old_idea.to_json())
@@ -104,7 +104,7 @@ def remove_follower(user_id, idea_id):
     my_idea = IdeaMeta.objects.get(unique=idea_id)
     my_idea.update(pull__followers=user_id)
 
-    return json.loads(my_idea.to_json())
+    return user_id
 
 def update_version(idea_id, version_id, **kwargs):
     idea_keys = ['text']

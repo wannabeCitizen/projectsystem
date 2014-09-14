@@ -72,38 +72,49 @@ class IdeaMeta(Document):
 
 
 class Role(EmbeddedDocument):
-    pass
+    person = StringField(required=True)
+    role = StringField()
+    responsible_for = StringField()
 
 
 class Task(EmbeddedDocument):
     task = StringField(required=True)
     #Google ID
     person = ListField(StringField())
-    due = DateTimeField
-    complete = BooleanField
+    due = DateTimeField()
+    complete = BooleanField()
 
 
 class Phase(EmbeddedDocument):
-    text = StringField
-    complete = BooleanField
+    text = StringField()
+    complete = BooleanField()
     tasks = ListField(EmbeddedDocumentField(Task))
-    goal_date = DateTimeField
+    goal_date = DateTimeField()
 
 
 class Revision(EmbeddedDocument):
     text = StringField(required=True)
-    time = DateTimeField(required=True)
-    revision_of = UUIDField(required=True)
+    time = DateTimeField(required=True, default=datetime.datetime.now)
+
+class Ballot(EmbeddedDocument):
+    voter = StringField()
+    comment = StringField()
+    in_favor = BooleanField()
+
 
 class Vote(EmbeddedDocument):
     #Google ID
     initiator = StringField()
     description = StringField()
+    #empty to start; once verdict reached, can't delete?
     verdict = BooleanField()
     vote_time = DateTimeField()
-    pending_votes = ListField()
-    completed_votes = ListField()
-    toted_votes = IntField()
+    #All members added when initiated
+    pending_votes = ListField(StringField())
+
+    yay = ListField(EmbeddedDocumentField(Ballot))
+    nay = ListField(EmbeddedDocumentField(Ballot))
+    vote_num = IntField()
     required_votes = IntField()
 
 class MiniProject(EmbeddedDocument):
@@ -115,6 +126,8 @@ class Project(Document):
     title = StringField(required=True)
     unique = StringField(required=True)
     short_description = StringField()
+    #This is an idea ID
+    based_on = StringField()
     created_on = DateTimeField(required=True, default=datetime.datetime.now)
     last_edit = DateTimeField(default=datetime.datetime.now)
     #List of Google IDs
@@ -122,16 +135,21 @@ class Project(Document):
     followers = ListField(StringField())
     complete = BooleanField()
     budget = FloatField()
-    voted_on = BooleanField()
-    quorum = DecimalField(min_value=.5, max_value=1.0)
+    quorum = DecimalField(min_value=.5, max_value=1.0, precision=2)
 
     minified = EmbeddedDocumentField(MiniProject)
     my_org = EmbeddedDocumentField(MiniOrganization)
 
+    votes = ListField(EmbeddedDocumentField(Vote))
+    num_votes = IntField()
+    
     roles = ListField(EmbeddedDocumentField(Role))
     phases = ListField(EmbeddedDocumentField(Phase))
     tasks = ListField(EmbeddedDocumentField(Task))
-    revisions = ListField(EmbeddedDocumentField(Revision))
+    old_revs = ListField(EmbeddedDocumentField(Revision))
+    current_rev = EmbeddedDocumentField(Revision)
+    comments = ListField(EmbeddedDocumentField(Comment))
+    num_comments = IntField()
 
 
 class User(Document):
@@ -167,6 +185,7 @@ class Organization(Document):
     owners = ListField(StringField())
     members = ListField(StringField())
     projects = ListField(EmbeddedDocumentField(MiniProject))
+    del_projects = ListField(EmbeddedDocumentField(MiniProject))
     ideas = ListField(EmbeddedDocumentField(MiniIdea))
     pending_members = ListField(StringField())
     pending_owners = ListField(StringField())

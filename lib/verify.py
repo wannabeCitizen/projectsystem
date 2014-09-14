@@ -67,3 +67,10 @@ def is_replier(user_id, idea_id, comment_id, reply_id):
 		return True
 	else:
 		return False
+
+def is_project_member(user_id, project_id):
+	my_project = Project.objects.get(unique=project_id)
+	for members in my_project.members:
+		if members.google_id == user_id:
+			return True
+	return False
