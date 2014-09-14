@@ -7,7 +7,9 @@ from flask_login import current_user
 from lib.verify import is_in_org, is_project_member
 from lib.project_utils import create_project, update_project, get_project, delete_project,
                                 add_follower, add_member, remove_member, remove_follower,
-                                add_role, remove_role, update_role, 
+                                add_role, remove_role, update_role, add_task, update_task,
+                                remove_task, add_vote, update_vote, remove_vote, cast_ballot,
+                                dkj
 
 import uuid
 import json
@@ -92,7 +94,7 @@ class ProjectRole(restful.Resource):
         else:
             return abort(401, message="User is not on project") 
 
-	#modify a role	
+	#modify a role by resending the whole role object (rather than just the update)	
 	def put(self, org_id, project_id):
 		role_data = request.get_json()
         verify = is_project_member(current_user.google_id, project_id)
@@ -105,40 +107,77 @@ class ProjectRole(restful.Resource):
 		old_role = request.get_json()
         verify = is_project_member(current_user.google_id, project_id)		
         if verify is True:
-            return remove_role(project_id, old_role[role])
+            return remove_role(project_id, old_role['index'])
         else:
             return abort(401, message="User is not on project")
 
 class ProjectTask(restful.Resource):
 	#add a task to a project
 	def post(self, org_id, project_id):
-		pass 
+		new_task = request.get_json()
+        verify = is_project_member(current_user.google_id, project_id)
+        if verify is True:
+            return add_task(project_id, **new_task)
+        else:
+            return abort(401, message="User is not on project") 
 
 	#modify a task	
 	def put(self, org_id, project_id):
-		pass
+		task_data = request.get_json()
+        verify = is_project_member(current_user.google_id, project_id)
+        if verify is True:
+            return update_task(project_id, **task_data)
+        else:
+            return abort(401, message="User is not on project")
 
 	def delete(self, org_id, project_id):
-		pass
+		old_task = request.get_json()
+        verify = is_project_member(current_user.google_id, project_id)      
+        if verify is True:
+            return remove_task(project_id, old_task['index'])
+        else:
+            return abort(401, message="User is not on project")
 
 class ProjectVote(restful.Resource):
 	#add a vote to a project
 	def post(self, org_id, project_id):
-		pass 
+		new_vote = request.get_json()
+        verify = is_project_member(current_user.google_id, project_id)
+        if verify is True:
+            new_vote['initiator'] = current_user.google_id
+            return add_vote(project_id, **new_vote)
+        else:
+            return abort(401, message="User is not on project") 
 
 	#modify a vote	
 	def put(self, org_id, project_id):
-		pass
+		vote_data = request.get_json()
+        verify = is_project_member(current_user.google_id, project_id)
+        if verify is True:
+            return update_vote(project_id, **vote_data)
+        else:
+            return abort(401, message="User is not on project")
 
+    #This should be disabled once testing is done
 	def delete(self, org_id, project_id):
-		pass
+		old_vote = request.get_json()
+        verify = is_project_member(current_user.google_id, project_id)      
+        if verify is True:
+            return remove_vote(project_id, old_vote['index'])
+        else:
+            return abort(401, message="User is not on project")
 
 class VoteBallot(restful.Resource):
 	def put(self, org_id, project_id):
-		pass
+		vote_data = request.get_json()
+        verify = is_project_member(current_user.google_id, project_id)
+        if verify is True:
+            return cast_ballot(project_id, **vote_data)
+        else:
+            return abort(401, message="User is not on project")
 
 class Revision(restful.Resource):
-	def get(self, org_id, projec_id):
+	def get(self, org_id, project_id):
 		pass
 
 class ProjectPhase(restful.Resource):

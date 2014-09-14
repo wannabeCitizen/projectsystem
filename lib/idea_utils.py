@@ -69,7 +69,7 @@ def update_idea(idea_id, **kwargs):
     idea_keys = ['title', 'short_description']
 
     my_idea = IdeaMeta.objects.get(unique=idea_id)
-    current_time = datetime.datetime.now
+    current_time = datetime.datetime.now()
     for k in idea_keys:
         if k in kwargs.keys():
             my_idea.minified[k] = kwargs[k]
@@ -112,7 +112,7 @@ def update_version(idea_id, version_id, **kwargs):
     for versions in my_idea.versions:
         if versions.unique == version_id:
             my_version = versions
-    current_time = datetime.datetime.now
+    current_time = datetime.datetime.now()
     for k in idea_keys:
         if k in kwargs.keys():
             my_version[k] = kwargs[k]
@@ -140,7 +140,7 @@ def create_comment(user_id, idea_id, **kwargs):
     my_comment = Comment(**kwargs)
     my_comment.my_order = my_index
     my_comment.num_replies = 0
-    my_comment.time = datetime.datetime.now
+    my_comment.time = datetime.datetime.now()
     my_comment.commenter = my_user.google_id
 
     my_idea.comments.append(my_comment)
@@ -156,7 +156,7 @@ def update_comment(idea_id, comment_id, **kwargs):
     for k in comments_keys:
         if k in kwargs.keys():
             my_comment[k] = kwargs[k]
-    my_comment.time = datetime.datetime.now
+    my_comment.time = datetime.datetime.now()
 
     my_idea.save()
 
@@ -180,7 +180,7 @@ def create_reply(user_id, idea_id, comment_id, **kwargs):
 
     my_reply = Reply(**kwargs)
     my_reply.my_order = my_index
-    my_reply.time = datetime.datetime.now
+    my_reply.time = datetime.datetime.now()
     my_reply.replier = my_user.google_id
 
     my_idea.comments[comment_id].replies.append(my_reply)
@@ -196,7 +196,7 @@ def update_reply(idea_id, comment_id, reply_id, **kwargs):
     for k in reply_keys:
         if k in kwargs.keys():
             my_reply[k] = kwargs[k]
-    my_reply.time = datetime.datetime.now
+    my_reply.time = datetime.datetime.now()
 
     my_idea.save()
 
