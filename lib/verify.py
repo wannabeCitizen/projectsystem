@@ -74,3 +74,19 @@ def is_project_member(user_id, project_id):
 		if members.google_id == user_id:
 			return True
 	return False
+
+def is_project_commenter(user_id, project_id, comment_id):
+	my_project = Project.objects.get(unique=project_id)
+	my_commenter = my_project.comments[comment_id].commenter.google_id
+	if my_commenter == user_id:
+		return True
+	else:
+		return False
+
+def is_project_replier(user_id, project_id, comment_id, reply_id):
+	my_project = Project.objects.get(unique=project_id)
+	my_replier = my_project.comments[comment_id].replies[reply_id].replier.google_id
+	if my_replier == user_id:
+		return True
+	else:
+		return False

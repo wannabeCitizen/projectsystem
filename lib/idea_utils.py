@@ -133,26 +133,25 @@ def change_karma(user_id, idea_id, version_id):
 
 def create_comment(user_id, idea_id, **kwargs):
     my_idea = IdeaMeta.objects.get(unique=idea_id)
-    my_user = User.objects.get(google_id=user_id)
-    my_index = my_idea.num_comments
-    my_idea.update_one(inc__num_comments=1)
 
     my_comment = Comment(**kwargs)
-    my_comment.my_order = my_index
+    my_comment.index = my_idea.num_comments
+
+    my_idea.update_one(inc__num_comments=1)
+
     my_comment.num_replies = 0
     my_comment.time = datetime.datetime.now()
-    my_comment.commenter = my_user.google_id
+    my_comment.commenter = user_id
 
-    my_idea.comments.append(my_comment)
+    my_idea.update(push__comments=my_comment)
 
-    my_idea.save()
-    return my_comment
+    return json.loads(my_comment.to_json())
 
 
-def update_comment(idea_id, comment_id, **kwargs):
+def update_comment(idea_id, **kwargs):
     comment_keys = ['text']
     my_idea = IdeaMeta.objects.get(unique=idea_id)
-    my_comment = my_idea.comments[comment_id]
+    my_comment = my_idea.comments[kwargs['index']]
     for k in comments_keys:
         if k in kwargs.keys():
             my_comment[k] = kwargs[k]
@@ -160,39 +159,35 @@ def update_comment(idea_id, comment_id, **kwargs):
 
     my_idea.save()
 
-    return my_comment
+    return json.loads(my_comment.to_json())
 
 
 def remove_comment(idea_id, comment_id):
     my_idea = IdeaMeta.objects.get(unique=idea_id)
-    my_idea.comments[comment_id] = None
-    my_idea.save()
+    my_idea.update(pull__comments__index=comment_id)
 
-    return my_idea
+    return "Removed"
 
 def create_reply(user_id, idea_id, comment_id, **kwargs):
-    my_idea = IdeaMeta.objects.get(unique=idea_id)
-    my_user = User.objects.get(google_id=user_id)
+    my_idea = IdeaMeta.objects.get(unique=project_id)
     my_comment = my_idea.comments[comment_id]
 
-    my_index = my_comment.num_replies
-    mycomment.num_replies += 1
-
     my_reply = Reply(**kwargs)
-    my_reply.my_order = my_index
+    my_reply.index = my_comment.num_replies
+    mycomment.num_replies += 1
     my_reply.time = datetime.datetime.now()
-    my_reply.replier = my_user.google_id
+    my_reply.replier = user_id
 
     my_idea.comments[comment_id].replies.append(my_reply)
 
     my_idea.save()
-    return my_reply
+    return json.loads(my_reply.to_json())
 
 
-def update_reply(idea_id, comment_id, reply_id, **kwargs):
+def update_reply(idea_id, comment_id, **kwargs):
     reply_keys = ['text']
     my_idea = IdeaMeta.objects.get(unique=idea_id)
-    my_reply = my_idea.comments[comment_id].replies[reply_id]
+    my_reply = my_idea.comments[comment_id].replies[kwargs['index']]
     for k in reply_keys:
         if k in kwargs.keys():
             my_reply[k] = kwargs[k]
@@ -200,11 +195,12 @@ def update_reply(idea_id, comment_id, reply_id, **kwargs):
 
     my_idea.save()
 
-    return reply
+    return json.loads(my_reply.to_json())
 
 def remove_reply(idea_id, comment_id, reply_id):
     my_idea = IdeaMeta.objects.get(unique=idea_id)
-    my_idea.comments[comment_id].replies[reply_id] = None
+    my_reply = my_idea.comments[comment_id].replies[reply_id]
+    my_idea.comments[comment_id].replies.remove(my_reply)
     my_idea.save()
 
-    return my_idea
+    return "Removed"

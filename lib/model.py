@@ -29,7 +29,7 @@ class Reply(EmbeddedDocument):
     replier = StringField()
     text = StringField(required=True)
     time = DateTimeField(default=datetime.datetime.now())
-    my_order = IntField()
+    index = IntField()
 
 class Comment(EmbeddedDocument):
     #Google ID
@@ -38,7 +38,7 @@ class Comment(EmbeddedDocument):
     time = DateTimeField(default=datetime.datetime.now())
     replies = ListField(EmbeddedDocumentField(Reply))
     num_replies = IntField()
-    my_order = IntField()
+    index = IntField()
 
 class IdeaVersion(EmbeddedDocument):
     #Google ID
@@ -87,9 +87,9 @@ class Task(EmbeddedDocument):
 
 
 class Phase(EmbeddedDocument):
-    text = StringField()
+    text = StringField(required=True)
     complete = BooleanField()
-    tasks = ListField(EmbeddedDocumentField(Task))
+    tasks = ListField(IntField())
     goal_date = DateTimeField()
     index = IntField()
 

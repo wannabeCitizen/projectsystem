@@ -116,17 +116,19 @@ class IdeaComment(restful.Resource):
             return abort(401, message="Not in Organization")
              
     #Edit a comment
-    def put(self, org_id, idea_id, comment_id):
+    def put(self, org_id, idea_id):
         new_comment_data = request.get_json()
         verify = is_commenter(current_user.google_id, idea_id, comment_id)
         if verify is True:
-            update_comment(idea_id, comment_id, **new_comment_data)
+            update_comment(idea_id, **new_comment_data)
             return "Success"
         else:
             return abort(401, message="Not Comment Owner")
 
     #remove comment and replies
-    def delete(self, org_id, idea_id, comment_id):
+    def delete(self, org_id, idea_id):
+        old_comment_data = request.get_json()
+        comment_id = old_comment_data['index']
         verify = is_commenter(current_user.google_id, idea_id, comment_id)
         if verify is True:
             remove_comment(idea_id, comment_id)
@@ -148,17 +150,20 @@ class IdeaReply(restful.Resource):
             return abort(401, message="Not in Organization")
 
     #Edit a reply to a comment
-    def put(self, org_id, idea_id, comment_id, reply_id):
+    def put(self, org_id, idea_id, comment_id):
         new_reply_data = request.get_json()
+        reply_id = new_reply_data['index']
         verify = is_replier(current_user.google_id, idea_id, comment_id, reply_id)
         if verify is True:
-            update_reply(idea_id, comment_id, reply_id, **new_reply_data)
+            update_reply(idea_id, comment_id, **new_reply_data)
             return "Success"
         else:
             return abort(401, message="Not Reply Owner")
 
     #Remove a reply
-    def delete(self, org_id, idea_id, comment_id, reply_id):
+    def delete(self, org_id, idea_id, comment_id):
+        old_reply_data = request.get_json()
+        reply_id = old_reply_data['index']
         verify = is_replier(current_user.google_id, idea_id, comment_id, reply_id)
         if verify is True:
             remove_reply(idea_id, comment_id, reply_id)

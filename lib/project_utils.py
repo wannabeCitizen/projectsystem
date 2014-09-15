@@ -5,7 +5,7 @@ import json
 import datetime
 
 from lib.model import (User, Organization, MiniOrganization, Project, MiniProject, Vote,
-						Ballot, Role, Task, Phase, Revision)
+                        Ballot, Role, Task, Phase, Revision)
 
 from mongoengine import Q
 
@@ -34,15 +34,15 @@ def update_project(project_id, **kwargs):
     current_time = datetime.datetime.now()
     for k in project_keys:
         if k in kwargs.keys():
-        	if k == 'text':
-        		old_rev = my_project.current_rev
-        		my_project.oldrevs.append(old_rev)
-        		my_project.current_rev = Revision(text=kwargs[k], time=current_time)
-        	elif k in mini_keys:
-            	my_project.minified[k] = kwargs[k]
-            	my_project[k] = kwargs[k]
+            if k == 'text':
+                old_rev = my_project.current_rev
+                my_project.oldrevs.append(old_rev)
+                my_project.current_rev = Revision(text=kwargs[k], time=current_time)
+            elif k in mini_keys:
+                my_project.minified[k] = kwargs[k]
+                my_project[k] = kwargs[k]
             else:
-            	my_project[k] = kwargs[k]
+                my_project[k] = kwargs[k]
 
     #Remember to do same for ideas in the future!!
     my_orgs = Organization.objects(projects__unique=project_id)
@@ -60,6 +60,20 @@ def get_project(project_id):
     my_project = Project.objects.exclude('old_revs').get(unique=project_id)
     return json.loads(my_project.to_json())
 
+def match_projects(org_id, search_string):
+    list_o_projects = Project.objects(Q(my_org__unique__exact=org_id) and (Q(title__icontains=search_string) | Q(short_description__icontains=search_string)))[:10]
+    data = []
+    for projects in list_o_projects:
+        data.append(json.loads(projects.to_json()))
+    return data
+
+def get_all_projects(org_id):
+    all_projects = []
+    my_org = Organization.objects.get(unique=org_id)
+    for projects in my_org.projects:
+        all_projects.append(json.loads(projects.to_json()))
+    return all_projects
+
 def delete_project(user_id, org_id, project_id):
     old_project = Project.objects.get(unique=project_id)
     
@@ -75,13 +89,13 @@ def add_member(user_id, project_id):
     my_project = Project.objects.get(unique=project_id)
     my_project.update(add_to_set__members=my_user.google_id)
 
-    return my_user
+    return json.loads(my_user.to_json())
 
 def remove_member(user_id, project_id):
     my_project = Project.objects.get(unique=project_id)
     my_project.update(pull__members=user_id)
 
-    return user_id
+    return "Removed"
 
 def add_follower(user_id, project_id):
     my_user = User.objects.get(google_id=user_id)
@@ -89,7 +103,7 @@ def add_follower(user_id, project_id):
     my_project = Project.objects.get(unique=project_id)
     my_project.update(add_to_set__followers=my_user.google_id)
 
-    return my_user
+    return json.loads(my_user.to_json())
 
 def remove_follower(user_id, project_id):
     my_project = Project.objects.get(unique=project_id)
@@ -110,7 +124,7 @@ def remove_role(project_id, role_id):
     my_project = Project.objects.get(unique=project_id)
     my_project.update(pull__roles__index=role_id)
 
-    return role_title
+    return "Removed"
 
 def update_role(project_id, **kwargs):
     role_keys = ['person', 'role', 'responsible_for']
@@ -157,7 +171,7 @@ def remove_task(project_id, task_id):
     my_project = Project.objects.get(unique=project_id)
     my_project.update(pull__tasks__index=task_id)
 
-    return json.loads(my_task.to_json())
+    return "Removed"
 
 def add_vote(project_id, **kwargs):
     my_project = Project.objects.get(unique=project_id)
@@ -217,4 +231,115 @@ def cast_ballot(project_id, **kwargs):
 
     return "Success"
 
+def get_revisions(project_id):
+    my_revs = Projects.objects.only('old_revs').get(unique=project_id)
+    return json.loads(my_revs.to_json())
 
+def add_phase(project_id, **kwargs):
+    my_project = Project.objects.get(unique=project_id)
+    my_phase = Phase(**kwargs)
+    my_phase.index = my_project.num_phases
+    my_project.update_one(inc__num_tasks=1) 
+    my_project.update(push__phases=my_phase)
+
+    return json.loads(my_phase.to_json())
+
+# Not sure if we need this:
+# def get_phase(project_id, phase_id):
+#     my_project = Project.objects.get(unique=project_id)
+#     my_phase = my_project.phases[phase_id]
+
+#     return json.loads(my_phase.to_json())
+
+def update_phase(project_id, **kwargs):
+    phase_keys = ['text', 'tasks', 'complete', 'goal_date']
+
+    my_project = Project.objects.get(unique=project_id)
+    current_time = datetime.datetime.now()
+    my_phase = my_project.phases[kwargs['index']]
+
+    for k in phase_keys:
+        if k in kwargs:
+            my_phase[k] = kwargs[k]
+
+    my_project.last_edit = current_time
+    my_project.save()
+
+    return json.loads(my_phase.to_json())
+
+def remove_phase(project_id, phase_id):
+    my_project = Project.objects.get(unique=project_id)
+    my_project.update(pull__phases__index=phase_id)
+
+    return "Removed"
+
+def create_comment(user_id, project_id, **kwargs):
+    my_project = Project.objects.get(unique=project_id)
+
+    my_comment = Comment(**kwargs)
+    my_comment.index = my_project.num_comments
+
+    my_project.update_one(inc__num_comments=1)
+    
+    my_comment.num_replies = 0
+    my_comment.time = datetime.datetime.now()
+    my_comment.commenter = user_id
+
+    my_project.update(push__comments=my_comment)
+
+    return json.loads(my_comment.to_json())
+
+def update_comment(project_id, **kwargs):
+    comment_keys = ['text']
+    my_idea = Project.objects.get(unique=project_id)
+    my_comment = my_project.comments[kwargs['index']]
+    for k in comments_keys:
+        if k in kwargs.keys():
+            my_comment[k] = kwargs[k]
+    my_comment.time = datetime.datetime.now()
+
+    my_idea.save()
+
+    return json.loads(my_comment.to_json()) 
+
+def remove_comment(project_id, comment_id):
+    my_project = Project.objects.get(unique=idea_id)
+    my_project.update(pull__comments__index=comment_id)
+
+    return "Removed"
+
+def create_reply(user_id, project_id, comment_id, **kwargs):
+    my_project = Project.objects.get(unique=project_id)
+    my_comment = my_project.comments[comment_id]
+
+    my_reply = Reply(**kwargs)
+    my_reply.index = my_comment.num_replies
+    mycomment.num_replies += 1
+    my_reply.time = datetime.datetime.now()
+    my_reply.replier = user_id
+
+    my_project.comments[comment_id].replies.append(my_reply)
+
+    my_project.save()
+    return json.loads(my_reply.to_json())
+
+def update_reply(project_id, comment_id, **kwargs):
+    reply_keys = ['text']
+    my_project = Project.objects.get(unique=project_id)
+    my_reply = my_project.comments[comment_id].replies[kwargs['index']]
+    for k in reply_keys:
+        if k in kwargs.keys():
+            my_reply[k] = kwargs[k]
+    my_reply.time = datetime.datetime.now()
+
+    my_project.save()
+
+    return json.loads(my_reply.to_json())
+
+def remove_reply(project_id, comment_id, reply_id):
+    my_project = Project.objects.get(unique=project_id)
+    my_reply = my_project.comments[comment_id].replies[reply_id]
+    my_project.comments[comment_id].replies.remove(my_reply)
+    my_project.save()
+
+    return "Removed"
