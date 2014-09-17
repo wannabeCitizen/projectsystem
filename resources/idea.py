@@ -110,14 +110,14 @@ class IdeaComment(restful.Resource):
         new_comment_data = request.get_json()
         verify = is_in_org(current_user.google_id, org_id)
         if verify is True:
-            create_comment(current_user.google_id, idea_id, **new_comment_data)
-            return "Success"
+            return create_comment(current_user.google_id, idea_id, **new_comment_data)
         else:
             return abort(401, message="Not in Organization")
              
     #Edit a comment
     def put(self, org_id, idea_id):
         new_comment_data = request.get_json()
+        comment_id = new_comment_data['index']
         verify = is_commenter(current_user.google_id, idea_id, comment_id)
         if verify is True:
             update_comment(idea_id, **new_comment_data)
@@ -144,8 +144,7 @@ class IdeaReply(restful.Resource):
         new_reply_data = request.get_json()
         verify = is_in_org(current_user.google_id, org_id)
         if verify is True:
-            create_reply(current_user.google_id, idea_id, comment_id, **new_reply_data)
-            return "Success"
+            return create_reply(current_user.google_id, idea_id, comment_id, **new_reply_data)
         else:
             return abort(401, message="Not in Organization")
 

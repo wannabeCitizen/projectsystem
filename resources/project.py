@@ -23,7 +23,7 @@ class AllProjects(restful.Resource):
         verify = is_in_org(current_user.google_id, org_id)
         if verify is True:
             new_project_data['unique'] = str(uuid.uuid4())
-            return create_project(current_user.google_id, org_id, **new_project_data)
+            return create_project(org_id, **new_project_data)
         else: 
             return abort(401, message="User not in org")
 
@@ -69,7 +69,7 @@ class ProjectMember(restful.Resource):
             return abort(401, message="User not in organization")
 
     def delete(self, org_id, project_id, user_id):
-        verify = is_project_member(current_user.google_id, org_id)
+        verify = is_project_member(current_user.google_id, project_id)
         if verify is True:
             remove_member(user_id, project_id)
             return "Success"

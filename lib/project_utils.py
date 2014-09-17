@@ -47,8 +47,8 @@ def update_project(project_id, **kwargs):
     #Remember to do same for ideas in the future!!
     my_orgs = Organization.objects(projects__unique=project_id)
     for an_org in my_orgs:
-        an_org.update_one(pull__projects__unique=project_id)
-        an_org.update_one(push__projects=my_project.minified)
+        an_org.update(pull__projects__unique=project_id)
+        an_org.update(push__projects=my_project.minified)
 
     my_project.last_edit = current_time
     my_project.save()
@@ -76,10 +76,15 @@ def get_all_projects(org_id):
 
 def delete_project(user_id, org_id, project_id):
     old_project = Project.objects.get(unique=project_id)
-    
+    old_project.delete()
+
     my_org = Organization.objects.get(unique=org_id)
     my_org.update(pull__projects__unique=project_id)
-    my_org.update(push__del_projects= old_project)
+    
+   #Eventually we'll want to enforce something stricter 
+    # my_org = Organization.objects.get(unique=org_id)
+    # my_org.update(pull__projects__unique=project_id)
+    # my_org.update(push__del_projects= old_project)
     
     return json.loads(old_project.to_json())
 
@@ -115,16 +120,17 @@ def add_role(project_id, **kwargs):
     my_project = Project.objects.get(unique=project_id)
     my_role = Role(**kwargs)
     my_role.index = my_project.num_roles
-    my_project.update_one(inc__num_roles=1) 
+    my_project.update(inc__num_roles=1) 
     my_project.update(push__roles=my_role)
 
     return json.loads(my_role.to_json())
 
 def remove_role(project_id, role_id):
     my_project = Project.objects.get(unique=project_id)
-    my_project.update(pull__roles__index=role_id)
+    my_project.roles[role_id].removed = True
+    my_project.save()
 
-    return "Removed"
+    return json.loads(my_project.roles[role_id].to_json())
 
 def update_role(project_id, **kwargs):
     role_keys = ['person', 'role', 'responsible_for']
@@ -146,13 +152,13 @@ def add_task(project_id, **kwargs):
     my_project = Project.objects.get(unique=project_id)
     my_task = Task(**kwargs)
     my_task.index = my_project.num_tasks
-    my_project.update_one(inc__num_tasks=1) 
+    my_project.update(inc__num_tasks=1) 
     my_project.update(push__tasks=my_task)
 
     return json.loads(my_task.to_json())
 
 def update_task(project_id, **kwargs):
-    task_keys = ['person', 'due', 'complete']
+    task_keys = ['person', 'due', 'complete', 'to_do']
 
     my_project = Project.objects.get(unique=project_id)
     current_time = datetime.datetime.now()
@@ -169,15 +175,16 @@ def update_task(project_id, **kwargs):
 
 def remove_task(project_id, task_id):
     my_project = Project.objects.get(unique=project_id)
-    my_project.update(pull__tasks__index=task_id)
+    my_project.task[task_id].removed = True
+    my_project.save()
 
-    return "Removed"
+    return json.loads(my_project.tasks[task_id].to_json())
 
 def add_vote(project_id, **kwargs):
     my_project = Project.objects.get(unique=project_id)
     my_vote = Vote(**kwargs)
     my_vote.index = my_project.num_votes
-    my_project.update_one(inc__num_votes=1) 
+    my_project.update(inc__num_votes=1) 
 
     q = my_project.quorum
     num_mem = len(my_project.members)
@@ -206,9 +213,10 @@ def update_vote(project_id, **kwargs):
 
 def remove_vote(project_id, vote_id):
     my_project = Project.objects.get(unique=project_id)
-    my_project.update(pull__votes__index=task_id)
+    my_project.votes[vote_id].removed = True
+    my_project.save()
 
-    return "Success"
+    return json.loads(my_project.votes[vote_id].to_json())
 
 def cast_ballot(project_id, **kwargs):
     my_project = Project.objects.get(unique=project_id)
@@ -239,7 +247,7 @@ def add_phase(project_id, **kwargs):
     my_project = Project.objects.get(unique=project_id)
     my_phase = Phase(**kwargs)
     my_phase.index = my_project.num_phases
-    my_project.update_one(inc__num_tasks=1) 
+    my_project.update(inc__num_tasks=1) 
     my_project.update(push__phases=my_phase)
 
     return json.loads(my_phase.to_json())
@@ -279,7 +287,7 @@ def create_comment(user_id, project_id, **kwargs):
     my_comment = Comment(**kwargs)
     my_comment.index = my_project.num_comments
 
-    my_project.update_one(inc__num_comments=1)
+    my_project.update(inc__num_comments=1)
     
     my_comment.num_replies = 0
     my_comment.time = datetime.datetime.now()
@@ -304,7 +312,8 @@ def update_comment(project_id, **kwargs):
 
 def remove_comment(project_id, comment_id):
     my_project = Project.objects.get(unique=idea_id)
-    my_project.update(pull__comments__index=comment_id)
+    my_project.comments[comment_id].text = "Comment removed by author"
+    my_project.save()
 
     return "Removed"
 
@@ -314,7 +323,7 @@ def create_reply(user_id, project_id, comment_id, **kwargs):
 
     my_reply = Reply(**kwargs)
     my_reply.index = my_comment.num_replies
-    mycomment.num_replies += 1
+    my_comment.num_replies += 1
     my_reply.time = datetime.datetime.now()
     my_reply.replier = user_id
 
@@ -338,8 +347,7 @@ def update_reply(project_id, comment_id, **kwargs):
 
 def remove_reply(project_id, comment_id, reply_id):
     my_project = Project.objects.get(unique=project_id)
-    my_reply = my_project.comments[comment_id].replies[reply_id]
-    my_project.comments[comment_id].replies.remove(my_reply)
+    my_reply = my_project.comments[comment_id].replies[reply_id].text = "Reply removed by author"
     my_project.save()
 
     return "Removed"

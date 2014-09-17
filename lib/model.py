@@ -76,14 +76,18 @@ class Role(EmbeddedDocument):
     role = StringField()
     responsible_for = StringField()
     index = IntField()
+    removed = BooleanField()
 
 
 class Task(EmbeddedDocument):
     index = IntField()
     #Google ID
     person = ListField(StringField())
+    to_do = StringField()
     due = DateTimeField()
     complete = BooleanField()
+    removed = BooleanField()
+
 
 
 class Phase(EmbeddedDocument):
@@ -92,6 +96,8 @@ class Phase(EmbeddedDocument):
     tasks = ListField(IntField())
     goal_date = DateTimeField()
     index = IntField()
+    removed = BooleanField()
+
 
 
 class Revision(EmbeddedDocument):
@@ -118,6 +124,8 @@ class Vote(EmbeddedDocument):
     nay = ListField(EmbeddedDocumentField(Ballot))
     index = IntField()
     required_votes = IntField()
+    removed = BooleanField()
+
 
 class MiniProject(EmbeddedDocument):
     title = StringField(required=True)

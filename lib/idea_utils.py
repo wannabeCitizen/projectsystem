@@ -5,7 +5,7 @@ import json
 import datetime
 
 from lib.model import (User, Organization, MiniOrganization, IdeaMeta, IdeaVersion,
-                        MiniIdea)
+                        MiniIdea, Comment, Reply)
 
 from mongoengine import Q
 
@@ -78,8 +78,8 @@ def update_idea(idea_id, **kwargs):
     #Remember to do same for projects in the future!!
     my_orgs = Organization.objects(ideas__unique=idea_id)
     for an_org in my_orgs:
-        an_org.update_one(pull__ideas__unique=idea_id)
-        an_org.update_one(push__ideas=my_idea.minified)
+        an_org.update(pull__ideas__unique=idea_id)
+        an_org.update(push__ideas=my_idea.minified)
 
     my_idea.last_edit = current_time
     my_idea.save()
@@ -122,7 +122,7 @@ def update_version(idea_id, version_id, **kwargs):
 
 def remove_version(idea_id, version_id):
     my_idea = IdeaMeta.objects.get(unique=idea_id)
-    my_idea.upate(pull__versions__unique=version_id)
+    my_idea.update(pull__versions__unique=version_id)
     return my_idea
 
 def change_karma(user_id, idea_id, version_id):
@@ -137,7 +137,7 @@ def create_comment(user_id, idea_id, **kwargs):
     my_comment = Comment(**kwargs)
     my_comment.index = my_idea.num_comments
 
-    my_idea.update_one(inc__num_comments=1)
+    my_idea.update(inc__num_comments=1)
 
     my_comment.num_replies = 0
     my_comment.time = datetime.datetime.now()
@@ -152,7 +152,7 @@ def update_comment(idea_id, **kwargs):
     comment_keys = ['text']
     my_idea = IdeaMeta.objects.get(unique=idea_id)
     my_comment = my_idea.comments[kwargs['index']]
-    for k in comments_keys:
+    for k in comment_keys:
         if k in kwargs.keys():
             my_comment[k] = kwargs[k]
     my_comment.time = datetime.datetime.now()
@@ -164,17 +164,18 @@ def update_comment(idea_id, **kwargs):
 
 def remove_comment(idea_id, comment_id):
     my_idea = IdeaMeta.objects.get(unique=idea_id)
-    my_idea.update(pull__comments__index=comment_id)
+    my_idea.comments[comment_id].text = "Comment removed by author."
+    my_idea.save()
 
     return "Removed"
 
 def create_reply(user_id, idea_id, comment_id, **kwargs):
-    my_idea = IdeaMeta.objects.get(unique=project_id)
+    my_idea = IdeaMeta.objects.get(unique=idea_id)
     my_comment = my_idea.comments[comment_id]
 
     my_reply = Reply(**kwargs)
     my_reply.index = my_comment.num_replies
-    mycomment.num_replies += 1
+    my_comment.num_replies += 1
     my_reply.time = datetime.datetime.now()
     my_reply.replier = user_id
 
@@ -199,8 +200,7 @@ def update_reply(idea_id, comment_id, **kwargs):
 
 def remove_reply(idea_id, comment_id, reply_id):
     my_idea = IdeaMeta.objects.get(unique=idea_id)
-    my_reply = my_idea.comments[comment_id].replies[reply_id]
-    my_idea.comments[comment_id].replies.remove(my_reply)
+    my_idea.comments[comment_id].replies[reply_id].text = "Reply removed by author."
     my_idea.save()
 
     return "Removed"
