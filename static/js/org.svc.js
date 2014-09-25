@@ -11,15 +11,19 @@ define(['angular', 'underscore'], function (angular, _) {
         return function (resource) {
             var org = angular.copy(resource, this);
 
-            org.ownersList = resource.owners;
-            UserSvc.getList(resource.owners).then(function (list) {
-                org.owners = list;
-            });
+            if (resource.owners) {
+                org.ownersList = resource.owners;
+                UserSvc.getList(resource.owners).then(function (list) {
+                    org.owners = list;
+                });
+            }
 
-            org.membersList = resource.members;
-            UserSvc.getList(resource.members).then(function (list) {
-                org.members = list;
-            });
+            if (resource.members) {
+                org.membersList = resource.members;
+                UserSvc.getList(resource.members).then(function (list) {
+                    org.members = list;
+                });
+            }
 
             org.userInList = function (list) {
                 return _(list).find(function (u) { return UserSvc.isCurrentUser(u); });
