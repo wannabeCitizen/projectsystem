@@ -6,7 +6,7 @@ define(['angular', 'gapi'], function (angular, gapi) {
 
     var factory = {};
 
-    factory.UserSvc = ['$q', '$rootScope', '$log', '$http', function ($q, $rootScope, $log, $http) {
+    factory.UserSvc = ['$q', '$rootScope', '$log', '$http', 'UserApi', function ($q, $rootScope, $log, $http, UserApi) {
         var svc = {};
         svc.currentUser = {};
         $rootScope.currentUser = svc.currentUser;
@@ -17,6 +17,10 @@ define(['angular', 'gapi'], function (angular, gapi) {
 
         svc.isCurrentUser = function (u) {
             return svc.usersEqual(u, svc.currentUser);
+        };
+
+        svc.getList = function (idList) {
+            return UserApi.getList(idList).$promise;
         };
 
         $rootScope.$on('event:google-plus-signin-success', function (event, authResult) {

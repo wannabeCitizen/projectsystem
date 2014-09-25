@@ -35,7 +35,7 @@ class Login(restful.Resource):
 
         #Check for user in DB
         user = User.objects(google_id=userinfo['id']).first()
-        
+
         #If we don't know you, we add your ass
         #CHANGE THIS SHIT!
         if not user:
@@ -44,7 +44,7 @@ class Login(restful.Resource):
             user.save()
 
         #Add user to the flask-login session (remember me auto-enabled)
-        login_user(user, remember=True)      
+        login_user(user, remember=True)
 
         return json.loads(user.to_json())
 
@@ -58,15 +58,13 @@ class AllUsers(restful.Resource):
             return match_users(search)
         elif request.args:
             abort(400, message="bad parameter")
-        else: 
+        else:
             return get_all_users()
 
 class UserList(restful.Resource):
-    def get(self):
+    def post(self):
         data = request.get_json()
-        my_list = data['user_list']
-
-        return get_list(my_list)
+        return get_list(data)
 
 
 class UserEP(restful.Resource):

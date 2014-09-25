@@ -18,8 +18,8 @@ def can_add(org_id, user_id):
     my_org = Organization.objects.get(unique=org_id)
     if my_org.open_org == True:
         return True
-    else: 
-        if user_id in  my_org.owner:
+    else:
+        if user_id in  my_org.owners:
             return True
         return False
 

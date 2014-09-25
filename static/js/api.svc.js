@@ -8,7 +8,8 @@ define([], function () {
 
     factory.UserApi = ['$resource', function ($resource) {
         return $resource('/api/user', {userId: '@unique'}, {
-            search: { method: 'GET', isArray: true }
+            search: { method: 'GET', isArray: true },
+            getList: { method: 'POST', url: '/api/user/list', isArray: true }
         });
     }];
 
