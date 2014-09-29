@@ -24,8 +24,10 @@ define([], function () {
     }];
 
     factory.IdeaApi = ['$resource', function ($resource) {
-        return $resource('/api/org/:orgId/idea/:ideaId', {orgId: '@orgId', ideaId: '@unique'}, {
-            update: { method: 'PUT' }
+        return $resource('/api/org/:orgId/idea/:ideaId', {orgId: '@my_org.unique', ideaId: '@unique'}, {
+            update: { method: 'PUT' },
+            follow: { method: 'PUT', url: '/api/org/:orgId/idea/:ideaId/follow'},
+            unfollow: { method: 'DELETE', url: '/api/org/:orgId/idea/:ideaId/follow'}
         });
     }];
 

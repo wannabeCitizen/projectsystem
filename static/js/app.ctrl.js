@@ -6,8 +6,8 @@ define([], function () {
 
     var ctrl = {};
 
-    ctrl.BaseCtrl = ['$scope',
-        function ($scope) {
+    ctrl.BaseCtrl = ['$scope', 'UserSvc',
+        function ($scope, UserSvc) {
             $scope.test = 'it works';
         }];
 

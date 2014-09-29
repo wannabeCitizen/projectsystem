@@ -19,6 +19,10 @@ define(['angular', 'gapi'], function (angular, gapi) {
             return svc.usersEqual(u, svc.currentUser);
         };
 
+        svc.isCurrentUserId = function (id) {
+            return svc.currentUser.google_id === id;
+        };
+
         svc.getList = function (idList) {
             return UserApi.getList(idList).$promise;
         };
@@ -46,12 +50,19 @@ define(['angular', 'gapi'], function (angular, gapi) {
 
             $q.all([api, plus.promise]).finally(function () {
                 svc.currentUser.loggedIn = true;
+
                 svc.currentUser.name = (svc.currentUser.googlePlus && svc.currentUser.googlePlus.displayName) ||
                     (svc.currentUser.googleAuth && svc.currentUser.googleAuth.name) ||
                     (svc.currentUser.api && svc.currentUser.api.name);
+
                 svc.currentUser.imageUrl = svc.currentUser.googlePlus && svc.currentUser.googlePlus.image && svc.currentUser.googlePlus.image.url;
+
                 svc.currentUser.google_id = (svc.currentUser.googlePlus && svc.currentUser.googlePlus.id) ||
                     (svc.currentUser.api && svc.currentUser.api.google_id);
+
+                svc.currentUser.logout = function () {
+                    gapi.auth.signOut();
+                };
             });
         });
 

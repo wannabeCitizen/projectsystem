@@ -6,10 +6,17 @@ define(['angular', 'underscore'], function (angular, _) {
 
     var factory = {};
 
-    factory.Idea = [function () {
+    factory.Idea = ['UserSvc', function (UserSvc) {
         // This is a class ctor
         return function (resource) {
             var idea = angular.copy(resource, this);
+
+            this.userIsFollowing = function () {
+                _(this.followers).find(function (follower) {
+                    return UserSvc.isCurrentUserId(follower);
+                });
+            };
+
             return idea;
         };
     }];
