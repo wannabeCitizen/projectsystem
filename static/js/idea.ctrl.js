@@ -78,6 +78,12 @@ define(['angular', 'underscore'], function (angular, _) {
 
                 return IdeaSvc.getById($stateParams.orgId, $stateParams.ideaId).then(function (idea) {
                     $scope.idea = idea;
+
+                    $scope.delIdea = function () {
+                        idea.$delete().then(function () {
+                            $state.go('org', {orgId: org.unique});
+                        });
+                    };
                 }, function (err) {
                     msg.error('Failed to load the specified idea.');
                 });
