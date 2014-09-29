@@ -12,8 +12,20 @@ define(['angular', 'underscore'], function (angular, _) {
             var idea = angular.copy(resource, this);
 
             this.userIsFollowing = function () {
-                _(this.followers).find(function (follower) {
+                return _(this.followers).find(function (follower) {
                     return UserSvc.isCurrentUserId(follower);
+                });
+            };
+
+            this.follow = function () {
+                this.$follow().then(function () {
+                    idea.followers.push(UserSvc.currentUser.id);
+                });
+            };
+
+            this.unfollow = function () {
+                this.$unfollow().then(function () {
+                    idea.followers = _(idea.followers).without(UserSvc.currentUser.id);
                 });
             };
 
