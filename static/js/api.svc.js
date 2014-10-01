@@ -8,7 +8,8 @@ define([], function () {
 
     factory.UserApi = ['$resource', function ($resource) {
         return $resource('/api/user', {userId: '@unique'}, {
-            search: { method: 'GET', isArray: true }
+            search: { method: 'GET', isArray: true },
+            getList: { method: 'POST', url: '/api/user/list', isArray: true }
         });
     }];
 
@@ -23,8 +24,10 @@ define([], function () {
     }];
 
     factory.IdeaApi = ['$resource', function ($resource) {
-        return $resource('/api/org/:orgId/idea/:ideaId', {orgId: '@orgId', ideaId: '@unique'}, {
-            update: { method: 'PUT' }
+        return $resource('/api/org/:orgId/idea/:ideaId', {orgId: '@my_org.unique', ideaId: '@unique'}, {
+            update: { method: 'PUT' },
+            follow: { method: 'PUT', url: '/api/org/:orgId/idea/:ideaId/follow'},
+            unfollow: { method: 'DELETE', url: '/api/org/:orgId/idea/:ideaId/follow'}
         });
     }];
 

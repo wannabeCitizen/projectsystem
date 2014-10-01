@@ -20,4 +20,4 @@ pip install Flask Flask-Restful Flask-Login Flask_Googlelogin mongoengine bson
 
 python /vagrant/manager.py &
 
-echo "Provisioning completed. Point your browser to http://localhost:55555/"
+echo "Provisioning completed. Point your browser to http://127.0.0.1:5000/"

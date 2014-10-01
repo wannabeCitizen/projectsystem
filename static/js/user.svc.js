@@ -6,7 +6,7 @@ define(['angular', 'gapi'], function (angular, gapi) {
 
     var factory = {};
 
-    factory.UserSvc = ['$q', '$rootScope', '$log', '$http', function ($q, $rootScope, $log, $http) {
+    factory.UserSvc = ['$q', '$rootScope', '$log', '$http', 'UserApi', function ($q, $rootScope, $log, $http, UserApi) {
         var svc = {};
         svc.currentUser = {};
         $rootScope.currentUser = svc.currentUser;
@@ -17,6 +17,14 @@ define(['angular', 'gapi'], function (angular, gapi) {
 
         svc.isCurrentUser = function (u) {
             return svc.usersEqual(u, svc.currentUser);
+        };
+
+        svc.isCurrentUserId = function (id) {
+            return svc.currentUser.google_id === id;
+        };
+
+        svc.getList = function (idList) {
+            return UserApi.getList(idList).$promise;
         };
 
         $rootScope.$on('event:google-plus-signin-success', function (event, authResult) {
@@ -42,12 +50,19 @@ define(['angular', 'gapi'], function (angular, gapi) {
 
             $q.all([api, plus.promise]).finally(function () {
                 svc.currentUser.loggedIn = true;
+
                 svc.currentUser.name = (svc.currentUser.googlePlus && svc.currentUser.googlePlus.displayName) ||
                     (svc.currentUser.googleAuth && svc.currentUser.googleAuth.name) ||
                     (svc.currentUser.api && svc.currentUser.api.name);
+
                 svc.currentUser.imageUrl = svc.currentUser.googlePlus && svc.currentUser.googlePlus.image && svc.currentUser.googlePlus.image.url;
-                svc.currentUser.google_id = (svc.currentUser.googlePlus && svc.currentUser.googlePlus.id) ||
+
+                svc.currentUser.id = svc.currentUser.google_id = (svc.currentUser.googlePlus && svc.currentUser.googlePlus.id) ||
                     (svc.currentUser.api && svc.currentUser.api.google_id);
+
+                svc.currentUser.logout = function () {
+                    gapi.auth.signOut();
+                };
             });
         });
 

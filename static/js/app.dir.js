@@ -1,7 +1,7 @@
 /*jslint browser:true */
 /*global define */
 
-define(['marked', 'gapi'], function (marked, gapi) {
+define(['marked'], function (marked) {
     'use strict';
 
     var dir = {};
@@ -15,13 +15,9 @@ define(['marked', 'gapi'], function (marked, gapi) {
                 scope.userDrop = [
                     {
                         "text": "Logout",
-                        "click": "logout()"
+                        "click": "currentUser.logout()"
                     }
                 ];
-
-                scope.logout = function () {
-                    gapi.auth.signOut();
-                };
             }
         };
     }];

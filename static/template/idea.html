@@ -13,6 +13,8 @@
             {{idea.title}}
             <button ng-show="org.userIsOwner()" class="btn btn-link" ui-sref="editIdea({orgId: org.unique, ideaId: idea.unique})"><i class="fa fa-pencil"></i> Edit</button>
             <button ng-show="org.userIsOwner()" class="btn btn-link" ng-click="delIdea()"><i class="fa fa-trash-o"></i> Delete</button>
+            <button ng-show="idea.userIsFollowing()" class="btn btn-link" ng-click="idea.unfollow()" data-title="Currently following. Click to stop."><i class="fa fa-eye"></i> Following</button>
+            <button ng-hide="idea.userIsFollowing()" class="btn btn-link" ng-click="idea.follow()" data-title="Currently not following. Click to follow."><i class="fa fa-eye-slash"></i> Not following</button>
         </h1>
 
         <p ng-if="idea.short_description">
