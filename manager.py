@@ -66,7 +66,7 @@ api.add_resource(FollowIdea, '/api/org/<string:org_id>/idea/<string:idea_id>/fol
 api.add_resource(AllProjects, '/api/org/<string:org_id>/project','/api/org/<string:org_id>/project/')
 api.add_resource(ProjectEP, '/api/org/<string:org_id>/project/<string:project_id>','/api/org/<string:org_id>/project/<string:project_id>/')
 api.add_resource(ProjectMember,'/api/org/<string:org_id>/project/<string:project_id>/member/<string:user_id>', '/api/org/<string:org_id>/project/<string:project_id>/member/<string:user_id>/' )
-api.add_resource(ProjectFollower, '/api/org/<string:org_id>/project/<string:project_id>/follower', '/api/org/<string:org_id>/project/<string:project_id>/follower/')
+api.add_resource(ProjectFollower, '/api/org/<string:org_id>/project/<string:project_id>/follow', '/api/org/<string:org_id>/project/<string:project_id>/follow/')
 api.add_resource(ProjectRole, '/api/org/<string:org_id>/project/<string:project_id>/role', '/api/org/<string:org_id>/project/<string:project_id>/role/')
 api.add_resource(ProjectTask, '/api/org/<string:org_id>/project/<string:project_id>/task', '/api/org/<string:org_id>/project/<string:project_id>/task/')
 api.add_resource(ProjectVote, '/api/org/<string:org_id>/project/<string:project_id>/vote', '/api/org/<string:org_id>/project/<string:project_id>/vote/')

@@ -1,7 +1,6 @@
 Flask
-Flask_Googlelogin
+Flask-Googlelogin
 mongoengine
 Flask-Restful
 Flask-Login
-bson
 mongodb
