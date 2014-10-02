@@ -1,7 +1,7 @@
 /*jslint browser:true, nomen:true */
 /*global define */
 
-define(['angular', 'underscore'], function (angular, _) {
+define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
     'use strict';
 
     var factory = {};
@@ -13,6 +13,15 @@ define(['angular', 'underscore'], function (angular, _) {
 
             this.orgId = this.my_org && this.my_org.unique;
             this.ideaId = this.unique;
+
+            _(this.versions).each(function (vers) {
+                vers.createdDate = moment(vers.created_on && vers.created_on.$date).format('l LT');
+                vers.title = vers.createdDate;
+                UserSvc.getById(vers.thinker).then(function (user) {
+                    vers.creatorUser = user;
+                    vers.title += ' by ' + user.name;
+                });
+            });
 
             this.userIsFollowing = function () {
                 return _(this.followers).find(function (follower) {

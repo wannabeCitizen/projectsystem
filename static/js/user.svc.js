@@ -27,6 +27,10 @@ define(['angular', 'gapi'], function (angular, gapi) {
             return UserApi.getList(idList).$promise;
         };
 
+        svc.getById = function (id) {
+            return UserApi.get({userId: id}).$promise;
+        };
+
         $rootScope.$on('event:google-plus-signin-success', function (event, authResult) {
             // Send login to server or save into cookie
             $log.log('user authenticated with google', authResult);

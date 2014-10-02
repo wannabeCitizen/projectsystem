@@ -77,6 +77,7 @@ define(['angular', 'underscore'], function (angular, _) {
     ctrl.IdeaCtrl = ['$scope', '$state', '$stateParams', 'OrgSvc', 'IdeaSvc', 'MsgSvc',
         function ($scope, $state, $stateParams, OrgSvc, IdeaSvc, msg) {
             $scope.loading = true;
+            $scope.selectedVersion = $stateParams.versId;
             $scope.ideaPromise = OrgSvc.getById($stateParams.orgId).then(function (org) {
                 $scope.org = org;
 
@@ -90,6 +91,10 @@ define(['angular', 'underscore'], function (angular, _) {
                             });
                         });
                     };
+
+                    $scope.$watch('selectedVersion', function (versId) {
+                        $state.go('idea.version', {versId: versId});
+                    });
 
                     return idea;
                 }, function (err) {
