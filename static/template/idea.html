@@ -11,10 +11,18 @@
     <div ng-show="idea && !loading">
         <h1>
             {{idea.title}}
-            <button ng-show="org.userIsOwner()" class="btn btn-link" ui-sref="editIdea({orgId: org.unique, ideaId: idea.unique})"><i class="fa fa-pencil"></i> Edit</button>
-            <button ng-show="org.userIsOwner()" class="btn btn-link" ng-click="delIdea()"><i class="fa fa-trash-o"></i> Delete</button>
-            <button ng-show="idea.userIsFollowing()" class="btn btn-link" ng-click="idea.unfollow()" data-title="Currently following. Click to stop."><i class="fa fa-eye"></i> Following</button>
-            <button ng-hide="idea.userIsFollowing()" class="btn btn-link" ng-click="idea.follow()" data-title="Currently not following. Click to follow."><i class="fa fa-eye-slash"></i> Not following</button>
+            <button ng-if="currentUser.loggedIn" ng-show="org.userIsOwner()" class="btn btn-link" ui-sref="editIdea({orgId: org.unique, ideaId: idea.unique})">
+                <i class="fa fa-pencil"></i> Edit
+            </button>
+            <button ng-if="currentUser.loggedIn" ng-show="org.userIsOwner()" class="btn btn-link" ng-click="delIdea()">
+                <i class="fa fa-trash-o"></i> Delete
+            </button>
+            <button ng-if="currentUser.loggedIn" ng-show="idea.userIsFollowing()" class="btn btn-link" ng-click="idea.unfollow()" data-title="Click to stop following" bs-tooltip>
+                <i class="fa fa-eye"></i> Following
+            </button>
+            <button ng-if="currentUser.loggedIn" ng-hide="idea.userIsFollowing()" class="btn btn-link" ng-click="idea.follow()" data-title="Click to follow" bs-tooltip>
+                <i class="fa fa-eye-slash"></i> Not following
+            </button>
         </h1>
 
         <p ng-if="idea.short_description">
@@ -22,5 +30,14 @@
             {{idea.short_description}}
             <i class="fa fa-quote-right"></i>
         </p>
+
+        <h3>Description</h3>
+        <div ng-if="!idea.versions.length && !isNewVersion">
+            <p>This idea does not have any versions yet.</p>
+            <button class="btn btn-primary" ui-sref="idea.newVersion({orgId: org.unique, ideaId: idea.unique})">
+                <i class="fa fa-plus"></i> Create the first version
+            </button>
+        </div>
+        <div ui-view></div>
     </div>
 </div>

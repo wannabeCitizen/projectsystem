@@ -6,10 +6,13 @@ define(['angular', 'underscore'], function (angular, _) {
 
     var factory = {};
 
-    factory.Idea = ['UserSvc', function (UserSvc) {
+    factory.Idea = ['UserSvc', 'IdeaApi', function (UserSvc, IdeaApi) {
         // This is a class ctor
         return function (resource) {
             var idea = angular.copy(resource, this);
+
+            this.orgId = this.my_org && this.my_org.unique;
+            this.ideaId = this.unique;
 
             this.userIsFollowing = function () {
                 return _(this.followers).find(function (follower) {
@@ -18,14 +21,23 @@ define(['angular', 'underscore'], function (angular, _) {
             };
 
             this.follow = function () {
-                this.$follow().then(function () {
+                return this.$follow().then(function () {
                     idea.followers.push(UserSvc.currentUser.id);
+                    return idea;
                 });
             };
 
             this.unfollow = function () {
-                this.$unfollow().then(function () {
+                return this.$unfollow().then(function () {
                     idea.followers = _(idea.followers).without(UserSvc.currentUser.id);
+                    return idea;
+                });
+            };
+
+            this.addVersion = function (versData) {
+                return IdeaApi.addVersion(_(this).pick('orgId', 'ideaId'), versData).$promise.then(function (newVers) {
+                    idea.versions.push(newVers);
+                    return newVers;
                 });
             };
 

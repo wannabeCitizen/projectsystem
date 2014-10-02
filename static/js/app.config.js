@@ -43,6 +43,20 @@ define([], function () {
                 url: '/org/:orgId/idea/:ideaId/edit',
                 templateUrl: 'static/template/editIdea.html',
                 controller: 'EditIdeaCtrl'
+            })
+            .state('idea.newVersion', {
+                url: '/version/new',
+                templateUrl: 'static/template/editIdeaVers.html',
+                controller: 'NewIdeaVersCtrl'
+            })
+            .state('idea.version', {
+                url: '/version/:versId',
+                templateUrl: 'static/template/ideaVers.html'
+            })
+            .state('idea.editVersion', {
+                url: '/version/:versId/edit',
+                templateUrl: 'static/template/editIdeaVers.html',
+                controller: 'EditIdeaVersCtrl'
             });
     }];
 });

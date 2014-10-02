@@ -14,7 +14,9 @@ define(['angular', 'underscore'], function (angular, _) {
             $scope.action = function () {
                 $scope.spin = true;
                 var newIdea = new IdeaApi($scope.idea);
-                newIdea.$save({orgId: $stateParams.orgId}).then(function (idea) {
+                newIdea.$save({
+                    orgId: $stateParams.orgId
+                }).then(function (idea) {
                     $state.go('idea', {
                         orgId: $stateParams.orgId,
                         ideaId: idea.unique
@@ -45,7 +47,9 @@ define(['angular', 'underscore'], function (angular, _) {
 
                 $scope.action = function () {
                     $scope.spin = true;
-                    $scope.idea.$update({orgId: $stateParams.orgId}).then(function () {
+                    $scope.idea.$update({
+                        orgId: $stateParams.orgId
+                    }).then(function () {
                         $state.go('idea', $stateParams);
                     }, function (err) {
                         msg.error('Failed to save the idea.', 'Please try again.');
@@ -73,7 +77,7 @@ define(['angular', 'underscore'], function (angular, _) {
     ctrl.IdeaCtrl = ['$scope', '$state', '$stateParams', 'OrgSvc', 'IdeaSvc', 'MsgSvc',
         function ($scope, $state, $stateParams, OrgSvc, IdeaSvc, msg) {
             $scope.loading = true;
-            OrgSvc.getById($stateParams.orgId).then(function (org) {
+            $scope.ideaPromise = OrgSvc.getById($stateParams.orgId).then(function (org) {
                 $scope.org = org;
 
                 return IdeaSvc.getById($stateParams.orgId, $stateParams.ideaId).then(function (idea) {
@@ -81,9 +85,13 @@ define(['angular', 'underscore'], function (angular, _) {
 
                     $scope.delIdea = function () {
                         idea.$delete().then(function () {
-                            $state.go('org', {orgId: org.unique});
+                            $state.go('org', {
+                                orgId: org.unique
+                            });
                         });
                     };
+
+                    return idea;
                 }, function (err) {
                     msg.error('Failed to load the specified idea.');
                 });
@@ -91,6 +99,49 @@ define(['angular', 'underscore'], function (angular, _) {
                 msg.error('Failed to load the specified organization.');
             }).finally(function () {
                 $scope.loading = false;
+            });
+
+            $scope.isNewVersion = $state.is('idea.newVersion');
+            $scope.$on('$stateChangeStart', function (event, toState) {
+                $scope.isNewVersion = (toState.name === 'idea.newVersion');
+            });
+        }];
+
+    // This is a child of IdeaCtrl
+    ctrl.NewIdeaVersCtrl = ['$scope', '$state',
+        function ($scope, $state) {
+            $scope.vers = {};
+
+            $scope.save = function () {
+                $scope.spin = true;
+                $scope.idea.addVersion($scope.vers).then(function (newVers) {
+                    $state.go('idea.version', {
+                        orgId: $scope.org.unique,
+                        ideaId: $scope.idea.unique,
+                        versId: newVers.unique
+                    });
+                }).finally(function () {
+                    $scope.spin = false;
+                });
+            };
+
+            $scope.saveIcon = function () {
+                return {
+                    fa: true,
+                    'fa-spinner': $scope.spin,
+                    'fa-spin': $scope.spin,
+                    'fa-save-o': !$scope.spin
+                };
+            };
+        }];
+
+    // This is a child of IdeaCtrl
+    ctrl.IdeaVersionCtrl = ['$scope', '$state', '$stateParams', 'OrgSvc', 'IdeaSvc', 'MsgSvc',
+        function ($scope, $state, $stateParams, OrgSvc, IdeaSvc, msg) {
+            $scope.ideaPromise.then(function (idea) {
+                $scope.vers = _(idea.versions).find(function (vers) {
+                    return $stateParams.versId === vers.unique;
+                });
             });
         }];
 

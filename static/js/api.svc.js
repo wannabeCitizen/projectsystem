@@ -26,6 +26,7 @@ define([], function () {
     factory.IdeaApi = ['$resource', function ($resource) {
         return $resource('/api/org/:orgId/idea/:ideaId', {orgId: '@my_org.unique', ideaId: '@unique'}, {
             update: { method: 'PUT' },
+            addVersion: { method: 'POST' },
             follow: { method: 'PUT', url: '/api/org/:orgId/idea/:ideaId/follow'},
             unfollow: { method: 'DELETE', url: '/api/org/:orgId/idea/:ideaId/follow'}
         });
