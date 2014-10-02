@@ -44,7 +44,7 @@ class Login(restful.Resource):
             user.save()
 
         #Add user to the flask-login session (remember me auto-enabled)
-        login_user(user, remember=True)
+        login_user(user)
 
         return json.loads(user.to_json())
 
