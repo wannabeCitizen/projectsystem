@@ -30,6 +30,7 @@ ADD bower.json /usr/src/app/
 RUN bower install --config.interactive=false --allow-root
 
 ADD . /usr/src/app/
+RUN grunt prebuild
 RUN grunt build
 
 EXPOSE 5000
