@@ -6,12 +6,12 @@ from app import app, api, googlelogin
 
 from lib.model import User
 
-from resources.organization import (OrganizationEP, OrgMember, OrgOwner, 
+from resources.organization import (OrganizationEP, OrgMember, OrgOwner,
                                     AllOrgs)
 from resources.user import Login, AllUsers, UserEP, UserList
-from resources.idea import (MetaIdea, VersionIdea, KarmaChange, IdeaComment, 
+from resources.idea import (MetaIdea, VersionIdea, KarmaChange, IdeaComment,
                             IdeaReply, AllIdeas, FollowIdea)
-from resources.project import (AllProjects, ProjectEP, ProjectMember, ProjectFollower, 
+from resources.project import (AllProjects, ProjectEP, ProjectMember, ProjectFollower,
                             ProjectRole, ProjectTask, ProjectVote, VoteBallot, Revision,
                             ProjectPhase, ProjectComment, ProjectReply)
 
@@ -19,9 +19,10 @@ from resources.project import (AllProjects, ProjectEP, ProjectMember, ProjectFol
 from mongoengine import connect
 
 import json
+import sys
 
-
-connect('projectsystem')
+mongoIp = ((len(sys.argv) > 1) and sys.argv[1]) or 'localhost'
+connect('projectsystem', host="mongodb://{}:27017/".format(mongoIp))
 
 @googlelogin.user_loader
 def load_user(userid):
