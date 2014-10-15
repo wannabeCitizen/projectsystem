@@ -20,6 +20,7 @@ def create_idea(creator, org_id, **kwargs):
     new_idea.created_by = my_owner.google_id
     new_idea.followers = [my_owner.google_id]
     new_idea.my_org = my_org.minified
+    new_idea.created_on = datetime.datetime.now()
     new_idea.num_comments = 0
     new_idea.save()
 
@@ -33,6 +34,7 @@ def create_version(creator, idea_id, **kwargs):
 
     new_version = IdeaVersion(**kwargs)
     new_version.thinker = my_creator.google_id
+    new_version.created_on = datetime.datetime.now()
 
     my_idea = IdeaMeta.objects.get(unique=idea_id)
     my_idea.update(push__versions=new_version)
@@ -69,7 +71,6 @@ def update_idea(idea_id, **kwargs):
     idea_keys = ['title', 'short_description']
 
     my_idea = IdeaMeta.objects.get(unique=idea_id)
-    current_time = datetime.datetime.now()
     for k in idea_keys:
         if k in kwargs.keys():
             my_idea.minified[k] = kwargs[k]
@@ -81,7 +82,7 @@ def update_idea(idea_id, **kwargs):
         an_org.update(pull__ideas__unique=idea_id)
         an_org.update(push__ideas=my_idea.minified)
 
-    my_idea.last_edit = current_time
+    my_idea.last_edit = datetime.datetime.now()
     my_idea.save()
 
     ##Need to update mini
@@ -112,11 +113,10 @@ def update_version(idea_id, version_id, **kwargs):
     for versions in my_idea.versions:
         if versions.unique == version_id:
             my_version = versions
-    current_time = datetime.datetime.now()
     for k in idea_keys:
         if k in kwargs.keys():
             my_version[k] = kwargs[k]
-    my_version.last_edit = current_time
+    my_version.last_edit = datetime.datetime.now()
     my_idea.save()
     return json.loads(my_idea.to_json())
 

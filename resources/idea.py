@@ -21,7 +21,9 @@ class MetaIdea(restful.Resource):
     #Create a new version of an idea
     def post(self, org_id, idea_id):
         new_version_data = request.get_json()
+        print "Made it here"
         verify = is_in_org(current_user.google_id, org_id)
+        print "Current user verified"
         if verify is True:
             new_version_data['unique'] = str(uuid.uuid4())
             return create_version(current_user.google_id, idea_id, **new_version_data)

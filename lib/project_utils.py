@@ -19,6 +19,7 @@ def create_project(org_id, **kwargs):
     new_project.my_org = my_org.minified
     new_project.num_comments = 0
     new_project.current_rev = Revision(text=kwargs['text'], time=datetime.datetime.now())
+    new_project.created_on = datetime.datetime.now()
     new_project.save()
 
     my_org.projects.append(new_project.minified)
@@ -31,7 +32,6 @@ def update_project(project_id, **kwargs):
     mini_keys = ['title', 'short_description']
     
     my_project = Project.objects.get(unique=project_id)
-    current_time = datetime.datetime.now()
     for k in project_keys:
         if k in kwargs.keys():
             if k == 'text':
@@ -50,7 +50,7 @@ def update_project(project_id, **kwargs):
         an_org.update(pull__projects__unique=project_id)
         an_org.update(push__projects=my_project.minified)
 
-    my_project.last_edit = current_time
+    my_project.last_edit = datetime.datetime.now()
     my_project.save()
 
     ##Need to update mini
@@ -136,14 +136,13 @@ def update_role(project_id, **kwargs):
     role_keys = ['person', 'role', 'responsible_for']
 
     my_project = Project.objects.get(unique=project_id)
-    current_time = datetime.datetime.now()
     my_role = my_project.roles[kwargs['index']]
 
     for k in role_keys:
         if k in kwargs:
             my_role[k] = kwargs[k]
 
-    my_project.last_edit = current_time
+    my_project.last_edit = datetime.datetime.now()
     my_project.save()
 
     return json.loads(my_role.to_json())
@@ -161,14 +160,13 @@ def update_task(project_id, **kwargs):
     task_keys = ['person', 'due', 'complete', 'to_do']
 
     my_project = Project.objects.get(unique=project_id)
-    current_time = datetime.datetime.now()
     my_task = my_project.tasks[kwargs['index']]
 
     for k in task_keys:
         if k in kwargs:
             my_task[k] = kwargs[k]
 
-    my_project.last_edit = current_time
+    my_project.last_edit = datetime.datetime.now()
     my_project.save()
 
     return json.loads(my_task.to_json())
@@ -199,14 +197,13 @@ def update_vote(project_id, **kwargs):
     vote_keys = ['description']
 
     my_project = Project.objects.get(unique=project_id)
-    current_time = datetime.datetime.now()
     my_vote = my_project.votes[kwargs['index']]
 
     for k in task_keys:
         if k in kwargs:
             my_vote[k] = kwargs[k]
 
-    my_project.last_edit = current_time
+    my_project.last_edit = datetime.datetime.now()
     my_project.save()
 
     return json.loads(my_vote.to_json())
@@ -263,14 +260,13 @@ def update_phase(project_id, **kwargs):
     phase_keys = ['text', 'tasks', 'complete', 'goal_date']
 
     my_project = Project.objects.get(unique=project_id)
-    current_time = datetime.datetime.now()
     my_phase = my_project.phases[kwargs['index']]
 
     for k in phase_keys:
         if k in kwargs:
             my_phase[k] = kwargs[k]
 
-    my_project.last_edit = current_time
+    my_project.last_edit = datetime.datetime.now()
     my_project.save()
 
     return json.loads(my_phase.to_json())

@@ -46,7 +46,7 @@ class IdeaVersion(EmbeddedDocument):
     text = StringField()
     unique = StringField(required=True)
     created_on = DateTimeField(required=True, default=datetime.datetime.now())
-    last_edit = DateTimeField(default=datetime.datetime.now)
+    last_edit = DateTimeField(default=datetime.datetime.now())
 
     meta = {'allow_inheritance': True}
 
