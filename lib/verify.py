@@ -44,7 +44,7 @@ def is_thinker(user_id, idea_id, version_id):
     for versions in my_idea.versions:
         if versions.unique == version_id:
             my_version = versions
-    if my_version.thinker.google_id == user_id:
+    if my_version.thinker == user_id:
         return True
     else:
         return False

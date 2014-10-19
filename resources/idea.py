@@ -27,7 +27,7 @@ class MetaIdea(restful.Resource):
         if verify is True:
             new_version_data['unique'] = str(uuid.uuid4())
             return create_version(current_user.google_id, idea_id, **new_version_data)
-        else: 
+        else:
             return abort(401, message="User not in org")
 
     #update a meta-idea
@@ -49,7 +49,7 @@ class MetaIdea(restful.Resource):
         if verify is True:
             delete_idea(current_user.google_id, org_id, idea_id)
             return "Success"
-        else: 
+        else:
             return abort(401, message="User is not an owner")
 
 class FollowIdea(restful.Resource):
@@ -79,8 +79,7 @@ class VersionIdea(restful.Resource):
         new_data = request.get_json()
         verify = is_thinker(current_user.google_id, idea_id, version_id)
         if verify is True:
-            update_version(idea_id, **new_data)
-            return "Success"
+            return update_version(idea_id, version_id, **new_data)
         else:
             return abort(401, message="Not Owner of Idea")
 
@@ -91,7 +90,7 @@ class VersionIdea(restful.Resource):
             remove_version(idea_id, version_id)
             return "Success"
         else:
-            return abort(401, message="Not Owner of Idea") 
+            return abort(401, message="Not Owner of Idea")
 
 class KarmaChange(restful.Resource):
 
@@ -103,7 +102,7 @@ class KarmaChange(restful.Resource):
             return "Success"
         else:
             return abort(401, message="Not in Organization")
-        
+
 
 class IdeaComment(restful.Resource):
 
@@ -115,7 +114,7 @@ class IdeaComment(restful.Resource):
             return create_comment(current_user.google_id, idea_id, **new_comment_data)
         else:
             return abort(401, message="Not in Organization")
-             
+
     #Edit a comment
     def put(self, org_id, idea_id):
         new_comment_data = request.get_json()
@@ -137,7 +136,7 @@ class IdeaComment(restful.Resource):
             return "Success"
         else:
             return abort(401, message="Not Comment Owner")
-        
+
 
 class IdeaReply(restful.Resource):
 
@@ -189,7 +188,7 @@ class AllIdeas(restful.Resource):
         if verify is True:
             new_idea_data['unique'] = str(uuid.uuid4())
             return create_idea(current_user.google_id, org_id, **new_idea_data)
-        else: 
+        else:
             return abort(401, message="User not in org")
 
 
