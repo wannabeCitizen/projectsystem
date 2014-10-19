@@ -6,33 +6,62 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
 
     var factory = {};
 
-    factory.Version = ['UserSvc', function (UserSvc) {
+    factory.Version = ['$http', 'UserSvc', function ($http, UserSvc) {
         // Instance ctor
-        var Version = function (resource) {
+        var Version = function (resource, idea) {
             angular.extend(this, resource);
 
+            this.versId = this.unique;
+            this.url = '/api/org/' + idea.orgId + '/idea/' + idea.ideaId + '/version/' + this.versId;
             this.createdDate = moment(this.created_on && this.created_on.$date).format('l LT');
             this.title = this.createdDate;
             this.$promise = UserSvc.getById(this.thinker).then(angular.bind(this, function (user) {
                 this.creatorUser = user;
                 this.title += ' by ' + user.name;
             }));
+
+            this.serialize = function () {
+                return _(this).pick('thinker', 'text', 'unique');
+            };
+
+            this.save = function () {
+                return $http.put(this.url, this.serialize()).then(
+                    angular.bind(this, function (response) {
+                        angular.extend(this, response.data);
+                        return this;
+                    })
+                );
+            };
         };
 
         return Version;
     }];
 
-    factory.Idea = ['UserSvc', 'IdeaApi', 'Version', function (UserSvc, IdeaApi, Version) {
+    factory.Idea = ['$http', '$resource', 'UserSvc', 'Version', function ($http, $resource, UserSvc, Version) {
         // Instance ctor
         var Idea = function (resource) {
             angular.extend(this, resource);
 
             this.orgId = this.my_org && this.my_org.unique;
             this.ideaId = this.unique;
+            this.url = '/api/org/' + this.orgId + '/idea/' + this.ideaId;
 
             _(this.versions).each(function (vers, i) {
-                this.versions[i] = new Version(vers);
+                this.versions[i] = new Version(vers, this);
             }, this);
+
+            this.serialize = function () {
+                return _(this).pick('title', 'short_description', 'unique');
+            };
+
+            this.save = function () {
+                return $http.put(this.url, this.serialize()).then(
+                    angular.bind(this, function (response) {
+                        angular.extend(this, response.data);
+                        return this;
+                    })
+                );
+            };
 
             this.userIsFollowing = function () {
                 return _(this.followers).find(function (follower) {
@@ -55,27 +84,43 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             };
 
             this.addVersion = function (versData) {
-                return IdeaApi.addVersion(_(this).pick('orgId', 'ideaId'), versData).$promise.then(angular.bind(this, function (newVers) {
-                    var vers = new Version(newVers);
+                return Idea.api.addVersion(_(this).pick('orgId', 'ideaId'), versData).$promise.then(angular.bind(this, function (newVers) {
+                    var vers = new Version(newVers, this);
                     this.versions.push(vers);
                     return vers;
                 }));
             };
+
+            this.updateVersion = function (vers) {
+                return vers.save().then(angular.bind(this, function () {
+                    var existing = _(this.versions).find(function (v) { return v.versId === vers.versId; });
+                    if (existing) {
+                        angular.copy(vers, existing);
+                    }
+                    return existing;
+                }));
+            };
+
+            this.getVersionById = function (versId) {
+                return _(this.versions).find(function (vers) { return vers.unique === versId; });
+            };
         };
 
-        return Idea;
-    }];
+        Idea.api = $resource('/api/org/:orgId/idea/:ideaId', {orgId: '@my_org.unique', ideaId: '@unique'}, {
+            update: { method: 'PUT' },
+            addVersion: { method: 'POST' },
+            updateVersion: { method: 'PUT', url: '/api/org/:orgId/idea/:ideaId/version/:versId' },
+            follow: { method: 'PUT', url: '/api/org/:orgId/idea/:ideaId/follow'},
+            unfollow: { method: 'DELETE', url: '/api/org/:orgId/idea/:ideaId/follow'}
+        });
 
-    factory.IdeaSvc = ['Idea', 'IdeaApi', function (Idea, IdeaApi) {
-        var svc = {};
-
-        svc.getById = function (orgId, ideaId) {
-            return IdeaApi.get({orgId: orgId, ideaId: ideaId}).$promise.then(function (idea) {
+        Idea.getById = function (orgId, ideaId) {
+            return Idea.api.get({orgId: orgId, ideaId: ideaId}).$promise.then(function (idea) {
                 return new Idea(idea);
             });
         };
 
-        return svc;
+        return Idea;
     }];
 
     return factory;

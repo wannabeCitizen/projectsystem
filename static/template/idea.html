@@ -35,6 +35,9 @@
             <button type="button" class="btn btn-default" ng-model="selectedVersion" ng-options="idea.unique as idea.title for idea in idea.versions" bs-select>
                 Version <span class="caret"></span>
             </button>
+            <button ng-if="currentUser.loggedIn" ng-show="org.userIsMember()" class="btn btn-link" ui-sref="idea.editVersion({versId: selectedVersion})" data-title="Edit this idea" bs-tooltip>
+                <i class="fa fa-pencil"></i> Edit
+            </button>
             <button ng-if="currentUser.loggedIn" ng-show="org.userIsMember()" class="btn btn-link" ui-sref="idea.newVersion" data-title="Create a new idea" bs-tooltip>
                 <i class="fa fa-plus"></i> New
             </button>

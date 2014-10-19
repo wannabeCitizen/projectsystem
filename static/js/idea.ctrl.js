@@ -6,14 +6,14 @@ define(['angular', 'underscore'], function (angular, _) {
 
     var ctrl = {};
 
-    ctrl.NewIdeaCtrl = ['$scope', '$state', '$stateParams', 'IdeaApi', 'MsgSvc',
-        function ($scope, $state, $stateParams, IdeaApi, msg) {
+    ctrl.NewIdeaCtrl = ['$scope', '$state', '$stateParams', 'Idea', 'MsgSvc',
+        function ($scope, $state, $stateParams, Idea, msg) {
             $scope.idea = {};
             $scope.heading = 'Create a new Idea';
 
             $scope.action = function () {
                 $scope.spin = true;
-                var newIdea = new IdeaApi($scope.idea);
+                var newIdea = new Idea.api($scope.idea);
                 newIdea.$save({
                     orgId: $stateParams.orgId
                 }).then(function (idea) {
@@ -38,18 +38,16 @@ define(['angular', 'underscore'], function (angular, _) {
             };
         }];
 
-    ctrl.EditIdeaCtrl = ['$scope', '$state', '$stateParams', 'IdeaSvc', 'MsgSvc',
-        function ($scope, $state, $stateParams, IdeaSvc, msg) {
+    ctrl.EditIdeaCtrl = ['$scope', '$state', '$stateParams', 'Idea', 'MsgSvc',
+        function ($scope, $state, $stateParams, Idea, msg) {
             $scope.heading = 'Edit this Idea';
 
-            IdeaSvc.getById($stateParams.orgId, $stateParams.ideaId).then(function (idea) {
+            Idea.getById($stateParams.orgId, $stateParams.ideaId).then(function (idea) {
                 $scope.idea = idea;
 
                 $scope.action = function () {
                     $scope.spin = true;
-                    $scope.idea.$update({
-                        orgId: $stateParams.orgId
-                    }).then(function () {
+                    $scope.idea.save().then(function () {
                         $state.go('idea', $stateParams);
                     }, function (err) {
                         msg.error('Failed to save the idea.', 'Please try again.');
@@ -74,14 +72,14 @@ define(['angular', 'underscore'], function (angular, _) {
             };
         }];
 
-    ctrl.IdeaCtrl = ['$scope', '$state', '$stateParams', 'OrgSvc', 'IdeaSvc', 'MsgSvc',
-        function ($scope, $state, $stateParams, OrgSvc, IdeaSvc, msg) {
+    ctrl.IdeaCtrl = ['$scope', '$state', '$stateParams', 'OrgSvc', 'Idea', 'MsgSvc',
+        function ($scope, $state, $stateParams, OrgSvc, Idea, msg) {
             $scope.loading = true;
             $scope.selectedVersion = $stateParams.versId;
             $scope.ideaPromise = OrgSvc.getById($stateParams.orgId).then(function (org) {
                 $scope.org = org;
 
-                return IdeaSvc.getById($stateParams.orgId, $stateParams.ideaId).then(function (idea) {
+                return Idea.getById($stateParams.orgId, $stateParams.ideaId).then(function (idea) {
                     $scope.idea = idea;
 
                     $scope.delIdea = function () {
@@ -138,11 +136,51 @@ define(['angular', 'underscore'], function (angular, _) {
                     'fa-save-o': !$scope.spin
                 };
             };
+
+            $scope.cancel = function () {
+                $state.go('idea');
+            };
         }];
 
     // This is a child of IdeaCtrl
-    ctrl.IdeaVersionCtrl = ['$scope', '$state', '$stateParams', 'OrgSvc', 'IdeaSvc', 'MsgSvc',
-        function ($scope, $state, $stateParams, OrgSvc, IdeaSvc, msg) {
+    ctrl.EditIdeaVersCtrl = ['$scope', '$state', '$stateParams', function ($scope, $state, $stateParams) {
+        $scope.versPromise = $scope.ideaPromise.then(function (idea) {
+            // we want to edit a copy, not the original directly
+            $scope.vers = angular.copy(idea.getVersionById($stateParams.versId));
+
+            $scope.save = function () {
+                $scope.spin = true;
+                idea.updateVersion($scope.vers).then(function (vers) {
+                    $state.go('idea.version', {
+                        orgId: $scope.idea.orgId,
+                        ideaId: $scope.idea.ideaId,
+                        versId: vers.versId
+                    });
+                }).finally(function () {
+                    $scope.spin = false;
+                });
+            };
+
+            $scope.saveIcon = function () {
+                return {
+                    fa: true,
+                    'fa-spinner': $scope.spin,
+                    'fa-spin': $scope.spin,
+                    'fa-save-o': !$scope.spin
+                };
+            };
+
+            $scope.cancel = function () {
+                $state.go('idea.version', $stateParams);
+            };
+
+            return $scope.vers;
+        });
+    }];
+
+    // This is a child of IdeaCtrl
+    ctrl.IdeaVersionCtrl = ['$scope', '$state', '$stateParams', 'OrgSvc', 'Idea', 'MsgSvc',
+        function ($scope, $state, $stateParams, OrgSvc, Idea, msg) {
             $scope.ideaPromise.then(function (idea) {
                 $scope.vers = _(idea.versions).find(function (vers) {
                     return $stateParams.versId === vers.unique;
