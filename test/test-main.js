@@ -35,7 +35,7 @@
             moment: "/base/static/lib/moment/moment",
             underscore: "/base/static/lib/underscore/underscore",
             css: "/base/static/lib/require-css/css",
-            gapi: "https://apis.google.com/js/api",
+            gapi: "/base/static/lib/gapi/index",
             'google-plus-signin': "../lib/angular-directive.g-signin/google-plus-signin",
             toaster: "/base/static/lib/AngularJS-Toaster/toaster"
         },

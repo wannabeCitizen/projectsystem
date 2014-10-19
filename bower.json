@@ -23,7 +23,8 @@
     "require-less": "~0.1",
     "marked": "~0.3",
     "angular-directive.g-signin": "*",
-    "AngularJS-Toaster": "jirikavi/AngularJS-Toaster#~0.4.7"
+    "AngularJS-Toaster": "jirikavi/AngularJS-Toaster#~0.4.7",
+    "gapi": "https://apis.google.com/js/api.js"
   },
   "exportsOverride": {
     "bootstrap": {

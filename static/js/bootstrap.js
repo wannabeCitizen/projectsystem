@@ -23,7 +23,7 @@ requirejs.config({
         less: "../lib/require-less/less",
         lessc: "../lib/require-less/lessc",
         normalize: "../lib/require-less/normalize",
-        gapi: "https://apis.google.com/js/api",
+        gapi: "../lib/gapi/index",
         'google-plus-signin': "../lib/angular-directive.g-signin/google-plus-signin",
         toaster: "../lib/AngularJS-Toaster/toaster"
     },
