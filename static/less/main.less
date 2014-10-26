@@ -7,6 +7,19 @@
 @import (inline) "../lib/angular-motion/angular-motion.min.css";
 @import (inline) "../lib/AngularJS-Toaster/toaster.css";
 
+// Variables
+@hover-background: #b1ebf8;
+@active-background: #0fb6de;
+
+// helpers
+.absolute-fill {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
 /* angularjs cloaking */
 .ng-cloak {
     display: none;
@@ -21,6 +34,8 @@ body {
 
     > .container {
         margin-top: 50px;
+        height: 100%;
+        position: relative;
     }
 }
 
@@ -51,6 +66,7 @@ body {
 }
 
 .org {
+    .absolute-fill();
     .img-thumbnail {
         margin-top: 20px;
         float: right;
@@ -64,6 +80,67 @@ body {
         ul li {
             .clickable-block();
         }
+    }
+
+    .idea {
+        .absolute-fill();
+        display: flex;
+        flex-flow: column;
+
+        .breadcrumb {
+            flex: 0 0 auto;
+        }
+
+        .content {
+            flex: 1 1;
+            display: flex;
+            flex-flow: column;
+
+            .heading {
+                flex: 0 0 auto;
+            }
+
+            .versions {
+                flex: 1 1;
+                position:  relative;
+                .version-list {
+                    .absolute-fill();
+                    right: auto;
+                    width: 200px;
+                    overflow-y: auto;
+                    list-style: none;
+                    display: block;
+                    margin: 0;
+                    padding: 0;
+
+                    > li {
+                        list-style: none;
+                        display: block;
+                        padding: 5px;
+
+                        &:hover {
+                            cursor: pointer;
+                            background-color: @hover-background;
+                        }
+
+                        &.active {
+                            background-color: @active-background;
+                        }
+
+                        .title {
+                            display: block;
+                            font-size: 16px;
+                        }
+                    }
+                }
+
+                .version-view {
+                    .absolute-fill();
+                    left: 200px;
+                }
+            }
+        }
+
     }
 }
 

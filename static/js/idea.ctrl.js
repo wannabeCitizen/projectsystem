@@ -75,7 +75,6 @@ define(['angular', 'underscore'], function (angular, _) {
     ctrl.IdeaCtrl = ['$scope', '$state', '$stateParams', 'OrgSvc', 'Idea', 'MsgSvc',
         function ($scope, $state, $stateParams, OrgSvc, Idea, msg) {
             $scope.loading = true;
-            $scope.selectedVersion = $stateParams.versId;
             $scope.ideaPromise = OrgSvc.getById($stateParams.orgId).then(function (org) {
                 $scope.org = org;
 
@@ -90,10 +89,6 @@ define(['angular', 'underscore'], function (angular, _) {
                         });
                     };
 
-                    $scope.$watch('selectedVersion', function (versId) {
-                        $state.go('org.idea.version', {versId: versId});
-                    });
-
                     return idea;
                 }, function (err) {
                     msg.error('Failed to load the specified idea.');
@@ -104,9 +99,15 @@ define(['angular', 'underscore'], function (angular, _) {
                 $scope.loading = false;
             });
 
-            $scope.isNewVersion = $state.is('org.idea.newVersion');
-            $scope.$on('$stateChangeStart', function (event, toState) {
+            $scope.versionClass = function (vers) {
+                return {
+                    active: vers.versId === $scope.selectedVersId
+                };
+            };
+
+            $scope.$on('$stateChangeSuccess', function (event, toState, toParams) {
                 $scope.isNewVersion = (toState.name === 'org.idea.newVersion');
+                $scope.selectedVersId = toParams.versId;
             });
         }];
 
