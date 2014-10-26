@@ -44,10 +44,12 @@
 
         <div class="versions">
             <ul class="version-list">
-                <li ng-repeat="vers in idea.versions" ui-sref="org.idea.version({versId: vers.unique})" ng-class="versionClass(vers)">
-                    <span class="title">{{vers.creatorUser.name}}</span>
-                    <span class="text-muted">{{vers.createdDate}}</span>
-                </li>
+                <ul>
+                    <li ng-repeat="vers in idea.versions" ui-sref="org.idea.version({versId: vers.unique})" ng-class="versionClass(vers)">
+                        <span class="title">{{vers.creatorUser.name}}</span>
+                        <span class="text-muted">{{vers.createdDate}}</span>
+                    </li>
+                </ul>
             </ul>
             <div class="version-view" ui-view="inner">
                 <div ng-if="!idea.versions.length">

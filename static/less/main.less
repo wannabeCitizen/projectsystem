@@ -8,8 +8,8 @@
 @import (inline) "../lib/AngularJS-Toaster/toaster.css";
 
 // Variables
-@hover-background: #b1ebf8;
-@active-background: #0fb6de;
+@hover-background: fade(@btn-primary-bg, 50%);
+@active-background: fade(@btn-primary-bg, 75%);
 
 // helpers
 .absolute-fill {
@@ -18,6 +18,37 @@
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+.selectable-block(@pad) {
+    margin: -@pad;
+    padding: @pad;
+    border: 1px solid transparent;
+    &:hover {
+        background-color: @hover-background;
+        border: 1px solid @btn-primary-border;
+        cursor: pointer;
+    }
+
+    &.active {
+        background-color: @active-background;
+        border: 1px solid @btn-primary-border;
+    }
+}
+
+.blockify-li {
+    ul {
+        display: block;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        li {
+            display: block;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+    }
 }
 
 /* angularjs cloaking */
@@ -39,32 +70,6 @@ body {
     }
 }
 
-.clickable-block {
-    margin: -10px;
-    padding: 10px;
-    border: 1px solid transparent;
-    &:hover {
-        background-color: fade(@btn-primary-bg, 50%);
-        border: 1px solid @btn-primary-border;
-        cursor: pointer;
-    }
-}
-
-.blockify-li {
-    ul {
-        display: block;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        li {
-            display: block;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-    }
-}
-
 .org {
     .absolute-fill();
     .img-thumbnail {
@@ -78,7 +83,7 @@ body {
 
     .projects, .ideas {
         ul li {
-            .clickable-block();
+            .selectable-block(10px);
         }
     }
 
@@ -104,32 +109,22 @@ body {
                 flex: 1 1;
                 position:  relative;
                 .version-list {
+                    .blockify-li();
                     .absolute-fill();
                     right: auto;
                     width: 200px;
                     overflow-y: auto;
-                    list-style: none;
-                    display: block;
-                    margin: 0;
-                    padding: 0;
 
-                    > li {
-                        list-style: none;
-                        display: block;
-                        padding: 5px;
+                    ul {
+                        .absolute-fill();
+                        li {
+                            .selectable-block(0);
+                            padding: 5px;
 
-                        &:hover {
-                            cursor: pointer;
-                            background-color: @hover-background;
-                        }
-
-                        &.active {
-                            background-color: @active-background;
-                        }
-
-                        .title {
-                            display: block;
-                            font-size: 16px;
+                            .title {
+                                display: block;
+                                font-size: 16px;
+                            }
                         }
                     }
                 }
@@ -147,7 +142,7 @@ body {
 .orgs {
     .blockify-li();
     ul li {
-        .clickable-block();
+        .selectable-block(10px);
         margin: 0 -10px;
         .org-name {
             margin: 0;
