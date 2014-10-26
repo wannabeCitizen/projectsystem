@@ -23,7 +23,7 @@ class MiniIdea(EmbeddedDocument):
     unique = UUIDField(required=True, binary=False)
     title = StringField(required=True)
     short_description = StringField(required=True)
- 
+
 class Reply(EmbeddedDocument):
     #Google ID
     replier = StringField()
@@ -59,7 +59,7 @@ class IdeaMeta(Document):
     last_edit = DateTimeField(default=datetime.datetime.now())
     #This takes GoogleID
     created_by = StringField()
-    
+
     followers = ListField(StringField())
     versions = ListField(EmbeddedDocumentField(IdeaVersion))
     comments = ListField(EmbeddedDocumentField(Comment))
@@ -153,7 +153,7 @@ class Project(Document):
 
     votes = ListField(EmbeddedDocumentField(Vote))
     num_votes = IntField()
-    
+
     roles = ListField(EmbeddedDocumentField(Role))
     num_roles = IntField(default=0)
 
