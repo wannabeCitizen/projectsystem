@@ -91,7 +91,7 @@ define(['angular', 'underscore'], function (angular, _) {
                     };
 
                     $scope.$watch('selectedVersion', function (versId) {
-                        $state.go('idea.version', {versId: versId});
+                        $state.go('org.idea.version', {versId: versId});
                     });
 
                     return idea;
@@ -104,9 +104,9 @@ define(['angular', 'underscore'], function (angular, _) {
                 $scope.loading = false;
             });
 
-            $scope.isNewVersion = $state.is('idea.newVersion');
+            $scope.isNewVersion = $state.is('org.idea.newVersion');
             $scope.$on('$stateChangeStart', function (event, toState) {
-                $scope.isNewVersion = (toState.name === 'idea.newVersion');
+                $scope.isNewVersion = (toState.name === 'org.idea.newVersion');
             });
         }];
 
@@ -118,7 +118,7 @@ define(['angular', 'underscore'], function (angular, _) {
             $scope.save = function () {
                 $scope.spin = true;
                 $scope.idea.addVersion($scope.vers).then(function (newVers) {
-                    $state.go('idea.version', {
+                    $state.go('org.idea.version', {
                         orgId: $scope.org.unique,
                         ideaId: $scope.idea.unique,
                         versId: newVers.unique
@@ -151,7 +151,7 @@ define(['angular', 'underscore'], function (angular, _) {
             $scope.save = function () {
                 $scope.spin = true;
                 idea.updateVersion($scope.vers).then(function (vers) {
-                    $state.go('idea.version', {
+                    $state.go('org.idea.version', {
                         orgId: $scope.idea.orgId,
                         ideaId: $scope.idea.ideaId,
                         versId: vers.versId
@@ -171,7 +171,7 @@ define(['angular', 'underscore'], function (angular, _) {
             };
 
             $scope.cancel = function () {
-                $state.go('idea.version', $stateParams);
+                $state.go('org.idea.version', $stateParams);
             };
 
             return $scope.vers;

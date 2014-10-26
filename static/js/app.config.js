@@ -16,8 +16,8 @@ define([], function () {
                 url: '/org',
                 templateUrl: 'static/template/orgs.html'
             })
-            .state('newOrg', {
-                url: '/org/new',
+            .state('orgs.new', {
+                url: '/new',
                 templateUrl: 'static/template/editOrg.html',
                 controller: 'NewOrgCtrl'
             })
@@ -25,36 +25,44 @@ define([], function () {
                 url: '/org/:orgId',
                 templateUrl: 'static/template/org.html'
             })
-            .state('editOrg', {
-                url: '/org/:orgId/edit',
+            .state('org.edit', {
+                url: '/edit',
                 templateUrl: 'static/template/editOrg.html',
                 controller: 'EditOrgCtrl'
             })
-            .state('newIdea', {
-                url: '/org/:orgId/idea/new',
+            .state('org.newIdea', {
+                url: '/idea/new',
                 templateUrl: 'static/template/editIdea.html',
                 controller: 'NewIdeaCtrl'
             })
-            .state('idea', {
-                url: '/org/:orgId/idea/:ideaId',
+            .state('org.idea', {
+                url: '/idea/:ideaId',
                 templateUrl: 'static/template/idea.html'
             })
-            .state('editIdea', {
-                url: '/org/:orgId/idea/:ideaId/edit',
+            .state('org.idea.edit', {
+                url: '/edit',
                 templateUrl: 'static/template/editIdea.html',
                 controller: 'EditIdeaCtrl'
             })
-            .state('idea.newVersion', {
+            .state('org.idea.newVersion', {
                 url: '/version/new',
-                templateUrl: 'static/template/editIdeaVers.html',
-                controller: 'NewIdeaVersCtrl'
+                views: {
+                    'inner': {
+                        templateUrl: 'static/template/editIdeaVers.html',
+                        controller: 'NewIdeaVersCtrl'
+                    }
+                }
             })
-            .state('idea.version', {
+            .state('org.idea.version', {
                 url: '/version/:versId',
-                templateUrl: 'static/template/ideaVers.html'
+                views: {
+                    'inner': {
+                        templateUrl: 'static/template/ideaVers.html'
+                    }
+                }
             })
-            .state('idea.editVersion', {
-                url: '/version/:versId/edit',
+            .state('org.idea.version.edit', {
+                url: '/edit',
                 templateUrl: 'static/template/editIdeaVers.html',
                 controller: 'EditIdeaVersCtrl'
             });

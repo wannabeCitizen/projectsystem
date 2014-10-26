@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<div class="orgs" ng-controller="OrgsCtrl">
+<div class="orgs" ng-controller="OrgsCtrl" ui-view>
     <ol class="breadcrumb">
         <li><a ui-sref="home">Home</a></li>
     </ol>
     <h1>All Organizations</h1>
-    <button ng-if="currentUser.loggedIn" class="btn btn-link" ui-sref="newOrg"><i class="fa fa-plus"></i> Create a new organization</button>
+    <button ng-if="currentUser.loggedIn" class="btn btn-link" ui-sref="orgs.new"><i class="fa fa-plus"></i> Create a new organization</button>
 
     <ul>
         <li ng-repeat="org in list" ui-sref="org({orgId: org.unique})">

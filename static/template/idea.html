@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<div class="idea" ng-controller="IdeaCtrl">
+<div class="idea" ng-controller="IdeaCtrl" ui-view>
     <ol class="breadcrumb">
         <li><a ui-sref="home">Home</a></li>
         <li><a ui-sref="orgs">Organizations</a></li>
-        <li ng-show="org"><a ui-sref="org({orgId: org.unique})">{{org.name}}</a></li>
+        <li ng-show="org"><a ui-sref="org">{{org.name}}</a></li>
     </ol>
     <div ng-show="loading">
         Loading...
@@ -11,7 +11,7 @@
     <div ng-show="idea && !loading">
         <h1>
             {{idea.title}}
-            <button ng-if="currentUser.loggedIn" ng-show="org.userIsOwner()" class="btn btn-link" ui-sref="editIdea({orgId: org.unique, ideaId: idea.unique})">
+            <button ng-if="currentUser.loggedIn" ng-show="org.userIsOwner()" class="btn btn-link" ui-sref="org.idea.edit">
                 <i class="fa fa-pencil"></i> Edit
             </button>
             <button ng-if="currentUser.loggedIn" ng-show="org.userIsOwner()" class="btn btn-link" ng-click="delIdea()">
@@ -35,24 +35,23 @@
             <button type="button" class="btn btn-default" ng-model="selectedVersion" ng-options="idea.unique as idea.title for idea in idea.versions" bs-select>
                 Version <span class="caret"></span>
             </button>
-            <button ng-if="currentUser.loggedIn" ng-show="org.userIsMember()" class="btn btn-link" ui-sref="idea.editVersion({versId: selectedVersion})" data-title="Edit this idea" bs-tooltip>
+            <button ng-if="currentUser.loggedIn" ng-show="org.userIsMember()" class="btn btn-link" ui-sref="org.idea.version.edit" data-title="Edit this version" bs-tooltip>
                 <i class="fa fa-pencil"></i> Edit
             </button>
-            <button ng-if="currentUser.loggedIn" ng-show="org.userIsMember()" class="btn btn-link" ui-sref="idea.newVersion" data-title="Create a new idea" bs-tooltip>
+            <button ng-if="currentUser.loggedIn" ng-show="org.userIsMember()" class="btn btn-link" ui-sref="org.idea.newVersion" data-title="Create a new version" bs-tooltip>
                 <i class="fa fa-plus"></i> New
             </button>
         </div>
-
-        <div ng-if="!idea.versions.length && !isNewVersion">
-            <p>This idea does not have any versions yet.</p>
-            <button
-                class="btn btn-primary"
-                ng-if="currentUser.loggedIn" ng-show="org.userIsMember()"
-                ui-sref="idea.newVersion({orgId: org.unique, ideaId: idea.unique})">
-                <i class="fa fa-plus"></i> Create the first version
-            </button>
+        <div ui-view="inner">
+            <div ng-if="!idea.versions.length && !isNewVersion">
+                <p>This idea does not have any versions yet.</p>
+                <button
+                        class="btn btn-primary"
+                        ng-if="currentUser.loggedIn" ng-show="org.userIsMember()"
+                        ui-sref="org.idea.newVersion">
+                    <i class="fa fa-plus"></i> Create the first version
+                </button>
+            </div>
         </div>
-
-        <div ui-view></div>
     </div>
 </div>
