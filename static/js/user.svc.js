@@ -48,13 +48,10 @@ define(['angular', 'gapi'], function (angular, gapi) {
                 svc.currentUser.googlePlus = plusData;
 
                 return $http.post('/api/login', svc.currentUser).then(function (response) {
-                    $log.log('login api success', response.data);
-                    svc.currentUser.api = response.data;
-                }, function (err) {
-                    $log.error('login api fail', err);
-                    svc.currentUser.api = null;
+                    return response.data;
                 });
-            }).then(function () {
+            }).then(function (apiUser) {
+                svc.currentUser.api = apiUser;
                 svc.currentUser.loggedIn = true;
 
                 svc.currentUser.name = (svc.currentUser.googlePlus && svc.currentUser.googlePlus.displayName) ||
