@@ -73,7 +73,7 @@ define(['angular', 'gapi'], function (angular, gapi) {
         $rootScope.$on('event:google-plus-signin-failure', function (event, authResult) {
             // Auth failure or signout detected
             $log.log('user logout or auth error', authResult);
-            $http.post('/api/logout');
+            $http.get('/api/logout');
             angular.copy({}, svc.currentUser);
         });
 

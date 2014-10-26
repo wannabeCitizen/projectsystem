@@ -4,7 +4,7 @@
         <li><a ui-sref="home">Home</a></li>
     </ol>
     <h1>All Organizations</h1>
-    <button class="btn btn-link" ui-sref="newOrg"><i class="fa fa-plus"></i> Create a new organization</button>
+    <button ng-if="currentUser.loggedIn" class="btn btn-link" ui-sref="newOrg"><i class="fa fa-plus"></i> Create a new organization</button>
 
     <ul>
         <li ng-repeat="org in list" ui-sref="org({orgId: org.unique})">

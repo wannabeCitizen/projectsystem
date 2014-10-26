@@ -29,10 +29,10 @@ def load_user(userid):
     return User.objects(google_id=userid).first()
 
 
-@app.route('/logout')
+@app.route('/api/logout')
 def logout():
     logout_user()
-    return render_template('devIndex.html')
+    return redirect('/')
 
 
 @app.route('/')

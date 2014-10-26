@@ -7,7 +7,7 @@
     <div class="form-horizontal">
         <h1>{{heading}}</h1>
 
-        <form name="orgForm" novalidate>
+        <form ng-if="currentUser.loggedIn" name="orgForm" novalidate>
             <div class="form-group" form-valid-style="name">
                 <label class="control-label col-sm-2">Name</label>
                 <div class="col-sm-10">
@@ -44,5 +44,6 @@
                 </div>
             </div>
         </form>
+        <p ng-if="!currentUser.loggedIn">You must be signed in to create or edit an organization!</p>
     </div>
 </div>

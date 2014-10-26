@@ -45,7 +45,10 @@
 
         <div ng-if="!idea.versions.length && !isNewVersion">
             <p>This idea does not have any versions yet.</p>
-            <button class="btn btn-primary" ui-sref="idea.newVersion({orgId: org.unique, ideaId: idea.unique})">
+            <button
+                class="btn btn-primary"
+                ng-if="currentUser.loggedIn" ng-show="org.userIsMember()"
+                ui-sref="idea.newVersion({orgId: org.unique, ideaId: idea.unique})">
                 <i class="fa fa-plus"></i> Create the first version
             </button>
         </div>
