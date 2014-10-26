@@ -9,6 +9,9 @@ from lib.verify import is_owner, can_add
 from lib.model import User
 
 from app import googlelogin
+from oauth2client.client import verify_id_token
+from oauth2client.crypt import AppIdentityError
+
 
 import json
 import datetime
@@ -22,25 +25,49 @@ class Login(restful.Resource):
     def post(self):
         #Grab code from authorization
         data = request.get_json()
-        code = data['code']
-        access_token = data['access_token']
+
+        id_token = data['googleAuth']['id_token']
+        my_name = data['googlePlus']['displayName']
+
+        for mails in data['googlePlus']['e-mails']:
+            if mails['type'] == 'account':
+                my_email = data['googlePlus']['email']
+            else:
+                my_email = "N/A"
+
+        try:
+            good_token = verify_id_token(id_token, googlelogin.client_id)
+            user_id = good_token['sub']
+        except AppIdentityError:
+            abort(403, message="Insecure login token")
+
+       
+
         #Get redirect uri for next request
-        redirect_uri = googlelogin.redirect_uri
+        #redirect_uri = googlelogin.redirect_uri
+
 
         #Make token request
         #token = googlelogin.exchange_code(code, redirect_uri)
 
 
-        userinfo = googlelogin.get_userinfo(access_token)
+
+        #userinfo = googlelogin.get_userinfo(access_token)
+
 
         #Check for user in DB
         user = User.objects(google_id=userinfo['id']).first()
+        if user.name != my_name or user.email != my_email:
+            user.name = my_name
+            user.email = my_email
+            user.save()
+
 
         #If we don't know you, we add your ass
         #CHANGE THIS SHIT!
         if not user:
             current_time = datetime.datetime.now()
-            user = User(google_id=userinfo['id'], email=userinfo['email'], name=userinfo['name'], joined_on=current_time )
+            user = User(google_id=user_id, email=my_email, name=my_name, joined_on=current_time )
             user.save()
 
         #Add user to the flask-login session (remember me auto-enabled)
