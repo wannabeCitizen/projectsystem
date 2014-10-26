@@ -8,49 +8,47 @@
     <div ng-show="loading">
         Loading...
     </div>
-    <div class="content" ng-show="idea && !loading">
-        <div class="heading">
-            <h1>
-                {{idea.title}}
-                <button ng-if="currentUser.loggedIn" ng-show="org.userIsOwner()" class="btn btn-link" ui-sref="org.idea.edit">
-                    <i class="fa fa-pencil"></i> Edit
-                </button>
-                <button ng-if="currentUser.loggedIn" ng-show="org.userIsOwner()" class="btn btn-link" ng-click="delIdea()">
-                    <i class="fa fa-trash-o"></i> Delete
-                </button>
-                <button ng-if="currentUser.loggedIn" ng-show="idea.userIsFollowing()" class="btn btn-link" ng-click="idea.unfollow()" data-title="Click to stop following" bs-tooltip>
-                    <i class="fa fa-eye"></i> Following
-                </button>
-                <button ng-if="currentUser.loggedIn" ng-hide="idea.userIsFollowing()" class="btn btn-link" ng-click="idea.follow()" data-title="Click to follow" bs-tooltip>
-                    <i class="fa fa-eye-slash"></i> Not following
-                </button>
-            </h1>
+    <div ng-show="idea && !loading">
+        <h1>
+            {{idea.title}}
+            <button ng-if="currentUser.loggedIn" ng-show="org.userIsOwner()" class="btn btn-link" ui-sref="org.idea.edit">
+                <i class="fa fa-pencil"></i> Edit
+            </button>
+            <button ng-if="currentUser.loggedIn" ng-show="org.userIsOwner()" class="btn btn-link" ng-click="delIdea()">
+                <i class="fa fa-trash-o"></i> Delete
+            </button>
+            <button ng-if="currentUser.loggedIn" ng-show="idea.userIsFollowing()" class="btn btn-link" ng-click="idea.unfollow()" data-title="Click to stop following" bs-tooltip>
+                <i class="fa fa-eye"></i> Following
+            </button>
+            <button ng-if="currentUser.loggedIn" ng-hide="idea.userIsFollowing()" class="btn btn-link" ng-click="idea.follow()" data-title="Click to follow" bs-tooltip>
+                <i class="fa fa-eye-slash"></i> Not following
+            </button>
+        </h1>
 
-            <p ng-if="idea.short_description">
-                <i class="fa fa-quote-left"></i>
-                {{idea.short_description}}
-                <i class="fa fa-quote-right"></i>
-            </p>
+        <p ng-if="idea.short_description">
+            <i class="fa fa-quote-left"></i>
+            {{idea.short_description}}
+            <i class="fa fa-quote-right"></i>
+        </p>
 
-            <div ng-show="idea.versions.length && !isNewVersion">
-                <button ng-if="currentUser.loggedIn" ng-show="org.userIsMember()" class="btn btn-link" ui-sref="org.idea.version.edit" data-title="Edit this version" bs-tooltip>
-                    <i class="fa fa-pencil"></i> Edit
-                </button>
-                <button ng-if="currentUser.loggedIn" ng-show="org.userIsMember()" class="btn btn-link" ui-sref="org.idea.newVersion" data-title="Create a new version" bs-tooltip>
-                    <i class="fa fa-plus"></i> New
-                </button>
-            </div>
+        <div ng-show="idea.versions.length && !isNewVersion">
+            <button ng-if="currentUser.loggedIn" ng-show="org.userIsMember()" class="btn btn-link" ui-sref="org.idea.version.edit" data-title="Edit this version" bs-tooltip>
+                <i class="fa fa-pencil"></i> Edit
+            </button>
+            <button ng-if="currentUser.loggedIn" ng-show="org.userIsMember()" class="btn btn-link" ui-sref="org.idea.newVersion" data-title="Create a new version" bs-tooltip>
+                <i class="fa fa-plus"></i> New
+            </button>
         </div>
 
         <div class="versions">
-            <ul class="version-list">
+            <div class="version-list">
                 <ul>
                     <li ng-repeat="vers in idea.versions" ui-sref="org.idea.version({versId: vers.unique})" ng-class="versionClass(vers)">
                         <span class="title">{{vers.creatorUser.name}}</span>
                         <span class="text-muted">{{vers.createdDate}}</span>
                     </li>
                 </ul>
-            </ul>
+            </div>
             <div class="version-view" ui-view="inner">
                 <div ng-if="!idea.versions.length">
                     <p>This idea does not have any versions yet.</p>
@@ -65,6 +63,10 @@
                     Choose a version of this idea to vew from the list on the left.
                 </div>
             </div>
+        </div>
+
+        <div class="comments">
+            <h2>Comments</h2>
         </div>
 
     </div>
