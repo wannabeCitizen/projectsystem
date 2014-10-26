@@ -40,7 +40,6 @@ class Login(restful.Resource):
             user_id = good_token['sub']
         except AppIdentityError:
             abort(403, message="Insecure login token")
-       
 
         #Get redirect uri for next request
         #redirect_uri = googlelogin.redirect_uri

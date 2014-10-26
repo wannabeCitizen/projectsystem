@@ -34,7 +34,7 @@ define(['angular', 'gapi'], function (angular, gapi) {
         $rootScope.$on('event:google-plus-signin-success', function (event, authResult) {
             // Send login to server or save into cookie
             $log.log('user authenticated with google', authResult);
-            svc.currentUser = {};
+            angular.copy({}, svc.currentUser);
             svc.currentUser.googleAuth = authResult;
 
             var plus = $q.defer();
