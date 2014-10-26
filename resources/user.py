@@ -29,9 +29,9 @@ class Login(restful.Resource):
         id_token = data['googleAuth']['id_token']
         my_name = data['googlePlus']['displayName']
 
-        for mails in data['googlePlus']['e-mails']:
+        for mails in data['googlePlus']['emails']:
             if mails['type'] == 'account':
-                my_email = data['googlePlus']['email']
+                my_email = mails['value']
             else:
                 my_email = "N/A"
 
@@ -40,7 +40,6 @@ class Login(restful.Resource):
             user_id = good_token['sub']
         except AppIdentityError:
             abort(403, message="Insecure login token")
-
        
 
         #Get redirect uri for next request
@@ -56,7 +55,7 @@ class Login(restful.Resource):
 
 
         #Check for user in DB
-        user = User.objects(google_id=userinfo['id']).first()
+        user = User.objects(google_id=user_id).first()
         if user.name != my_name or user.email != my_email:
             user.name = my_name
             user.email = my_email
