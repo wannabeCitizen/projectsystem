@@ -89,6 +89,12 @@ define(['angular', 'underscore'], function (angular, _) {
                         });
                     };
 
+                    $scope.addComment = function (text) {
+                        idea.addComment(text).then(null, function () {
+                            msg.error('Failed to add the comment');
+                        });
+                    };
+
                     return idea;
                 }, function (err) {
                     msg.error('Failed to load the specified idea.');

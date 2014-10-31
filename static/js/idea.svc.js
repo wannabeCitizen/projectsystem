@@ -13,7 +13,7 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
 
             this.versId = this.unique;
             this.url = '/api/org/' + idea.orgId + '/idea/' + idea.ideaId + '/version/' + this.versId;
-            this.createdDate = moment(this.created_on && this.created_on.$date).format('l LT');
+            this.createdDate = moment.utc(this.created_on && this.created_on.$date).format('l LT');
             this.title = this.createdDate;
             this.$promise = UserSvc.getById(this.thinker).then(angular.bind(this, function (user) {
                 this.creatorUser = user;
@@ -37,7 +37,38 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
         return Version;
     }];
 
-    factory.Idea = ['$http', '$resource', 'UserSvc', 'Version', function ($http, $resource, UserSvc, Version) {
+    factory.Comment = ['$http', 'UserSvc', function ($http, UserSvc) {
+        var Comment = function (resource, baseUrl) {
+            angular.extend(this, resource);
+
+            this.commentId = this.index;
+            this.url = baseUrl + '/' + this.commentId;
+            this.date = moment.utc(this.time && this.time.$date).format('l LT');
+            this.$promise = UserSvc.getById(this.commenter).then(angular.bind(this, function (user) {
+                this.user = user;
+            }));
+
+            this.serialize = function () {
+                return _(this).pick('commenter', 'text', 'time', 'replies', 'num_replies', 'index');
+            };
+
+            this.save = function () {
+                return $http.put(this.url, this.serialize())
+                    .then(angular.bind(this, function (response) {
+                        angular.extend(this, response.data);
+                        return this;
+                    }));
+            };
+
+            this.del = function () {
+                return $http.delete(this.url);
+            };
+        };
+
+        return Comment;
+    }];
+
+    factory.Idea = ['$http', '$resource', 'UserSvc', 'Version', 'Comment', function ($http, $resource, UserSvc, Version, Comment) {
         // Instance ctor
         var Idea = function (resource) {
             angular.extend(this, resource);
@@ -45,10 +76,17 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             this.orgId = this.my_org && this.my_org.unique;
             this.ideaId = this.unique;
             this.url = '/api/org/' + this.orgId + '/idea/' + this.ideaId;
+            this.commentUrl = this.url + '/comment';
 
             _(this.versions).each(function (vers, i) {
                 this.versions[i] = new Version(vers, this);
             }, this);
+            this.versions = this.versions || [];
+
+            _(this.comments).each(function (vers, i) {
+                this.comments[i] = new Comment(vers, this.commentUrl);
+            }, this);
+            this.comments = this.comments || [];
 
             this.serialize = function () {
                 return _(this).pick('title', 'short_description', 'unique');
@@ -104,14 +142,23 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             this.getVersionById = function (versId) {
                 return _(this.versions).find(function (vers) { return vers.unique === versId; });
             };
+
+            this.addComment = function (text) {
+                return Idea.api.addComment(_(this).pick('orgId', 'ideaId'), {text: text}).$promise
+                    .then(angular.bind(this, function (comment) {
+                        var c = new Comment(comment);
+                        this.comments.push(c);
+                    }));
+            };
         };
 
         Idea.api = $resource('/api/org/:orgId/idea/:ideaId', {orgId: '@my_org.unique', ideaId: '@unique'}, {
             update: { method: 'PUT' },
             addVersion: { method: 'POST' },
             updateVersion: { method: 'PUT', url: '/api/org/:orgId/idea/:ideaId/version/:versId' },
-            follow: { method: 'PUT', url: '/api/org/:orgId/idea/:ideaId/follow'},
-            unfollow: { method: 'DELETE', url: '/api/org/:orgId/idea/:ideaId/follow'}
+            follow: { method: 'PUT', url: '/api/org/:orgId/idea/:ideaId/follow' },
+            unfollow: { method: 'DELETE', url: '/api/org/:orgId/idea/:ideaId/follow' },
+            addComment: { method: 'POST', url: '/api/org/:orgId/idea/:ideaId/comment' }
         });
 
         Idea.getById = function (orgId, ideaId) {

@@ -67,6 +67,15 @@
 
         <div class="comments">
             <h2>Comments</h2>
+			<ul>
+				<li ng-repeat="comment in idea.comments">
+					<div class="heading">{{comment.user.name}} at {{comment.date}}</div>
+					<div class="text">{{comment.text}}</div>
+				</li>
+			</ul>
+			<textarea class="form-control" ng-model="newComment" placeholder="Add a comment" />
+			<div class="well" marked="newComment" ng-show="vers.text.length"></div>
+			<button class="btn btn-primary" ng-click="addComment(newComment)">Add</button>
         </div>
 
     </div>
