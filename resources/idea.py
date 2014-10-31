@@ -55,7 +55,7 @@ class MetaIdea(restful.Resource):
 
 class FollowIdea(restful.Resource):
 
-    '/api/org/<string:org_id>/idea/<string:idea_id>/follow'
+    url = '/api/org/<string:org_id>/idea/<string:idea_id>/follow'
 
     #Add yourself as a follower
     def put(self, org_id, idea_id):

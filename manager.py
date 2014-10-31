@@ -48,7 +48,7 @@ def devIndex():
 #Expected variables are placed in carrot brackets with a type declaration
 api.add_resource(AllUsers, AllUsers.url, AllUsers.url+'/')
 api.add_resource(UserList, UserList.url, UserList.url+'/')
-api.add_resource(UserEP, , UserEP.url, UserEP.url+'/')
+api.add_resource(UserEP, UserEP.url, UserEP.url+'/')
 api.add_resource(Login, Login.url, Login.url+'/')
 
 api.add_resource(AllOrgs, AllOrgs.url, AllOrgs.url+'/')
@@ -58,10 +58,10 @@ api.add_resource(OrgOwner, OrgOwner.url, OrgOwner.url+'/')
 
 api.add_resource(AllIdeas, AllIdeas.url, AllIdeas.url+'/')
 api.add_resource(MetaIdea, MetaIdea.url, MetaIdea.url+'/')
-api.add_resource(VersionIdea, VersionIdea.url, VersonIdea.url+'/')
+api.add_resource(VersionIdea, VersionIdea.url, VersionIdea.url+'/')
 api.add_resource(KarmaChange, KarmaChange.url, KarmaChange.url+'/')
 api.add_resource(IdeaComment, IdeaComment.url, IdeaComment.url+'/')
-api.add_resource(IdeaReply, IdeaReply.url, Idea.Reply.url+'/')
+api.add_resource(IdeaReply, IdeaReply.url, IdeaReply.url+'/')
 api.add_resource(FollowIdea, FollowIdea.url, FollowIdea.url+'/')
 
 api.add_resource(AllProjects, AllProjects.url, AllProjects.url+'/')
