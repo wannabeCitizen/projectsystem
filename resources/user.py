@@ -22,6 +22,8 @@ import datetime
 
 class Login(restful.Resource):
 
+    url = '/api/login'
+
     def post(self):
         #Grab code from authorization
         data = request.get_json()
@@ -76,6 +78,8 @@ class Login(restful.Resource):
 
 class AllUsers(restful.Resource):
 
+    url = '/api/user'
+
     #Returns all users matching a string
     def get(self):
         if 'search' in request.args and request.args['search'] != None:
@@ -87,12 +91,17 @@ class AllUsers(restful.Resource):
             return get_all_users()
 
 class UserList(restful.Resource):
+
+    url = '/api/user/list'
+    
     def post(self):
         data = request.get_json()
         return get_list(data)
 
 
 class UserEP(restful.Resource):
+
+    url = '/api/user/<string:user_id>'
 
     #user_id will be an oauth token from google
     def get(self, user_id):

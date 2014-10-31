@@ -18,6 +18,9 @@ import json
 
 
 class AllProjects(restful.Resource):
+
+    url = '/api/org/<string:org_id>/project'
+
     def post(self, org_id):
         new_project_data = request.get_json()
         verify = is_in_org(current_user.google_id, org_id)
@@ -35,6 +38,8 @@ class AllProjects(restful.Resource):
             return get_all_projects(org_id)
 
 class ProjectEP(restful.Resource):
+
+    url = '/api/org/<string:org_id>/project/<string:project_id>'
 
     #update a project
     def put(self, org_id, project_id):
@@ -59,6 +64,9 @@ class ProjectEP(restful.Resource):
             return abort(401, message="User is not an owner")
 
 class ProjectMember(restful.Resource):
+
+    url = '/api/org/<string:org_id>/project/<string:project_id>/member/<string:user_id>'
+
     #add a member to a project
     def put(self, org_id, project_id, user_id):
         verify = is_project_member(current_user.google_id, project_id)
@@ -77,6 +85,8 @@ class ProjectMember(restful.Resource):
             return abort(401, message="User not in organization")
 
 class ProjectFollower(restful.Resource):
+
+    url = '/api/org/<string:org_id>/project/<string:project_id>/follow'
     #add a follower to a project
     def put(self, org_id, project_id):
         verify = is_in_org(current_user.google_id, org_id)
@@ -95,6 +105,8 @@ class ProjectFollower(restful.Resource):
             return abort(401, message="User not in organization")
 
 class ProjectRole(restful.Resource):
+
+    url = '/api/org/<string:org_id>/project/<string:project_id>/role'
     #add a Role to a project
     def post(self, org_id, project_id):
         new_role = request.get_json()
@@ -122,6 +134,9 @@ class ProjectRole(restful.Resource):
             return abort(401, message="User is not on project")
 
 class ProjectTask(restful.Resource):
+
+    url = '/api/org/<string:org_id>/project/<string:project_id>/task'
+
     #add a task to a project
     def post(self, org_id, project_id):
         new_task = request.get_json()
@@ -149,6 +164,8 @@ class ProjectTask(restful.Resource):
             return abort(401, message="User is not on project")
 
 class ProjectVote(restful.Resource):
+
+    url = '/api/org/<string:org_id>/project/<string:project_id>/vote'
     #add a vote to a project
     def post(self, org_id, project_id):
         new_vote = request.get_json()
@@ -178,6 +195,9 @@ class ProjectVote(restful.Resource):
             return abort(401, message="User is not on project")
 
 class VoteBallot(restful.Resource):
+
+    url = '/api/org/<string:org_id>/project/<string:project_id>/ballot'
+
     def put(self, org_id, project_id):
         vote_data = request.get_json()
         verify = is_project_member(current_user.google_id, project_id)
@@ -187,10 +207,16 @@ class VoteBallot(restful.Resource):
             return abort(401, message="User is not on project")
 
 class Revision(restful.Resource):
+
+    url = '/api/org/<string:org_id>/project/<string:project_id>/revision'
+
     def get(self, org_id, project_id):
         return get_revisions(project_id)
 
 class ProjectPhase(restful.Resource):
+
+    url = '/api/org/<string:org_id>/project/<string:project_id>/phase'
+
     #add a phase to a project
     def post(self, org_id, project_id):
         new_phase = request.get_json()
@@ -218,6 +244,8 @@ class ProjectPhase(restful.Resource):
             return abort(401, message="User is not on project")
 
 class ProjectComment(restful.Resource):
+
+    url = '/api/org/<string:org_id>/project/<string:project_id>/comment'
 
     #Add a new comment to a project
     def post(self, org_id, project_id):
@@ -253,6 +281,8 @@ class ProjectComment(restful.Resource):
         
 
 class ProjectReply(restful.Resource):
+
+    url = '/api/org/<string:org_id>/project/<string:project_id>/comment/<string:comment_id>/reply'
 
     #Add a reply to a comment
     def post(self, org_id, project_id, comment_id):

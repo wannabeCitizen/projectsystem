@@ -14,6 +14,9 @@ import json
 
 
 class OrganizationEP(restful.Resource):
+
+    url =  '/api/org/<string:org_id>'
+
     def get(self, org_id):
         return get_org(org_id)
 
@@ -34,6 +37,9 @@ class OrganizationEP(restful.Resource):
             return abort(401, message="User is not an owner")
 
 class AllOrgs(restful.Resource):
+
+    url = '/api/org'
+
     def get(self):
         if 'search' in request.args and request.args['search'] != None:
             search = request.args['search']
@@ -50,6 +56,9 @@ class AllOrgs(restful.Resource):
         return create_org(current_user.google_id, **new_org_data)
 
 class OrgMember(restful.Resource):
+
+    url = '/api/org/<string:org_id>/member/<string:user_id>'
+
     def put(self, org_id):
         user_id = request.get_json()['google_id']
         verify = can_add(org_id, current_user.google_id)
@@ -68,6 +77,9 @@ class OrgMember(restful.Resource):
             return abort(401, message="User is not an owner")
 
 class OrgOwner(restful.Resource):
+
+    url = '/api/org/<string:org_id>/owner/<string:user_id>'
+
     def put(self, org_id):
         user_id = request.get_json()['google_id']
         verify = can_add(org_id, current_user.google_id)
