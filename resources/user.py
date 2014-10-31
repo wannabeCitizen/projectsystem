@@ -56,7 +56,6 @@ class Login(restful.Resource):
         #Check for user in DB
         user = User.objects(google_id=user_id).first()
 
-
         #If we don't know you, we add your ass
         #CHANGE THIS SHIT!
         if not user:
