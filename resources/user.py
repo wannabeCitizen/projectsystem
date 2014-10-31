@@ -55,10 +55,6 @@ class Login(restful.Resource):
 
         #Check for user in DB
         user = User.objects(google_id=user_id).first()
-        if user.name != my_name or user.email != my_email:
-            user.name = my_name
-            user.email = my_email
-            user.save()
 
 
         #If we don't know you, we add your ass
@@ -66,6 +62,11 @@ class Login(restful.Resource):
         if not user:
             current_time = datetime.datetime.now()
             user = User(google_id=user_id, email=my_email, name=my_name, joined_on=current_time )
+            user.save()
+
+        if user.name != my_name or user.email != my_email:
+            user.name = my_name
+            user.email = my_email
             user.save()
 
         #Add user to the flask-login session (remember me auto-enabled)
