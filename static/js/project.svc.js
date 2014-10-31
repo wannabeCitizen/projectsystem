@@ -9,7 +9,7 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
 	factory.Vote = ['$http', 'UserSvc'], function ($http, UserSvc) {
 		
 		var Vote = function (resource, project) {
-			angular.extend(this, resource)
+			angular.extend(this, resource);
 		}
 
 

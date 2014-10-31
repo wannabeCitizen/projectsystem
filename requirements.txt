@@ -1,5 +1,5 @@
 Flask
-Flask-Googlelogin
+Flask-GoogleLogin
 mongoengine
 Flask-Restful
 Flask-Login

@@ -15,8 +15,9 @@ import uuid
 import json
 
 
-
 class MetaIdea(restful.Resource):
+
+    url = '/api/org/<string:org_id>/idea/<string:idea_id>'
 
     #Create a new version of an idea
     def post(self, org_id, idea_id):
@@ -54,6 +55,8 @@ class MetaIdea(restful.Resource):
 
 class FollowIdea(restful.Resource):
 
+    '/api/org/<string:org_id>/idea/<string:idea_id>/follow'
+
     #Add yourself as a follower
     def put(self, org_id, idea_id):
         verify = is_in_org(current_user.google_id, org_id)
@@ -74,6 +77,7 @@ class FollowIdea(restful.Resource):
 
 class VersionIdea(restful.Resource):
 
+    url = '/api/org/<string:org_id>/idea/<string:idea_id>/version/<string:version_id>'
     #Update a version of an idea
     def put(self, org_id, idea_id, version_id):
         new_data = request.get_json()
@@ -94,6 +98,8 @@ class VersionIdea(restful.Resource):
 
 class KarmaChange(restful.Resource):
 
+    url = '/api/org/<string:org_id>/idea/<string:idea_id>/karma/<string:version_id>'
+
     #Put Karma somewhere and remove it from elsewhere
     def put(self, org_id, idea_id, version_id):
         verify = is_in_org(current_user.google_id, org_id)
@@ -105,6 +111,8 @@ class KarmaChange(restful.Resource):
 
 
 class IdeaComment(restful.Resource):
+
+    url = '/api/org/<string:org_id>/idea/<string:idea_id>/comment'
 
     #Add a new comment to a meta-idea
     def post(self, org_id, idea_id):
@@ -140,6 +148,8 @@ class IdeaComment(restful.Resource):
 
 class IdeaReply(restful.Resource):
 
+    url = '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<int:comment_id>/reply'
+
     #Add a reply to a comment
     def post(self, org_id, idea_id, comment_id):
         new_reply_data = request.get_json()
@@ -172,6 +182,8 @@ class IdeaReply(restful.Resource):
             return abort(401, message="Not Reply Owner")
 
 class AllIdeas(restful.Resource):
+
+    url = '/api/org/<string:org_id>/idea'
 
     #Get all meta-ideas or search by string
     def get(self, org_id):
