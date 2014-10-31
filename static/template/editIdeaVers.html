@@ -1,5 +1,5 @@
 <div ng-if="currentUser.loggedIn">
-    <textarea class="form-control" rows="6" ng-model="vers.text" name="description" placeholder="Enter a description (supports markdown syntax)" required/>
+	<textarea class="form-control" rows="6" ng-model="vers.text" name="description" placeholder="Enter a description (supports markdown syntax)" required></textarea>
     <div class="well" marked="vers.text" ng-show="vers.text.length"></div>
     <button class="btn btn-primary" ng-click="save()">
         <i ng-class="saveIcon()"></i> Save

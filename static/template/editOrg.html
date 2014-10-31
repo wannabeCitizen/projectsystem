@@ -1,50 +1,50 @@
 <!DOCTYPE html>
 <div class="org">
-    <ol class="breadcrumb">
-        <li><a ui-sref="home">Home</a></li>
-        <li><a ui-sref="orgs">Organizations</a></li>
-    </ol>
-    <div class="form-horizontal">
-        <h1>{{heading}}</h1>
+	<ol class="breadcrumb">
+		<li><a ui-sref="home">Home</a></li>
+		<li><a ui-sref="orgs">Organizations</a></li>
+	</ol>
+	<div class="form-horizontal">
+		<h1>{{heading}}</h1>
 
-        <form ng-if="currentUser.loggedIn" name="orgForm" novalidate>
-            <div class="form-group" form-valid-style="name">
-                <label class="control-label col-sm-2">Name</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" ng-model="org.name" name="name" placeholder="Name" ng-minlength="1" required/>
-                </div>
-            </div>
-            <div class="form-group" form-valid-style="short">
-                <label class="control-label col-sm-2">Short Description</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" ng-model="org.short_description" name="short" placeholder="Give this organization a tagline"/>
-                </div>
-            </div>
-            <div class="form-group" form-valid-style="description">
-                <label class="control-label col-sm-2">Description</label>
-                <div class="col-sm-10">
-                    <textarea class="form-control" rows="6" ng-model="org.description" name="description" placeholder="Enter a description (supports markdown syntax)" required/>
-                    <div class="well" marked="org.description" ng-show="org.description.length"></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" ng-model="org.open_org">Open organization (anyone can join without confirmation)
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button type="button" class="btn btn-primary" ng-click="action()" ng-disabled="orgForm.$invalid || spin">
-                        <i ng-class="actionIcon()"></i> {{actionLabel}}
-                    </button>
-                    <button type="button" class="btn btn-link" ui-sref="^">Cancel</button>
-                </div>
-            </div>
-        </form>
-        <p ng-if="!currentUser.loggedIn">You must be signed in to create or edit an organization!</p>
-    </div>
+		<form ng-if="currentUser.loggedIn" name="orgForm" novalidate>
+			<div class="form-group" form-valid-style="name">
+				<label class="control-label col-sm-2">Name</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" ng-model="org.name" name="name" placeholder="Name" ng-minlength="1" required/>
+				</div>
+			</div>
+			<div class="form-group" form-valid-style="short">
+				<label class="control-label col-sm-2">Short Description</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" ng-model="org.short_description" name="short" placeholder="Give this organization a tagline"/>
+				</div>
+			</div>
+			<div class="form-group" form-valid-style="description">
+				<label class="control-label col-sm-2">Description</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="6" ng-model="org.description" name="description" placeholder="Enter a description (supports markdown syntax)" required></textarea>
+					<div class="well" marked="org.description" ng-show="org.description.length"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" ng-model="org.open_org">Open organization (anyone can join without confirmation)
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="button" class="btn btn-primary" ng-click="action()" ng-disabled="orgForm.$invalid || spin">
+						<i ng-class="actionIcon()"></i> {{actionLabel}}
+					</button>
+					<button type="button" class="btn btn-link" ui-sref="^">Cancel</button>
+				</div>
+			</div>
+		</form>
+		<p ng-if="!currentUser.loggedIn">You must be signed in to create or edit an organization!</p>
+	</div>
 </div>
