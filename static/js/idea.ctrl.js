@@ -17,7 +17,7 @@ define(['angular', 'underscore'], function (angular, _) {
                 newIdea.$save({
                     orgId: $stateParams.orgId
                 }).then(function (idea) {
-                    $state.go('idea', {
+                    $state.go('org.idea', {
                         orgId: $stateParams.orgId,
                         ideaId: idea.unique
                     });
@@ -48,7 +48,7 @@ define(['angular', 'underscore'], function (angular, _) {
                 $scope.action = function () {
                     $scope.spin = true;
                     $scope.idea.save().then(function () {
-                        $state.go('idea', $stateParams);
+                        $state.go('org.idea', $stateParams);
                     }, function (err) {
                         msg.error('Failed to save the idea.', 'Please try again.');
                     }).finally(function () {
@@ -139,7 +139,7 @@ define(['angular', 'underscore'], function (angular, _) {
             };
 
             $scope.cancel = function () {
-                $state.go('idea');
+                $state.go('org.idea');
             };
         }];
 
