@@ -30,8 +30,8 @@ define(['angular', 'underscore'], function (angular, _) {
             $scope.ownerToAdd = '';
             $scope.memberToAdd = '';
 
-            $scope.addOwner = function () {
-                $scope.org.addOwner($scope.ownerToAdd).then(null, function (err) {
+            $scope.addOwner = function (user) {
+                $scope.org.addOwner(user).then(null, function (err) {
                     msg.error('Failed to add a new owner.');
                 }).finally(function () {
                     $scope.showAddOwn = false;
@@ -45,8 +45,8 @@ define(['angular', 'underscore'], function (angular, _) {
                 });
             };
 
-            $scope.addMember = function () {
-                $scope.org.addMember($scope.memberToAdd).then(null, function (err) {
+            $scope.addMember = function (user) {
+                $scope.org.addMember(user).then(null, function (err) {
                     msg.error('Failed to add a new member.');
                 }).finally(function () {
                     $scope.showAddMember = false;

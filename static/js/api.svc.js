@@ -16,9 +16,9 @@ define([], function () {
     factory.OrgApi = ['$resource', function ($resource) {
         return $resource('/api/org/:orgId', {orgId: '@unique'}, {
             update: { method: 'PUT' },
-            addOwner: { method: 'PUT', url: '/api/org/:orgId/owner'},
+            addOwner: { method: 'PUT', url: '/api/org/:orgId/owner/:userId'},
             delOwner: { method: 'DELETE', url: '/api/org/:orgId/owner/:userId'},
-            addMember: { method: 'PUT', url: '/api/org/:orgId/member'},
+            addMember: { method: 'PUT', url: '/api/org/:orgId/member/:userId'},
             delMember: { method: 'DELETE', url: '/api/org/:orgId/member/:userId'}
         });
     }];

@@ -38,7 +38,7 @@ define(['angular', 'underscore'], function (angular, _) {
             };
 
             org.addOwner = function (user) {
-                OrgApi.addOwner({orgId: org.unique}, user).$promise.then(function () {
+                OrgApi.addOwner({orgId: org.unique, userId: user.google_id}, null).$promise.then(function () {
                     org.owners.push(user);
                 });
             };
@@ -53,7 +53,7 @@ define(['angular', 'underscore'], function (angular, _) {
             };
 
             org.addMember = function (user) {
-                return OrgApi.addMember({orgId: org.unique}, user).$promise.then(function () {
+                return OrgApi.addMember({orgId: org.unique, userId: user.google_id}, null).$promise.then(function () {
                     org.members.push(user);
                 });
             };

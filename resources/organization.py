@@ -59,8 +59,7 @@ class OrgMember(restful.Resource):
 
     url = '/api/org/<string:org_id>/member/<string:user_id>'
 
-    def put(self, org_id):
-        user_id = request.get_json()['google_id']
+    def put(self, org_id, user_id):
         verify = can_add(org_id, current_user.google_id)
         if verify is True:
             new_member = add_member(org_id, user_id)
@@ -80,8 +79,7 @@ class OrgOwner(restful.Resource):
 
     url = '/api/org/<string:org_id>/owner/<string:user_id>'
 
-    def put(self, org_id):
-        user_id = request.get_json()['google_id']
+    def put(self, org_id, user_id):
         verify = can_add(org_id, current_user.google_id)
         if verify is True:
             new_owner = add_owner(org_id, user_id)
