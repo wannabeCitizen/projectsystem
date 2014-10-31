@@ -61,7 +61,11 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             };
 
             this.del = function () {
-                return $http.delete(this.url);
+                return $http({
+                    method: 'DELETE',
+                    url: baseUrl,
+                    data: this.serialize()
+                });
             };
         };
 
@@ -149,6 +153,12 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
                         var c = new Comment(comment);
                         this.comments.push(c);
                     }));
+            };
+
+            this.delComment = function (comment) {
+                return comment.del().then(angular.bind(this, function () {
+                    this.comments = _(this.comments).without(comment);
+                }));
             };
         };
 

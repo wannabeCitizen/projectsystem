@@ -123,12 +123,21 @@ body {
 		.comments {
 			.blockify-li();
 			ul > li {
+				position: relative;
 				border: 1px solid black;
 				padding: 10px;
 				margin: 5px 0;
 
 				.heading {
 					font-weight: bold;
+				}
+
+				.actions {
+					.absolute-fill();
+					left: auto;
+					bottom: auto;
+					text-align: right;
+					padding: 5px;
 				}
 
 				.text {

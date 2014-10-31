@@ -72,6 +72,22 @@ define(['angular', 'underscore'], function (angular, _) {
             };
         }];
 
+    ctrl.CommentCtrl = ['$scope', 'MsgSvc', function ($scope, msg) {
+        $scope.addComment = function (text) {
+            $scope.idea.addComment(text).then(function () {
+                $scope.newComment = '';
+            }, function () {
+                msg.error('Failed to add the comment');
+            });
+        };
+
+        $scope.delComment = function (comment) {
+            $scope.idea.delComment(comment).then(null, function () {
+                msg.error('Failed to delete the comment');
+            });
+        };
+    }];
+
     ctrl.IdeaCtrl = ['$scope', '$state', '$stateParams', 'OrgSvc', 'Idea', 'MsgSvc',
         function ($scope, $state, $stateParams, OrgSvc, Idea, msg) {
             $scope.loading = true;
@@ -86,12 +102,6 @@ define(['angular', 'underscore'], function (angular, _) {
                             $state.go('org', {
                                 orgId: org.unique
                             });
-                        });
-                    };
-
-                    $scope.addComment = function (text) {
-                        idea.addComment(text).then(null, function () {
-                            msg.error('Failed to add the comment');
                         });
                     };
 
