@@ -6,82 +6,97 @@ define(['angular', 'underscore'], function (angular, _) {
 
     var factory = {};
 
-    factory.Org = ['$q', 'OrgApi', 'UserSvc', function ($q, OrgApi, UserSvc) {
+    factory.Org = ['$q', '$http', 'UserSvc', function ($q, $http, UserSvc) {
         // This is a class ctor
-        return function (resource) {
-            var org = angular.copy(resource, this);
+        var Org = function (resource) {
+            angular.extend(this, resource);
 
+            this.orgId = resource.unique;
+            this.url = Org.url + this.orgId;
+
+            this.owners = [];
             if (resource.owners) {
-                org.ownersList = resource.owners;
-                UserSvc.getList(resource.owners).then(function (list) {
-                    org.owners = list;
-                });
+                this.ownersList = resource.owners;
+                UserSvc.getList(resource.owners).then(angular.bind(this, function (list) {
+                    this.owners = list;
+                }));
             }
 
+            this.members = [];
             if (resource.members) {
-                org.membersList = resource.members;
-                UserSvc.getList(resource.members).then(function (list) {
-                    org.members = list;
-                });
+                this.membersList = resource.members;
+                UserSvc.getList(resource.members).then(angular.bind(this, function (list) {
+                    this.members = list;
+                }));
             }
 
-            org.userInList = function (list) {
+            this.userInList = function (list) {
                 return _(list).find(function (u) { return UserSvc.isCurrentUser(u); });
             };
 
-            org.userIsOwner = function () {
-                return org.userInList(org.owners);
+            this.userIsOwner = function () {
+                return this.userInList(this.owners);
             };
 
-            org.userIsMember = function () {
-                return org.userIsOwner() || org.userInList(org.members);
+            this.userIsMember = function () {
+                return this.userIsOwner() || this.userInList(this.members);
             };
 
-            org.addOwner = function (user) {
-                OrgApi.addOwner({orgId: org.unique, userId: user.google_id}, null).$promise.then(function () {
-                    org.owners.push(user);
-                });
+            this.addOwner = function (user) {
+                return $http.put(this.url + '/owner/' + user.google_id).then(angular.bind(this, function () {
+                    this.owners.push(user);
+                }));
             };
 
-            org.delOwner = function (user) {
-                if (org.owners.length === 1) {
+            this.delOwner = function (user) {
+                if (this.owners.length === 1) {
                     return $q.reject('You cannot delete the only owner. Add a new owner first.');
                 }
-                return OrgApi.delOwner({orgId: org.unique, userId: user.google_id}).$promise.then(function () {
-                    org.owners = _(org.owners).without(user);
-                });
+                return $http.delete(this.url + '/owner/' + user.google_id).then(angular.bind(this, function () {
+                    this.owners = _(this.owners).without(user);
+                }));
             };
 
-            org.addMember = function (user) {
-                return OrgApi.addMember({orgId: org.unique, userId: user.google_id}, null).$promise.then(function () {
-                    org.members.push(user);
-                });
+            this.addMember = function (user) {
+                return $http.put(this.url + '/member/' + user.google_id).then(angular.bind(this, function () {
+                    this.members.push(user);
+                }));
             };
 
-            org.delMember = function (user) {
-                return OrgApi.delMember({orgId: org.unique, userId: user.google_id}).$promise.then(function () {
-                    org.members = _(org.members).without(user);
-                });
+            this.delMember = function (user) {
+                return $http.delete(this.url + '/member/' + user.google_id).then(angular.bind(this, function () {
+                    this.members = _(this.members).without(user);
+                }));
+            };
+
+            this.update = function () {
+                return $http.put(this.url, this).then(angular.bind(this, function (response) {
+                    return angular.extend(this, response.data);
+                }));
             };
         };
-    }];
 
-    factory.OrgSvc = ['Org', 'OrgApi', function (Org, OrgApi) {
-        var svc = {};
+        Org.url = '/api/org/';
 
-        svc.getAll = function () {
-            return OrgApi.query().$promise.then(function (orgs) {
-                return _(orgs).map(function (org) { return new Org(org); });
+        Org.create = function (data) {
+            return $http.post(Org.url, data).then(function (response) {
+                return new Org(response.data);
             });
         };
 
-        svc.getById = function (orgId) {
-            return OrgApi.get({orgId: orgId}).$promise.then(function (org) {
-                return new Org(org);
+        Org.getAll = function () {
+            return $http.get(Org.url).then(function (response) {
+                return _(response.data).map(function (org) { return new Org(org); });
             });
         };
 
-        return svc;
+        Org.getById = function (orgId) {
+            return $http.get(Org.url + orgId).then(function (response) {
+                return new Org(response.data);
+            });
+        };
+
+        return Org;
     }];
 
     return factory;

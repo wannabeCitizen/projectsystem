@@ -113,6 +113,7 @@ class KarmaChange(restful.Resource):
 class IdeaComment(restful.Resource):
 
     url = '/api/org/<string:org_id>/idea/<string:idea_id>/comment'
+    url2 = '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<int:comment_id>'
 
     #Add a new comment to a meta-idea
     def post(self, org_id, idea_id):
@@ -124,9 +125,8 @@ class IdeaComment(restful.Resource):
             return abort(401, message="Not in Organization")
 
     #Edit a comment
-    def put(self, org_id, idea_id):
+    def put(self, org_id, idea_id, comment_id):
         new_comment_data = request.get_json()
-        comment_id = new_comment_data['index']
         verify = is_commenter(current_user.google_id, idea_id, comment_id)
         if verify is True:
             update_comment(idea_id, **new_comment_data)
@@ -135,9 +135,7 @@ class IdeaComment(restful.Resource):
             return abort(401, message="Not Comment Owner")
 
     #remove comment and replies
-    def delete(self, org_id, idea_id):
-        old_comment_data = request.get_json()
-        comment_id = old_comment_data['index']
+    def delete(self, org_id, idea_id, comment_id):
         verify = is_commenter(current_user.google_id, idea_id, comment_id)
         if verify is True:
             remove_comment(idea_id, comment_id)

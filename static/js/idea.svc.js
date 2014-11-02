@@ -61,11 +61,7 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             };
 
             this.del = function () {
-                return $http({
-                    method: 'DELETE',
-                    url: baseUrl,
-                    data: this.serialize()
-                });
+                return $http.delete(this.url);
             };
         };
 
@@ -103,6 +99,10 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
                         return this;
                     })
                 );
+            };
+
+            this.del = function () {
+                return $http.delete(this.url);
             };
 
             this.userIsFollowing = function () {
