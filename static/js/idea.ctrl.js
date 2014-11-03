@@ -6,14 +6,54 @@ define(['angular', 'underscore'], function (angular, _) {
 
     var ctrl = {};
 
+    ctrl.IdeaCtrl = ['$scope', '$state', '$stateParams', 'Org', 'Idea', 'MsgSvc',
+        function ($scope, $state, $stateParams, Org, Idea, msg) {
+            $scope.loading = true;
+            $scope.ideaPromise = Org.getById($stateParams.orgId).then(function (org) {
+                $scope.org = org;
+
+                return Idea.getById($stateParams.orgId, $stateParams.ideaId).then(function (idea) {
+                    $scope.idea = idea;
+
+                    $scope.delIdea = function () {
+                        idea.del().then(function () {
+                            $state.go('org', {
+                                orgId: org.unique
+                            });
+                        });
+                    };
+
+                    return idea;
+                }, function (err) {
+                    msg.error('Failed to load the specified idea.');
+                });
+            }, function (err) {
+                msg.error('Failed to load the specified organization.');
+            }).finally(function () {
+                $scope.loading = false;
+            });
+
+            $scope.versionClass = function (vers) {
+                return {
+                    active: vers.versId === $scope.selectedVersId
+                };
+            };
+
+            $scope.$on('$stateChangeSuccess', function (event, toState, toParams) {
+                $scope.isNewVersion = (toState.name === 'org.idea.newVersion');
+                $scope.selectedVersId = toParams.versId;
+            });
+        }];
+
+    // This is a child of IdeaCtrl
     ctrl.NewIdeaCtrl = ['$scope', '$state', '$stateParams', 'Idea', 'MsgSvc',
         function ($scope, $state, $stateParams, Idea, msg) {
-            $scope.idea = {};
+            $scope.ideaToEdit = {};
             $scope.heading = 'Create a new Idea';
 
             $scope.action = function () {
                 $scope.spin = true;
-                var newIdea = new Idea.api($scope.idea);
+                var newIdea = new Idea.api($scope.ideaToEdit);
                 newIdea.$save({
                     orgId: $stateParams.orgId
                 }).then(function (idea) {
@@ -38,28 +78,26 @@ define(['angular', 'underscore'], function (angular, _) {
             };
         }];
 
+    // This is a child of IdeaCtrl
     ctrl.EditIdeaCtrl = ['$scope', '$state', '$stateParams', 'Idea', 'MsgSvc',
         function ($scope, $state, $stateParams, Idea, msg) {
             $scope.heading = 'Edit this Idea';
 
-            Idea.getById($stateParams.orgId, $stateParams.ideaId).then(function (idea) {
-                $scope.idea = idea;
-
-                $scope.action = function () {
-                    $scope.spin = true;
-                    $scope.idea.save().then(function () {
-                        $state.go('org.idea', $stateParams);
-                    }, function (err) {
-                        msg.error('Failed to save the idea.', 'Please try again.');
-                    }).finally(function () {
-                        $scope.spin = false;
-                    });
-                };
-            }, function (err) {
-                msg.error('Failed to load the requested idea.');
-            }).finally(function () {
-                $scope.loading = false;
+            $scope.ideaPromise.then(function (idea) {
+                $scope.ideaToEdit = angular.copy(idea);
             });
+
+            $scope.action = function () {
+                $scope.spin = true;
+                $scope.ideaToEdit.save().then(function () {
+                    angular.copy($scope.ideaToEdit, $scope.idea);
+                    $state.go('org.idea', $stateParams);
+                }, function (err) {
+                    msg.error('Failed to save the idea.', 'Please try again.');
+                }).finally(function () {
+                    $scope.spin = false;
+                });
+            };
 
             $scope.actionLabel = 'Save';
             $scope.actionIcon = function () {
@@ -88,44 +126,6 @@ define(['angular', 'underscore'], function (angular, _) {
         };
     }];
 
-    ctrl.IdeaCtrl = ['$scope', '$state', '$stateParams', 'OrgSvc', 'Idea', 'MsgSvc',
-        function ($scope, $state, $stateParams, OrgSvc, Idea, msg) {
-            $scope.loading = true;
-            $scope.ideaPromise = OrgSvc.getById($stateParams.orgId).then(function (org) {
-                $scope.org = org;
-
-                return Idea.getById($stateParams.orgId, $stateParams.ideaId).then(function (idea) {
-                    $scope.idea = idea;
-
-                    $scope.delIdea = function () {
-                        idea.$delete().then(function () {
-                            $state.go('org', {
-                                orgId: org.unique
-                            });
-                        });
-                    };
-
-                    return idea;
-                }, function (err) {
-                    msg.error('Failed to load the specified idea.');
-                });
-            }, function (err) {
-                msg.error('Failed to load the specified organization.');
-            }).finally(function () {
-                $scope.loading = false;
-            });
-
-            $scope.versionClass = function (vers) {
-                return {
-                    active: vers.versId === $scope.selectedVersId
-                };
-            };
-
-            $scope.$on('$stateChangeSuccess', function (event, toState, toParams) {
-                $scope.isNewVersion = (toState.name === 'org.idea.newVersion');
-                $scope.selectedVersId = toParams.versId;
-            });
-        }];
 
     // This is a child of IdeaCtrl
     ctrl.NewIdeaVersCtrl = ['$scope', '$state',
@@ -196,8 +196,8 @@ define(['angular', 'underscore'], function (angular, _) {
     }];
 
     // This is a child of IdeaCtrl
-    ctrl.IdeaVersionCtrl = ['$scope', '$state', '$stateParams', 'OrgSvc', 'Idea', 'MsgSvc',
-        function ($scope, $state, $stateParams, OrgSvc, Idea, msg) {
+    ctrl.IdeaVersionCtrl = ['$scope', '$stateParams',
+        function ($scope, $stateParams) {
             $scope.ideaPromise.then(function (idea) {
                 $scope.vers = _(idea.versions).find(function (vers) {
                     return $stateParams.versId === vers.unique;
