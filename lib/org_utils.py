@@ -4,7 +4,7 @@ For Handling db calls on Organization Documents
 import json
 import datetime
 
-from lib.model import User, Organization, MiniOrganization
+from lib.model import User, Organization, MiniOrganization, IdeaMeta
                         
 from mongoengine import Q
 
@@ -83,7 +83,7 @@ def update_org(org_id, **kwargs):
             my_org.update(**{"set__minified__%s" % k : kwargs[k]})
 
     # Will need to replicate this for projects when time comes!!
-    my_ideas = Ideas.objects(my_org=org_id)
+    my_ideas = IdeaMeta.objects(my_org=org_id)
     my_mini = my_org.minified
     for an_idea in my_ideas:
         an_idea.update(set__my_org=my_mini)
