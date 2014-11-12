@@ -1,29 +1,28 @@
 {
-  "name": "angular-seed",
-  "description": "A seed project for angularjs web applications",
+  "name": "projectsystem",
+  "description": "A project for organizing projects",
   "private": true,
   "dependencies": {
-    "requirejs": "~2.1",
-    "almond": "~0.2",
-    "require-css": "~0.1",
-    "angular": "~1.2",
-    "angular-animate": "~1.2",
-    "angular-mocks": "~1.2",
-    "angular-resource": "~1.2",
-    "angular-sanitize": "~1.2",
-    "angular-strap": "~2.0",
-    "angular-motion": "~0.3",
-    "bootstrap-additions": "~0.2",
-    "angular-ui-router": "~0.2",
-    "jquery": "~1.11",
-    "fastclick": "~1",
-    "moment": "~2",
-    "underscore": "~1",
-    "fontawesome": "~4",
-    "require-less": "~0.1",
-    "marked": "~0.3",
+    "requirejs": "2",
+    "almond": "0.2",
+    "angular": "1.3",
+    "angular-animate": "1.3",
+    "angular-mocks": "1.3",
+    "angular-resource": "1.3",
+    "angular-sanitize": "1.3",
+    "angular-strap": "2",
+    "angular-motion": "0.3",
+    "bootstrap-additions": "0.2",
+    "angular-ui-router": "0.2",
+    "jquery": "2",
+    "fastclick": "1",
+    "moment": "2",
+    "underscore": "1",
+    "fontawesome": "4",
+    "require-less": "0.1",
+    "marked": "0.3",
     "angular-directive.g-signin": "*",
-    "AngularJS-Toaster": "jirikavi/AngularJS-Toaster#~0.4.7",
+    "AngularJS-Toaster": "jirikavi/AngularJS-Toaster#0.4",
     "gapi": "https://apis.google.com/js/api.js"
   },
   "exportsOverride": {
@@ -42,5 +41,8 @@
     "marked": {
       "": "lib/marked.js"
     }
+  },
+  "resolutions": {
+    "angular": "1.3"
   }
 }

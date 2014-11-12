@@ -4,7 +4,7 @@
 @import "../lib/bootstrap/less/bootstrap";
 @import "../lib/fontawesome/less/font-awesome";
 @fa-font-path: "/static/lib/fontawesome/fonts";
-@import (inline) "../lib/angular-motion/angular-motion.min.css";
+@import (inline) "../lib/angular-motion/angular-motion.css";
 @import (inline) "../lib/AngularJS-Toaster/toaster.css";
 
 // Variables
@@ -120,31 +120,31 @@ body {
             }
         }
 
-		.comments {
-			.blockify-li();
-			ul > li {
-				position: relative;
-				border: 1px solid black;
-				padding: 10px;
-				margin: 5px 0;
+        .comments {
+            .blockify-li();
+            ul > li {
+                position: relative;
+                border: 1px solid black;
+                padding: 10px;
+                margin: 5px 0;
 
-				.heading {
-					font-weight: bold;
-				}
+                .heading {
+                    font-weight: bold;
+                }
 
-				.actions {
-					.absolute-fill();
-					left: auto;
-					bottom: auto;
-					text-align: right;
-					padding: 5px;
-				}
+                .actions {
+                    .absolute-fill();
+                    left: auto;
+                    bottom: auto;
+                    text-align: right;
+                    padding: 5px;
+                }
 
-				.text {
-					padding-left: 20px;
-				}
-			}
-		}
+                .text {
+                    padding-left: 20px;
+                }
+            }
+        }
     }
 }
 
