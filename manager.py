@@ -61,7 +61,7 @@ api.add_resource(MetaIdea, MetaIdea.url, MetaIdea.url+'/')
 api.add_resource(VersionIdea, VersionIdea.url, VersionIdea.url+'/')
 api.add_resource(KarmaChange, KarmaChange.url, KarmaChange.url+'/')
 api.add_resource(IdeaComment, IdeaComment.url, IdeaComment.url+'/', IdeaComment.url2)
-api.add_resource(IdeaReply, IdeaReply.url, IdeaReply.url+'/')
+api.add_resource(IdeaReply, IdeaReply.url, IdeaReply.url+'/', IdeaReply.url2)
 api.add_resource(FollowIdea, FollowIdea.url, FollowIdea.url+'/')
 
 api.add_resource(AllProjects, AllProjects.url, AllProjects.url+'/')

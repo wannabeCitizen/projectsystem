@@ -107,6 +107,8 @@ class ProjectFollower(restful.Resource):
 class ProjectRole(restful.Resource):
 
     url = '/api/org/<string:org_id>/project/<string:project_id>/role'
+    url1 = '/api/org/<string:org_id>/project/<string:project_id>/role/<int:role_id>'
+
     #add a Role to a project
     def post(self, org_id, project_id):
         new_role = request.get_json()
@@ -125,17 +127,17 @@ class ProjectRole(restful.Resource):
         else:
             return abort(401, message="User is not on project")
 
-    def delete(self, org_id, project_id):
-        old_role = request.get_json()
+    def delete(self, org_id, project_id, role_id):
         verify = is_project_member(current_user.google_id, project_id)      
         if verify is True:
-            return remove_role(project_id, old_role['index'])
+            return remove_role(project_id, role_id)
         else:
             return abort(401, message="User is not on project")
 
 class ProjectTask(restful.Resource):
 
     url = '/api/org/<string:org_id>/project/<string:project_id>/task'
+    url = '/api/org/<string:org_id>/project/<string:project_id>/task/<int:task_id>'
 
     #add a task to a project
     def post(self, org_id, project_id):
@@ -156,16 +158,16 @@ class ProjectTask(restful.Resource):
             return abort(401, message="User is not on project")
 
     def delete(self, org_id, project_id):
-        old_task = request.get_json()
         verify = is_project_member(current_user.google_id, project_id)      
         if verify is True:
-            return remove_task(project_id, old_task['index'])
+            return remove_task(project_id, task_id)
         else:
             return abort(401, message="User is not on project")
 
 class ProjectVote(restful.Resource):
 
     url = '/api/org/<string:org_id>/project/<string:project_id>/vote'
+    url1 = '/api/org/<string:org_id>/project/<string:project_id>/vote/<int:vote_id>'
     #add a vote to a project
     def post(self, org_id, project_id):
         new_vote = request.get_json()
@@ -190,7 +192,7 @@ class ProjectVote(restful.Resource):
         old_vote = request.get_json()
         verify = is_project_member(current_user.google_id, project_id)      
         if verify is True:
-            return remove_vote(project_id, old_vote['index'])
+            return remove_vote(project_id, vote_id)
         else:
             return abort(401, message="User is not on project")
 
@@ -216,6 +218,8 @@ class Revision(restful.Resource):
 class ProjectPhase(restful.Resource):
 
     url = '/api/org/<string:org_id>/project/<string:project_id>/phase'
+    url1 = '/api/org/<string:org_id>/project/<string:project_id>/phase/<int:phase_id>'
+
 
     #add a phase to a project
     def post(self, org_id, project_id):
@@ -236,16 +240,16 @@ class ProjectPhase(restful.Resource):
             return abort(401, message="User is not on project")
 
     def delete(self, org_id, project_id):
-        old_phase = request.get_json()
         verify = is_project_member(current_user.google_id, project_id)      
         if verify is True:
-            return remove_phase(project_id, old_phase['index'])
+            return remove_phase(project_id, phase_id)
         else:
             return abort(401, message="User is not on project")
 
 class ProjectComment(restful.Resource):
 
     url = '/api/org/<string:org_id>/project/<string:project_id>/comment'
+    url1 = '/api/org/<string:org_id>/project/<string:project_id>/comment/<int:comment_id>'
 
     #Add a new comment to a project
     def post(self, org_id, project_id):
@@ -269,9 +273,7 @@ class ProjectComment(restful.Resource):
             return abort(401, message="Not Comment Owner")
 
     #remove comment and replies
-    def delete(self, org_id, project_id):
-        old_comment_data = request.get_json()
-        comment_id = old_comment_data['index']
+    def delete(self, org_id, project_id, comment_id):
         verify = is_project_commenter(current_user.google_id, project_id, comment_id)
         if verify is True:
             remove_comment(project_id, comment_id)
@@ -283,6 +285,7 @@ class ProjectComment(restful.Resource):
 class ProjectReply(restful.Resource):
 
     url = '/api/org/<string:org_id>/project/<string:project_id>/comment/<string:comment_id>/reply'
+    url1 = '/api/org/<string:org_id>/project/<string:project_id>/comment/<string:comment_id>/reply/<int:reply_id>'
 
     #Add a reply to a comment
     def post(self, org_id, project_id, comment_id):
@@ -306,9 +309,7 @@ class ProjectReply(restful.Resource):
             return abort(401, message="Not Reply Owner")
 
     #Remove a reply
-    def delete(self, org_id, project_id, comment_id):
-        old_reply_data = request.get_json()
-        reply_id = old_reply_data['index']
+    def delete(self, org_id, project_id, comment_id, reply_id):
         verify = is_project_replier(current_user.google_id, project_id, comment_id, reply_id)
         if verify is True:
             remove_reply(project_id, comment_id, reply_id)

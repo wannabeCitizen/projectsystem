@@ -147,6 +147,7 @@ class IdeaComment(restful.Resource):
 class IdeaReply(restful.Resource):
 
     url = '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<int:comment_id>/reply'
+    url2 = '/api/org/<string:org_id>/idea/<string:idea_id>/comment/<int:comment_id>/reply/<int:reply_id>'
 
     #Add a reply to a comment
     def post(self, org_id, idea_id, comment_id):
