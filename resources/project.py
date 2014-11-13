@@ -137,7 +137,7 @@ class ProjectRole(restful.Resource):
 class ProjectTask(restful.Resource):
 
     url = '/api/org/<string:org_id>/project/<string:project_id>/task'
-    url = '/api/org/<string:org_id>/project/<string:project_id>/task/<int:task_id>'
+    url1 = '/api/org/<string:org_id>/project/<string:project_id>/task/<int:task_id>'
 
     #add a task to a project
     def post(self, org_id, project_id):
