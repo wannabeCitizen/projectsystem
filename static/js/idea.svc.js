@@ -41,6 +41,7 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
         var Comment = function (resource, baseUrl) {
             angular.extend(this, resource);
 
+            this.baseUrl = baseUrl;
             this.commentId = this.index;
             this.url = baseUrl + '/' + this.commentId;
             this.date = moment.utc(this.time && this.time.$date).format('l LT');
@@ -55,14 +56,22 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
 
         Comment.prototype.save = function () {
             return $http.put(this.url, this.serialize())
-            .then(angular.bind(this, function (response) {
-                angular.extend(this, response.data);
-                return this;
-            }));
+                .then(angular.bind(this, function (response) {
+                    angular.extend(this, new Comment(response.data, this.baseUrl));
+                    return this;
+                }));
         };
 
         Comment.prototype.del = function () {
-            return $http.delete(this.url);
+            return $http.delete(this.url)
+                .then(angular.bind(this, function (response) {
+                    angular.extend(this, new Comment(response.data, this.baseUrl));
+                    return this;
+                }));
+        };
+
+        Comment.prototype.userIsAuthor = function () {
+            return UserSvc.isCurrentUser(this.user);
         };
 
         return Comment;
@@ -156,9 +165,7 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             };
 
             this.delComment = function (comment) {
-                return comment.del().then(angular.bind(this, function () {
-                    this.comments = _(this.comments).without(comment);
-                }));
+                return comment.del();
             };
         };
 

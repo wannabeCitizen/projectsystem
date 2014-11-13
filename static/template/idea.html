@@ -78,8 +78,8 @@
                     <div ng-hide="comment.$editClone">
                         <div class="heading">{{comment.user.name}} at {{comment.date}}</div>
                         <div class="actions">
-                            <button class="btn btn-default" ng-click="editComment(comment)"><i class="fa fa-pencil"></i></button>
-                            <button class="btn btn-danger" ng-click="delComment(comment)"><i class="fa fa-trash-o"></i></button>
+                            <button class="btn btn-default" ng-click="editComment(comment)" ng-show="comment.userIsAuthor()"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-danger" ng-click="delComment(comment)" ng-show="comment.userIsAuthor()"><i class="fa fa-trash-o"></i></button>
                         </div>
                         <div class="text" marked="comment.text"></div>
                     </div>
