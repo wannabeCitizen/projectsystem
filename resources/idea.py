@@ -129,8 +129,7 @@ class IdeaComment(restful.Resource):
         new_comment_data = request.get_json()
         verify = is_commenter(current_user.google_id, idea_id, comment_id)
         if verify is True:
-            update_comment(idea_id, **new_comment_data)
-            return "Success"
+            return update_comment(idea_id, **new_comment_data)  
         else:
             return abort(401, message="Not Comment Owner")
 

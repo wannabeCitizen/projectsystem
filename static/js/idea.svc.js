@@ -150,7 +150,7 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             this.addComment = function (text) {
                 return Idea.api.addComment(_(this).pick('orgId', 'ideaId'), {text: text}).$promise
                     .then(angular.bind(this, function (comment) {
-                        var c = new Comment(comment);
+                        var c = new Comment(comment, this.commentUrl);
                         this.comments.push(c);
                     }));
             };
