@@ -47,22 +47,22 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             this.$promise = UserSvc.getById(this.commenter).then(angular.bind(this, function (user) {
                 this.user = user;
             }));
+        };
 
-            this.serialize = function () {
-                return _(this).pick('commenter', 'text', 'time', 'replies', 'num_replies', 'index');
-            };
+        Comment.prototype.serialize = function () {
+            return _(this).pick('commenter', 'text', 'time', 'replies', 'num_replies', 'index');
+        };
 
-            this.save = function () {
-                return $http.put(this.url, this.serialize())
-                    .then(angular.bind(this, function (response) {
-                        angular.extend(this, response.data);
-                        return this;
-                    }));
-            };
+        Comment.prototype.save = function () {
+            return $http.put(this.url, this.serialize())
+            .then(angular.bind(this, function (response) {
+                angular.extend(this, response.data);
+                return this;
+            }));
+        };
 
-            this.del = function () {
-                return $http.delete(this.url);
-            };
+        Comment.prototype.del = function () {
+            return $http.delete(this.url);
         };
 
         return Comment;
