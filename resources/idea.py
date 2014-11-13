@@ -137,8 +137,7 @@ class IdeaComment(restful.Resource):
     def delete(self, org_id, idea_id, comment_id):
         verify = is_commenter(current_user.google_id, idea_id, comment_id)
         if verify is True:
-            remove_comment(idea_id, comment_id)
-            return "Success"
+            return remove_comment(idea_id, comment_id)
         else:
             return abort(401, message="Not Comment Owner")
 
@@ -174,8 +173,7 @@ class IdeaReply(restful.Resource):
         reply_id = old_reply_data['index']
         verify = is_replier(current_user.google_id, idea_id, comment_id, reply_id)
         if verify is True:
-            remove_reply(idea_id, comment_id, reply_id)
-            return "Success"
+            return remove_reply(idea_id, comment_id, reply_id)
         else:
             return abort(401, message="Not Reply Owner")
 
