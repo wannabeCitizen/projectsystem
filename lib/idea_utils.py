@@ -167,7 +167,7 @@ def remove_comment(idea_id, comment_id):
     my_idea.comments[comment_id].text = "Comment removed by author."
     my_idea.save()
 
-    return "Removed"
+    return json.loads(my_idea.to_json())
 
 def create_reply(user_id, idea_id, comment_id, **kwargs):
     my_idea = IdeaMeta.objects.get(unique=idea_id)
@@ -203,4 +203,4 @@ def remove_reply(idea_id, comment_id, reply_id):
     my_idea.comments[comment_id].replies[reply_id].text = "Reply removed by author."
     my_idea.save()
 
-    return "Removed"
+    return json.loads(my_idea.to_json())
