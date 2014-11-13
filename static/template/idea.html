@@ -67,18 +67,27 @@
 
         <div class="comments" ng-controller="CommentCtrl">
             <h2>Comments</h2>
-			<ul>
-				<li ng-repeat="comment in idea.comments">
-					<div class="heading">{{comment.user.name}} at {{comment.date}}</div>
-					<div class="actions">
-						<button class="btn btn-danger" ng-click="delComment(comment)"><i class="fa fa-trash-o"></i></button>
-					</div>
-					<div class="text" marked="comment.text"></div>
-				</li>
-			</ul>
-			<textarea class="form-control" ng-model="newComment" placeholder="Add a comment"></textarea>
-			<div class="well" marked="newComment" ng-show="newComment.length"></div>
-			<button class="btn btn-primary" ng-click="addComment(newComment)">Add</button>
+            <ul>
+                <li ng-repeat="comment in idea.comments">
+                    <div ng-show="comment.$editClone">
+                        <textarea class="form-control" ng-model="comment.$editClone.text" placeholder="Edit this comment"></textarea>
+                        <div class="well" marked="comment.$editClone.text" ng-show="comment.$editClone.text"></div>
+                        <button class="btn btn-link" ng-click="cancelCommentEdit(comment)">Cancel</button>
+                        <button class="btn btn-primary" ng-click="saveCommentEdit(comment)">Save</button>
+                    </div>
+                    <div ng-hide="comment.$editClone">
+                        <div class="heading">{{comment.user.name}} at {{comment.date}}</div>
+                        <div class="actions">
+                            <button class="btn btn-default" ng-click="editComment(comment)"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-danger" ng-click="delComment(comment)"><i class="fa fa-trash-o"></i></button>
+                        </div>
+                        <div class="text" marked="comment.text"></div>
+                    </div>
+                </li>
+            </ul>
+            <textarea class="form-control" ng-model="newComment" placeholder="Add a comment"></textarea>
+            <div class="well" marked="newComment" ng-show="newComment.length"></div>
+            <button class="btn btn-primary" ng-click="addComment(newComment)">Add</button>
         </div>
 
     </div>

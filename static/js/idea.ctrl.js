@@ -124,6 +124,20 @@ define(['angular', 'underscore'], function (angular, _) {
                 msg.error('Failed to delete the comment');
             });
         };
+
+        $scope.editComment = function (comment) {
+            comment.$editClone = angular.copy(comment);
+        };
+
+        $scope.cancelCommentEdit = function (comment) {
+            comment.$editClone = null;
+        };
+
+        $scope.saveCommentEdit = function (comment) {
+            comment.$editClone.save().then(function (c) {
+                angular.copy(c, comment);
+            });
+        };
     }];
 
 
