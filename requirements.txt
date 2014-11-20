@@ -3,4 +3,4 @@ Flask-GoogleLogin
 mongoengine
 Flask-Restful
 Flask-Login
-oauth2client
+oauth2client==1.3
