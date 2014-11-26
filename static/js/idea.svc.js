@@ -121,14 +121,14 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             };
 
             this.follow = function () {
-                return this.$follow().then(angular.bind(this, function () {
+                $http.put(this.url + '/follow').then(angular.bind(this, function () {
                     this.followers.push(UserSvc.currentUser.id);
                     return this;
                 }));
             };
 
             this.unfollow = function () {
-                return this.$unfollow().then(angular.bind(this, function () {
+                $http.delete(this.url + '/follow').then(angular.bind(this, function () {
                     this.followers = _(this.followers).without(UserSvc.currentUser.id);
                     return this;
                 }));
@@ -173,8 +173,6 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             update: { method: 'PUT' },
             addVersion: { method: 'POST' },
             updateVersion: { method: 'PUT', url: '/api/org/:orgId/idea/:ideaId/version/:versId' },
-            follow: { method: 'PUT', url: '/api/org/:orgId/idea/:ideaId/follow' },
-            unfollow: { method: 'DELETE', url: '/api/org/:orgId/idea/:ideaId/follow' },
             addComment: { method: 'POST', url: '/api/org/:orgId/idea/:ideaId/comment' }
         });
 

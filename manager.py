@@ -79,4 +79,4 @@ api.add_resource(ProjectReply, ProjectReply.url, ProjectReply.url+'/', ProjectRe
 
 if __name__ == "__main__":
     app.debug = True
-    app.run('0.0.0.0', 80)
+    app.run('0.0.0.0', 5000)
