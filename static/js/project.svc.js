@@ -9,8 +9,7 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
     //     var Vote = function (resource, project) {
     //         angular.extend(this, resource);
     //     };
-    // }];
-
+    //
 
 
     factory.Project = ['$http', '$resource', 'UserSvc', function ($http, $resource, UserSvc, Version) {
@@ -38,6 +37,10 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
                         angular.extend(this, response.data);
                         return this;
                     }));
+            };
+
+            this.del = function () {
+                return $http.delete(this.url);
             };
 
             this.userIsMember = function (memList) {
@@ -190,8 +193,13 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             delReply: { method: 'DELETE', url: '/api/org/:orgId/project/:projectId/comment/:commentId/reply'},
             updateReply: { method: 'PUT', url: '/api/org/:orgId/project/:projectId/comment/:commentId/reply'}
         });
-        //Need to add Project.api
-        //Need to add Project.getbyId
+
+        Project.getById = function (orgId, projectId) {
+            return Project.api.get({orgId: orgId, projectId: projectId}).$promise.then(function (project) {
+                return new Project(project);
+            });
+        };
+
         return Project;
     }];
 
