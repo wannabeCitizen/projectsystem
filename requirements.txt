@@ -4,3 +4,4 @@ mongoengine
 Flask-Restful
 Flask-Login
 oauth2client==1.3
+PyCrypto
