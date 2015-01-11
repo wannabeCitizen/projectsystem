@@ -176,14 +176,14 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
         };
 
         Idea.prototype.follow = function () {
-            $http.put(this.url + '/follow').then(angular.bind(this, function () {
+            return $http.put(this.url + '/follow').then(angular.bind(this, function () {
                 this.followers.push(UserSvc.currentUser.id);
                 return this;
             }));
         };
 
         Idea.prototype.unfollow = function () {
-            $http.delete(this.url + '/follow').then(angular.bind(this, function () {
+            return $http.delete(this.url + '/follow').then(angular.bind(this, function () {
                 this.followers = _(this.followers).without(UserSvc.currentUser.id);
                 return this;
             }));
