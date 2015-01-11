@@ -131,13 +131,13 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
         return Reply;
     }];
 
-    factory.Idea = ['$http', '$resource', 'UserSvc', 'Version', 'Comment', function ($http, $resource, UserSvc, Version, Comment) {
+    factory.Idea = ['$http', 'UserSvc', 'Version', 'Comment', function ($http, UserSvc, Version, Comment) {
         // Instance ctor
-        var Idea = function (resource) {
+        var Idea = function (resource, orgId) {
             angular.extend(this, resource);
 
-            this.orgId = this.my_org && this.my_org.unique;
-            this.ideaId = this.unique;
+            this.orgId = orgId || (this.my_org && this.my_org.unique);
+            this.ideaId = this.unique || '';
             this.url = '/api/org/' + this.orgId + '/idea/' + this.ideaId;
             this.commentUrl = this.url + '/comment';
 
@@ -159,7 +159,7 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
         Idea.prototype.save = function () {
             return $http.put(this.url, this.serialize()).then(
                 angular.bind(this, function (response) {
-                    angular.extend(this, response.data);
+                    angular.extend(this, new Idea(response.data));
                     return this;
                 })
             );
@@ -190,8 +190,8 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
         };
 
         Idea.prototype.addVersion = function (versData) {
-            return Idea.api.addVersion(_(this).pick('orgId', 'ideaId'), versData).$promise.then(angular.bind(this, function (newVers) {
-                var vers = new Version(newVers, this);
+            return $http.post(this.url, versData).then(angular.bind(this, function (response) {
+                var vers = new Version(response.data, this);
                 this.versions.push(vers);
                 return vers;
             }));
@@ -212,9 +212,9 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
         };
 
         Idea.prototype.addComment = function (text) {
-            return Idea.api.addComment(_(this).pick('orgId', 'ideaId'), {text: text}).$promise
-                .then(angular.bind(this, function (comment) {
-                    var c = new Comment(comment, this.commentUrl);
+            return $http.post(this.url + '/comment', {text: text})
+                .then(angular.bind(this, function (response) {
+                    var c = new Comment(response.data, this.commentUrl);
                     this.comments.push(c);
                 }));
         };
@@ -225,16 +225,15 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
 
         // Static
 
-        Idea.api = $resource('/api/org/:orgId/idea/:ideaId', {orgId: '@my_org.unique', ideaId: '@unique'}, {
-            update: { method: 'PUT' },
-            addVersion: { method: 'POST' },
-            updateVersion: { method: 'PUT', url: '/api/org/:orgId/idea/:ideaId/version/:versId' },
-            addComment: { method: 'POST', url: '/api/org/:orgId/idea/:ideaId/comment' }
-        });
+        Idea.createNew = function (orgId, data) {
+            return $http.post('/api/org/' + orgId + '/idea', data).then(function (response) {
+                return new Idea(response.data);
+            });
+        };
 
         Idea.getById = function (orgId, ideaId) {
-            return Idea.api.get({orgId: orgId, ideaId: ideaId}).$promise.then(function (idea) {
-                return new Idea(idea);
+            return $http.get('/api/org/' + orgId + '/idea/' + ideaId).then(function (response) {
+                return new Idea(response.data);
             });
         };
 

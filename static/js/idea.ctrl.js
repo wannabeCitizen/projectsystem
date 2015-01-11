@@ -53,13 +53,10 @@ define(['angular', 'underscore'], function (angular, _) {
 
             $scope.action = function () {
                 $scope.spin = true;
-                var newIdea = new Idea.api($scope.ideaToEdit);
-                newIdea.$save({
-                    orgId: $stateParams.orgId
-                }).then(function (idea) {
+                Idea.createNew($stateParams.orgId, $scope.ideaToEdit).then(function (idea) {
                     $state.go('org.idea', {
-                        orgId: $stateParams.orgId,
-                        ideaId: idea.unique
+                        orgId: idea.orgId,
+                        ideaId: idea.ideaId
                     });
                 }, function (err) {
                     msg.error('Failed to create the idea.', 'Please try again.');
@@ -114,6 +111,7 @@ define(['angular', 'underscore'], function (angular, _) {
         $scope.addComment = function (text) {
             $scope.idea.addComment(text).then(function () {
                 $scope.newComment = '';
+                $scope.idea.commenting = false;
             }, function () {
                 msg.error('Failed to add the comment');
             });
