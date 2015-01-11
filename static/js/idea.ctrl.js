@@ -15,6 +15,12 @@ define(['angular', 'underscore'], function (angular, _) {
                 return Idea.getById($stateParams.orgId, $stateParams.ideaId).then(function (idea) {
                     $scope.idea = idea;
 
+                    if (!$stateParams.versId && idea.versions.length) {
+                        $state.go('.version', {
+                            versId: idea.versions[0].versId
+                        });
+                    }
+
                     $scope.delIdea = function () {
                         idea.del().then(function () {
                             $state.go('org', {
