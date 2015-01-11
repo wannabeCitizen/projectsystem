@@ -138,6 +138,20 @@ define(['angular', 'underscore'], function (angular, _) {
                 angular.copy(c, comment);
             });
         };
+
+        $scope.addReply = function (comment) {
+            comment.addReply(comment.newReply).then(function () {
+                comment.newReply = '';
+                comment.replying = false;
+            }, function () {
+                msg.error('Failed to add the reply');
+            });
+        };
+
+        $scope.cancelReply = function (comment) {
+            comment.newReply = '';
+            comment.replying = false;
+        };
     }];
 
 

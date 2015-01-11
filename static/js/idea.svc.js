@@ -49,6 +49,14 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             this.$promise = UserSvc.getById(this.commenter).then(angular.bind(this, function (user) {
                 this.user = user;
             }));
+
+            if (!angular.isArray(this.replies)) {
+                this.replies = [];
+            } else {
+                _(this.replies).each(function (reply, i) {
+                    this.replies[i] = new Reply(reply, this.replyUrl);
+                }, this);
+            }
         };
 
         Comment.prototype.serialize = function () {

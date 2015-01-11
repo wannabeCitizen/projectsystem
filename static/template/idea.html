@@ -78,19 +78,47 @@
                     <div ng-hide="comment.$editClone">
                         <div class="heading">{{comment.user.name}} at {{comment.date}}</div>
                         <div class="actions">
+                            <button class="btn btn-default" ng-click="comment.replying = true" ng-show="currentUser.loggedIn"><i class="fa fa-reply"></i></button>
                             <button class="btn btn-default" ng-click="editComment(comment)" ng-show="comment.userIsAuthor()"><i class="fa fa-pencil"></i></button>
                             <button class="btn btn-danger" ng-click="delComment(comment)" ng-show="comment.userIsAuthor()"><i class="fa fa-trash-o"></i></button>
                         </div>
                         <div class="text" marked="comment.text"></div>
                     </div>
-                    <li ng-repeat="reply in comment.replies">
-
-                    </li>
+					<ul>
+						<li ng-repeat="reply in comment.replies">
+							<div ng-show="reply.$editClone">
+								<textarea class="form-control" ng-model="reply.$editClone.text" placeholder="Edit this reply"></textarea>
+								<div class="well" marked="reply.$editClone.text" ng-show="reply.$editClone.text"></div>
+								<button class="btn btn-link" ng-click="cancelCommentEdit(reply)">Cancel</button>
+								<button class="btn btn-primary" ng-click="saveCommentEdit(reply)">Save</button>
+							</div>
+							<div ng-hide="reply.$editClone">
+								<div class="heading">{{reply.user.name}} at {{reply.date}}</div>
+								<div class="actions">
+									<button class="btn btn-default" ng-click="editComment(reply)" ng-show="reply.userIsAuthor()"><i class="fa fa-pencil"></i></button>
+									<button class="btn btn-danger" ng-click="reply.del()" ng-show="reply.userIsAuthor()"><i class="fa fa-trash-o"></i></button>
+								</div>
+								<div class="text" marked="reply.text"></div>
+							</div>
+						</li>
+					</ul>
+					<div ng-show="comment.replying">
+						<textarea class="form-control" ng-model="comment.newReply" placeholder="Add a reply"></textarea>
+						<div class="well" marked="comment.newReply" ng-show="comment.newReply.length"></div>
+						<button class="btn btn-primary" ng-click="addReply(comment)">Add</button>
+						<button class="btn btn-link" ng-click="cancelReply(comment)">cancel</button>
+					</div>
                 </li>
             </ul>
-            <textarea class="form-control" ng-model="newComment" placeholder="Add a comment"></textarea>
-            <div class="well" marked="newComment" ng-show="newComment.length"></div>
-            <button class="btn btn-primary" ng-click="addComment(newComment)">Add</button>
+            <button ng-if="currentUser.loggedIn" ng-show="org.userIsMember() && !idea.commenting" class="btn btn-link" ng-click="idea.commenting = true">
+                <i class="fa fa-plus"></i> New comment
+            </button>
+			<div ng-show="idea.commenting">
+				<textarea class="form-control" ng-model="newComment" placeholder="Add a comment"></textarea>
+				<div class="well" marked="newComment" ng-show="newComment.length"></div>
+				<button class="btn btn-primary" ng-click="addComment(newComment)">Add</button>
+				<button class="btn btn-link" ng-click="idea.commenting = false">cancel</button>
+			</div>
         </div>
 
     </div>
