@@ -37,13 +37,14 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
         return Version;
     }];
 
-    factory.Comment = ['$http', 'UserSvc', function ($http, UserSvc) {
+    factory.Comment = ['$http', 'UserSvc', 'Reply', function ($http, UserSvc, Reply) {
         var Comment = function (resource, baseUrl) {
             angular.extend(this, resource);
 
             this.baseUrl = baseUrl;
             this.commentId = this.index;
             this.url = baseUrl + '/' + this.commentId;
+            this.replyUrl = this.url + '/reply';
             this.date = moment.utc(this.time && this.time.$date).format('l LT');
             this.$promise = UserSvc.getById(this.commenter).then(angular.bind(this, function (user) {
                 this.user = user;
@@ -74,7 +75,55 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             return UserSvc.isCurrentUser(this.user);
         };
 
+        Comment.prototype.addReply = function (text) {
+            return $http.post(this.replyUrl, {text: text}).then(angular.bind(this, function (response) {
+                var reply = new Reply(response.data, this.replyUrl);
+                this.replies.push(reply);
+                return reply;
+            }));
+        };
+
         return Comment;
+    }];
+
+    factory.Reply = ['$http', 'UserSvc', function ($http, UserSvc) {
+        var Reply = function (resource, baseUrl) {
+            angular.extend(this, resource);
+
+            this.baseUrl = baseUrl;
+            this.replyId = this.index;
+            this.url = baseUrl + '/' + this.replyId;
+            this.date = moment.utc(this.time && this.time.$date).format('l LT');
+            this.$promise = UserSvc.getById(this.replier).then(angular.bind(this, function (user) {
+                this.user = user;
+            }));
+        };
+
+        Reply.prototype.serialize = function () {
+            return _(this).pick('replier', 'text', 'time', 'index');
+        };
+
+        Reply.prototype.save = function () {
+            return $http.put(this.url, this.serialize())
+                .then(angular.bind(this, function (response) {
+                    angular.extend(this, new Reply(response.data, this.baseUrl));
+                    return this;
+                }));
+        };
+
+        Reply.prototype.del = function () {
+            return $http.delete(this.url)
+                .then(angular.bind(this, function (response) {
+                    angular.extend(this, new Reply(response.data, this.baseUrl));
+                    return this;
+                }));
+        };
+
+        Reply.prototype.userIsAuthor = function () {
+            return UserSvc.isCurrentUser(this.user);
+        };
+
+        return Reply;
     }];
 
     factory.Idea = ['$http', '$resource', 'UserSvc', 'Version', 'Comment', function ($http, $resource, UserSvc, Version, Comment) {
