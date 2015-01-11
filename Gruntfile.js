@@ -188,8 +188,8 @@ module.exports = function (grunt) {
     });
 
     // Default task(s).
-    grunt.registerTask('prebuild', ['npm-install', 'bower']);
-    grunt.registerTask('test', ['jslint', 'ngtemplates:test', 'karma']);
-    grunt.registerTask('build', ['requirejs', 'ngtemplates:app', 'uglify', 'processhtml']);
-    grunt.registerTask('default', ['prebuild', 'test', 'build']);
+    grunt.registerTask('deps', ['npm-install', 'bower']);
+    grunt.registerTask('test', ['deps', 'jslint', 'ngtemplates:test', 'karma']);
+    grunt.registerTask('build', ['deps', 'requirejs', 'ngtemplates:app', 'uglify', 'processhtml']);
+    grunt.registerTask('default', ['test', 'build']);
 };

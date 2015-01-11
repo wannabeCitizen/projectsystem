@@ -33,5 +33,5 @@ ADD . /usr/src/app/
 RUN grunt prebuild
 RUN grunt build
 
-EXPOSE 5000
+EXPOSE 80
 CMD python ./manager.py $DB_1_PORT_27017_TCP_ADDR

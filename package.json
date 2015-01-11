@@ -15,7 +15,6 @@
     "grunt-karma": "~0.8",
     "grunt-npm-install": "~0.1",
     "grunt-processhtml": "~0.3",
-    "http-proxy": "1.6",
     "karma-chrome-launcher": "~0.1",
     "karma-firefox-launcher": "~0.1",
     "karma-jasmine": "~0.2",
