@@ -168,9 +168,7 @@ class IdeaReply(restful.Resource):
             return abort(401, message="Not Reply Owner")
 
     #Remove a reply
-    def delete(self, org_id, idea_id, comment_id):
-        old_reply_data = request.get_json()
-        reply_id = old_reply_data['index']
+    def delete(self, org_id, idea_id, comment_id, reply_id):
         verify = is_replier(current_user.google_id, idea_id, comment_id, reply_id)
         if verify is True:
             return remove_reply(idea_id, comment_id, reply_id)
