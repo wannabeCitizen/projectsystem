@@ -19,35 +19,41 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
                 this.creatorUser = user;
                 this.title += ' by ' + user.name;
             }));
+        };
 
-            this.serialize = function () {
-                return _(this).pick('thinker', 'text', 'unique');
-            };
+        Version.prototype.serialize = function () {
+            return _(this).pick('thinker', 'text', 'unique');
+        };
 
-            this.save = function () {
-                return $http.put(this.url, this.serialize()).then(
-                    angular.bind(this, function (response) {
-                        angular.extend(this, response.data);
-                        return this;
-                    })
-                );
-            };
+        Version.prototype.save = function () {
+            return $http.put(this.url, this.serialize()).then(
+                angular.bind(this, function (response) {
+                    angular.extend(this, response.data);
+                    return this;
+                })
+            );
         };
 
         return Version;
     }];
 
-    factory.Comment = ['$http', 'UserSvc', function ($http, UserSvc) {
+    factory.Comment = ['$http', 'UserSvc', 'Reply', function ($http, UserSvc, Reply) {
         var Comment = function (resource, baseUrl) {
             angular.extend(this, resource);
 
             this.baseUrl = baseUrl;
             this.commentId = this.index;
             this.url = baseUrl + '/' + this.commentId;
+            this.replyUrl = this.url + '/reply';
             this.date = moment.utc(this.time && this.time.$date).format('l LT');
             this.$promise = UserSvc.getById(this.commenter).then(angular.bind(this, function (user) {
                 this.user = user;
             }));
+
+            _(this.replies).each(function (reply, i) {
+                this.replies[i] = new Reply(reply, this.replyUrl);
+            }, this);
+            this.replies = this.replies || [];
         };
 
         Comment.prototype.serialize = function () {
@@ -74,16 +80,64 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             return UserSvc.isCurrentUser(this.user);
         };
 
+        Comment.prototype.addReply = function (text) {
+            return $http.post(this.replyUrl, {text: text}).then(angular.bind(this, function (response) {
+                var reply = new Reply(response.data, this.replyUrl);
+                this.replies.push(reply);
+                return reply;
+            }));
+        };
+
         return Comment;
     }];
 
-    factory.Idea = ['$http', '$resource', 'UserSvc', 'Version', 'Comment', function ($http, $resource, UserSvc, Version, Comment) {
-        // Instance ctor
-        var Idea = function (resource) {
+    factory.Reply = ['$http', 'UserSvc', function ($http, UserSvc) {
+        var Reply = function (resource, baseUrl) {
             angular.extend(this, resource);
 
-            this.orgId = this.my_org && this.my_org.unique;
-            this.ideaId = this.unique;
+            this.baseUrl = baseUrl;
+            this.replyId = this.index;
+            this.url = baseUrl + '/' + this.replyId;
+            this.date = moment.utc(this.time && this.time.$date).format('l LT');
+            this.$promise = UserSvc.getById(this.replier).then(angular.bind(this, function (user) {
+                this.user = user;
+            }));
+        };
+
+        Reply.prototype.serialize = function () {
+            return _(this).pick('replier', 'text', 'time', 'index');
+        };
+
+        Reply.prototype.save = function () {
+            return $http.put(this.url, this.serialize())
+                .then(angular.bind(this, function (response) {
+                    angular.extend(this, new Reply(response.data, this.baseUrl));
+                    return this;
+                }));
+        };
+
+        Reply.prototype.del = function () {
+            return $http.delete(this.url)
+                .then(angular.bind(this, function (response) {
+                    angular.extend(this, new Reply(response.data, this.baseUrl));
+                    return this;
+                }));
+        };
+
+        Reply.prototype.userIsAuthor = function () {
+            return UserSvc.isCurrentUser(this.user);
+        };
+
+        return Reply;
+    }];
+
+    factory.Idea = ['$http', 'UserSvc', 'Version', 'Comment', function ($http, UserSvc, Version, Comment) {
+        // Instance ctor
+        var Idea = function (resource, orgId) {
+            angular.extend(this, resource);
+
+            this.orgId = orgId || (this.my_org && this.my_org.unique);
+            this.ideaId = this.unique || '';
             this.url = '/api/org/' + this.orgId + '/idea/' + this.ideaId;
             this.commentUrl = this.url + '/comment';
 
@@ -96,89 +150,90 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
                 this.comments[i] = new Comment(vers, this.commentUrl);
             }, this);
             this.comments = this.comments || [];
-
-            this.serialize = function () {
-                return _(this).pick('title', 'short_description', 'unique');
-            };
-
-            this.save = function () {
-                return $http.put(this.url, this.serialize()).then(
-                    angular.bind(this, function (response) {
-                        angular.extend(this, response.data);
-                        return this;
-                    })
-                );
-            };
-
-            this.del = function () {
-                return $http.delete(this.url);
-            };
-
-            this.userIsFollowing = function () {
-                return _(this.followers).find(function (follower) {
-                    return UserSvc.isCurrentUserId(follower);
-                });
-            };
-
-            this.follow = function () {
-                $http.put(this.url + '/follow').then(angular.bind(this, function () {
-                    this.followers.push(UserSvc.currentUser.id);
-                    return this;
-                }));
-            };
-
-            this.unfollow = function () {
-                $http.delete(this.url + '/follow').then(angular.bind(this, function () {
-                    this.followers = _(this.followers).without(UserSvc.currentUser.id);
-                    return this;
-                }));
-            };
-
-            this.addVersion = function (versData) {
-                return Idea.api.addVersion(_(this).pick('orgId', 'ideaId'), versData).$promise.then(angular.bind(this, function (newVers) {
-                    var vers = new Version(newVers, this);
-                    this.versions.push(vers);
-                    return vers;
-                }));
-            };
-
-            this.updateVersion = function (vers) {
-                return vers.save().then(angular.bind(this, function () {
-                    var existing = _(this.versions).find(function (v) { return v.versId === vers.versId; });
-                    if (existing) {
-                        angular.copy(vers, existing);
-                    }
-                    return existing;
-                }));
-            };
-
-            this.getVersionById = function (versId) {
-                return _(this.versions).find(function (vers) { return vers.unique === versId; });
-            };
-
-            this.addComment = function (text) {
-                return Idea.api.addComment(_(this).pick('orgId', 'ideaId'), {text: text}).$promise
-                    .then(angular.bind(this, function (comment) {
-                        var c = new Comment(comment, this.commentUrl);
-                        this.comments.push(c);
-                    }));
-            };
-
-            this.delComment = function (comment) {
-                return comment.del();
-            };
         };
 
-        Idea.api = $resource('/api/org/:orgId/idea/:ideaId', {orgId: '@my_org.unique', ideaId: '@unique'}, {
-            update: { method: 'PUT' },
-            addVersion: { method: 'POST' },
-            updateVersion: { method: 'PUT', url: '/api/org/:orgId/idea/:ideaId/version/:versId' },
-            addComment: { method: 'POST', url: '/api/org/:orgId/idea/:ideaId/comment' }
-        });
+        Idea.prototype.serialize = function () {
+            return _(this).pick('title', 'short_description', 'unique');
+        };
+
+        Idea.prototype.save = function () {
+            return $http.put(this.url, this.serialize()).then(
+                angular.bind(this, function (response) {
+                    angular.extend(this, new Idea(response.data));
+                    return this;
+                })
+            );
+        };
+
+        Idea.prototype.del = function () {
+            return $http.delete(this.url);
+        };
+
+        Idea.prototype.userIsFollowing = function () {
+            return _(this.followers).find(function (follower) {
+                return UserSvc.isCurrentUserId(follower);
+            });
+        };
+
+        Idea.prototype.follow = function () {
+            return $http.put(this.url + '/follow').then(angular.bind(this, function () {
+                this.followers.push(UserSvc.currentUser.id);
+                return this;
+            }));
+        };
+
+        Idea.prototype.unfollow = function () {
+            return $http.delete(this.url + '/follow').then(angular.bind(this, function () {
+                this.followers = _(this.followers).without(UserSvc.currentUser.id);
+                return this;
+            }));
+        };
+
+        Idea.prototype.addVersion = function (versData) {
+            return $http.post(this.url, versData).then(angular.bind(this, function (response) {
+                var vers = new Version(response.data, this);
+                this.versions.push(vers);
+                return vers;
+            }));
+        };
+
+        Idea.prototype.updateVersion = function (vers) {
+            return vers.save().then(angular.bind(this, function () {
+                var existing = _(this.versions).find(function (v) { return v.versId === vers.versId; });
+                if (existing) {
+                    angular.copy(vers, existing);
+                }
+                return existing;
+            }));
+        };
+
+        Idea.prototype.getVersionById = function (versId) {
+            return _(this.versions).find(function (vers) { return vers.unique === versId; });
+        };
+
+        Idea.prototype.addComment = function (text) {
+            return $http.post(this.url + '/comment', {text: text})
+                .then(angular.bind(this, function (response) {
+                    var c = new Comment(response.data, this.commentUrl);
+                    this.comments.push(c);
+                }));
+        };
+
+        Idea.prototype.delComment = function (comment) {
+            return comment.del();
+        };
+
+        // Static
+
+        Idea.createNew = function (orgId, data) {
+            return $http.post('/api/org/' + orgId + '/idea', data).then(function (response) {
+                return new Idea(response.data);
+            });
+        };
 
         Idea.getById = function (orgId, ideaId) {
-            return Idea.api.get({orgId: orgId, ideaId: ideaId}).$promise.then(function (idea) {
-                return new Idea(idea);
+            return $http.get('/api/org/' + orgId + '/idea/' + ideaId).then(function (response) {
+                return new Idea(response.data);
             });
         };
 

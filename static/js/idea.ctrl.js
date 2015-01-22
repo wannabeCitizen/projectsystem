@@ -15,6 +15,12 @@ define(['angular', 'underscore'], function (angular, _) {
                 return Idea.getById($stateParams.orgId, $stateParams.ideaId).then(function (idea) {
                     $scope.idea = idea;
 
+                    if (!$stateParams.versId && idea.versions.length) {
+                        $state.go('.version', {
+                            versId: idea.versions[0].versId
+                        });
+                    }
+
                     $scope.delIdea = function () {
                         idea.del().then(function () {
                             $state.go('org', {
@@ -53,13 +59,10 @@ define(['angular', 'underscore'], function (angular, _) {
 
             $scope.action = function () {
                 $scope.spin = true;
-                var newIdea = new Idea.api($scope.ideaToEdit);
-                newIdea.$save({
-                    orgId: $stateParams.orgId
-                }).then(function (idea) {
+                Idea.createNew($stateParams.orgId, $scope.ideaToEdit).then(function (idea) {
                     $state.go('org.idea', {
-                        orgId: $stateParams.orgId,
-                        ideaId: idea.unique
+                        orgId: idea.orgId,
+                        ideaId: idea.ideaId
                     });
                 }, function (err) {
                     msg.error('Failed to create the idea.', 'Please try again.');
@@ -114,6 +117,7 @@ define(['angular', 'underscore'], function (angular, _) {
         $scope.addComment = function (text) {
             $scope.idea.addComment(text).then(function () {
                 $scope.newComment = '';
+                $scope.idea.commenting = false;
             }, function () {
                 msg.error('Failed to add the comment');
             });
@@ -137,6 +141,20 @@ define(['angular', 'underscore'], function (angular, _) {
             comment.$editClone.save().then(function (c) {
                 angular.copy(c, comment);
             });
+        };
+
+        $scope.addReply = function (comment) {
+            comment.addReply(comment.newReply).then(function () {
+                comment.newReply = '';
+                comment.replying = false;
+            }, function () {
+                msg.error('Failed to add the reply');
+            });
+        };
+
+        $scope.cancelReply = function (comment) {
+            comment.newReply = '';
+            comment.replying = false;
         };
     }];
 

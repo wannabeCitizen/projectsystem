@@ -43,6 +43,11 @@ You can use Vagrant to set up a completely isolated development and test environ
   ```
   vagrant up
   ```
-4. In your browser, navigate to http://127.0.0.1:55555/dev
+4. Edit the `hosts` file on your system (required for authentication to work). The vm uses a bridged adapter, so you need to find its ip address on your network, and add an entry like the following:
+
+ ```
+ 192.168.0.123 projects.d0ck.me
+ ```
+4. In your browser, navigate to http://projects.d0ck.me/dev
 5. Any changes to the source will be immediately reflected after a browser refresh
-6. To run the compiled, production code instead, navigate to http://127.0.0.1:55555/
+6. To run the compiled, production code instead, navigate to http://projects.d0ck.me/
