@@ -101,12 +101,29 @@ body {
                     .absolute-fill();
                     li {
                         .selectable-block(0);
+						position: relative;
                         padding: 5px;
 
                         .title {
                             display: block;
                             font-size: 16px;
                         }
+
+						.karma-btn {
+							.absolute-fill();
+							left: auto;
+							padding: 5px;
+							text-decoration: none;
+
+							.karma {
+								color: fade(@gray-darker, 10%);
+								
+								&.mine {
+									color: @gray-darker;
+								}
+							}
+
+						}
                     }
                 }
             }
