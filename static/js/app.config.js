@@ -66,9 +66,13 @@ define([], function () {
                 templateUrl: 'static/template/editIdeaVers.html',
                 controller: 'EditIdeaVersCtrl'
             })
-            .state('project', {
+            .state('org.project', {
                 url:'/project',
                 templateUrl: 'static/template/project.html'
+            })
+            .state('org.project.edit', {
+                url:'/edit',
+                templateUrl: 'static/template/projectEdit.html'
             });
     }];
 });

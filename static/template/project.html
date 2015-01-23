@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<div class="project" ng-controller="ProjectCtrl" ui-view>
+    <ol class="breadcrumb">
+        <li><a ui-sref="home">Home</a></li>
+        <li><a ui-sref="orgs">Organizations</a></li>
+        <li ng-show="org"><a ui-sref="org">{{org.name}}</a></li>
+    </ol>
+    <div ng-show="loading">
+        Loading...
+    </div>
+    <div ng-show="project && !loading">
+        <h1>
+            {{project.title}}
+            <button ng-if="currentUser.loggedIn" ng-show="project.userIsMember()" class="btn btn-link" ui-sref="project.edit">
+                <i class="fa fa-pencil"></i> Edit
+            </button>
+            <button ng-if="currentUser.loggedIn" ng-show="project.userIsMember()" class="btn btn-link" ng-click="delProject()">
+                <i class="fa fa-trash-o"></i> Delete
+            </button>
+            <button ng-if="currentUser.loggedIn" ng-show="project.userIsFollowing()" class="btn btn-link" ng-click="project.unfollow()" data-title="Click to stop following" bs-tooltip>
+                <i class="fa fa-eye"></i> Following
+            </button>
+            <button ng-if="currentUser.loggedIn" ng-hide="project.userIsFollowing()" class="btn btn-link" ng-click="project.follow()" data-title="Click to follow" bs-tooltip>
+                <i class="fa fa-eye-slash"></i> Not following
+            </button>
+        </h1>
+
+        <p ng-if="idea.short_description">
+            <i class="fa fa-quote-left"></i>
+            {{idea.short_description}}
+            <i class="fa fa-quote-right"></i>
+        </p>    
+
+        <div class="project-view" marked="project.text" ng-show="project.text.length"></div>
+        <div class="members-list">
+            Members
+            <ul>
+                <li ng-repeat="ppl in project.members">
+                    {{ppl.name}}
+                </li>
+            </ul>
+        </div>
+        
+
+    </div>
+
+</div>
