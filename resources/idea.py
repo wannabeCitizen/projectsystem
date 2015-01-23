@@ -104,8 +104,7 @@ class KarmaChange(restful.Resource):
     def put(self, org_id, idea_id, version_id):
         verify = is_in_org(current_user.google_id, org_id)
         if verify is True:
-            change_karma(current_user.google_id, idea_id, version_id)
-            return "Success"
+            return change_karma(current_user.google_id, idea_id, version_id)
         else:
             return abort(401, message="Not in Organization")
 

@@ -65,6 +65,10 @@ define([], function () {
                 url: '/edit',
                 templateUrl: 'static/template/editIdeaVers.html',
                 controller: 'EditIdeaVersCtrl'
+            })
+            .state('project', {
+                url:'/project',
+                templateUrl: 'static/template/project.html'
             });
     }];
 });

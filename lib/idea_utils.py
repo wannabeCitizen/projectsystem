@@ -129,7 +129,7 @@ def change_karma(user_id, idea_id, version_id):
     my_idea = IdeaMeta.objects.get(unique=idea_id)
     my_idea.karma[user_id] = version_id
     my_idea.save()
-    return my_idea
+    return my_idea.karma
 
 def create_comment(user_id, idea_id, **kwargs):
     my_idea = IdeaMeta.objects.get(unique=idea_id)
