@@ -20,4 +20,7 @@ grunt build
 
 python /vagrant/manager.py &
 
-echo "Provisioning completed. Point your browser to http://127.0.0.1:80/"
+echo "Vagrant box has the following ip addresses:"
+ifconfig | sed -rn 's/.*r:([^ ]+) .*/\1/p'
+echo "Add an entry to your hosts file like"
+echo "192.168.1.5 projects.d0ck.me"
