@@ -34,6 +34,10 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             );
         };
 
+        Version.prototype.hasUserKarma = function () {
+            return _(this.karmaUsers).contains(UserSvc.currentUser.id);
+        };
+
         return Version;
     }];
 
@@ -132,6 +136,17 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
     }];
 
     factory.Idea = ['$http', 'UserSvc', 'Version', 'Comment', function ($http, UserSvc, Version, Comment) {
+
+        var updateVersKarma = function (vers, ideaKarma) {
+            vers.karmaUsers = [];
+            _(ideaKarma).each(function (v, u) {
+                if (v === vers.versId) {
+                    vers.karmaUsers.push(u);
+                }
+            });
+            vers.karma = vers.karmaUsers && vers.karmaUsers.length;
+        };
+
         // Instance ctor
         var Idea = function (resource, orgId) {
             angular.extend(this, resource);
@@ -141,8 +156,11 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
             this.url = '/api/org/' + this.orgId + '/idea/' + this.ideaId;
             this.commentUrl = this.url + '/comment';
 
-            _(this.versions).each(function (vers, i) {
-                this.versions[i] = new Version(vers, this);
+            this.karma = this.karma || {};
+
+            _(this.versions).each(function (v, i) {
+                this.versions[i] = new Version(v, this);
+                updateVersKarma(this.versions[i], this.karma);
             }, this);
             this.versions = this.versions || [];
 
@@ -221,6 +239,16 @@ define(['angular', 'underscore', 'moment'], function (angular, _, moment) {
 
         Idea.prototype.delComment = function (comment) {
             return comment.del();
+        };
+
+        Idea.prototype.grantKarma = function (vers) {
+            return $http.put(this.url + '/karma/' + vers.versId).then(angular.bind(this, function (response) {
+                angular.copy(response.data, this.karma);
+                // recompute the karma counts
+                _(this.versions).each(function (vers) {
+                    updateVersKarma(vers, this.karma);
+                }, this);
+            }));
         };
 
         // Static

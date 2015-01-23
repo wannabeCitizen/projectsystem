@@ -68,6 +68,7 @@ define([], function () {
             })
             .state('org.project', {
                 url:'/project',
+
                 templateUrl: 'static/template/project.html'
             })
             .state('org.project.edit', {

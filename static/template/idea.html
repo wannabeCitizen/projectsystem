@@ -46,6 +46,10 @@
                     <li ng-repeat="vers in idea.versions" ui-sref="org.idea.version({versId: vers.unique})" ng-class="versionClass(vers)">
                         <span class="title">{{vers.creatorUser.name}}</span>
                         <span class="text-muted">{{vers.createdDate}}</span>
+						<button class="btn btn-link karma-btn" ng-click="idea.grantKarma(vers)" data-title="Karmic Rating" data-container="body" data-placement="right" bs-tooltip>
+							<i class="fa fa-try karma" ng-class="{mine: vers.hasUserKarma()}"></i>
+							<span class="badge">{{vers.karma}}</span>
+						</button>
                     </li>
                 </ul>
             </div>
