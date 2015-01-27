@@ -1,6 +1,8 @@
 Democratic Project Manager
 =============
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/wannabeCitizen/projectsystem?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This will be a web app used for collectives of people to manage democratically controlled projects.
 
 Getting Started
